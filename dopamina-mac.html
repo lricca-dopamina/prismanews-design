@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dopamina — Creative Marketing</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000;--white:#fff;--beige:#c8c4b0;--beige-d:#a09c8a;--beige-l:#dedad0;
+  --screen-bg:#f2ede0;--px:'Press Start 2P',monospace;--mono:'Courier New',monospace;
+}
+html,body{
+  width:100%;min-height:100vh;background:#0d0d0d;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;font-family:var(--mono);
+}
+
+/* ── BOOT ── */
+#boot{
+  position:fixed;inset:0;background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:9999;transition:opacity .6s ease;
+}
+#boot.out{opacity:0;pointer-events:none}
+.hm{width:80px;height:80px;image-rendering:pixelated;
+  animation:pop .4s steps(1) .4s both}
+@keyframes pop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+#wt{
+  color:#fff;font-family:var(--px);font-size:9px;margin-top:20px;
+  white-space:nowrap;overflow:hidden;width:0;
+  animation:type 1.2s steps(22) 1.2s both;
+}
+@keyframes type{to{width:22ch}}
+#bb{width:120px;height:8px;border:1px solid #fff;margin-top:14px;
+  animation:fadein .3s .8s both}
+#bf{height:100%;background:#fff;width:0;animation:bar 2s linear 1.4s both}
+@keyframes bar{to{width:100%}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+/* ── MONITOR ── */
+#mon{
+  position:relative;
+  width:min(88vw,660px);
+  background:var(--beige);
+  border-radius:14px 14px 10px 10px;
+  padding:18px 22px 56px;
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.55),
+    inset 0 -2px 4px rgba(0,0,0,.3),
+    0 24px 80px rgba(0,0,0,.85),
+    0 0 0 2px var(--beige-d);
+}
+#mon::before{
+  content:'';position:absolute;top:8px;left:14px;right:14px;
+  height:2px;background:linear-gradient(to right,transparent,rgba(255,255,255,.5),transparent);
+}
+#bezel{
+  background:#222;border-radius:5px;padding:10px;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.9);
+}
+#scr{
+  position:relative;width:100%;
+  aspect-ratio:512/342;
+  background:var(--screen-bg);border-radius:3px;overflow:hidden;cursor:default;
+  animation:flicker 9s infinite;
+}
+@keyframes flicker{0%,97%,100%{opacity:1}98%{opacity:.96}99%{opacity:1}}
+
+/* CRT vignette */
+#scr::before{
+  content:'';position:absolute;inset:0;border-radius:3px;
+  background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.35) 100%);
+  z-index:500;pointer-events:none;
+}
+/* scanlines */
+#scr::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent 1px,rgba(0,0,0,.07) 1px,rgba(0,0,0,.07) 2px);
+  z-index:501;pointer-events:none;
+  animation:scan 10s linear infinite;
+}
+@keyframes scan{from{background-position:0 0}to{background-position:0 200px}}
+
+/* monitor bottom chrome */
+#mbot{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:14px;
+}
+#fslot{width:58px;height:5px;background:#888;border-radius:1px;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
+#led{width:6px;height:6px;border-radius:50%;background:#3f3;box-shadow:0 0 7px #3f3;
+  animation:lpulse 2.5s ease-in-out infinite}
+@keyframes lpulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── DESKTOP ── */
+#desk{
+  width:100%;height:100%;position:relative;overflow:hidden;
+  background:repeating-conic-gradient(#b0aaa0 0% 25%,#e0d8cc 0% 50%) 0 0/4px 4px;
+}
+
+/* ── MENUBAR ── */
+#mb{
+  position:relative;width:100%;height:20px;
+  background:var(--screen-bg);border-bottom:1px solid #000;
+  display:flex;align-items:center;padding:0 3px;z-index:300;user-select:none;
+}
+.mi{
+  font-family:var(--px);font-size:7px;height:100%;
+  display:flex;align-items:center;padding:0 7px;
+  cursor:pointer;white-space:nowrap;position:relative;
+}
+.mi:hover,.mi.on{background:#000;color:#fff}
+.mi.app{font-size:11px;padding:0 9px}
+.mi.bold{font-weight:700;pointer-events:none}
+#clk{margin-left:auto;font-family:var(--px);font-size:6px;padding:0 6px}
+.drop{
+  display:none;position:absolute;top:100%;left:0;
+  background:var(--screen-bg);border:1px solid #000;border-top:none;
+  min-width:150px;box-shadow:2px 2px 0 #000;z-index:600;
+}
+.mi.on .drop{display:block}
+.di{font-family:var(--px);font-size:7px;padding:5px 10px;cursor:pointer;display:block;white-space:nowrap}
+.di:hover{background:#000;color:#fff}
+.dsep{height:1px;background:#000;margin:2px 0}
+
+/* ── WINDOWS ── */
+.mw{
+  position:absolute;background:var(--screen-bg);
+  border:1.5px solid #000;box-shadow:3px 3px 0 #000;
+  min-width:160px;display:flex;flex-direction:column;z-index:50;
+}
+.mw.top{z-index:150}
+.mw.gone{display:none}
+
+/* open animation */
+@keyframes wbounce{
+  0%{transform:scale(0);opacity:0}
+  60%{transform:scale(1.06);opacity:1}
+  80%{transform:scale(.97)}
+  100%{transform:scale(1)}
+}
+.mw.spawn{animation:wbounce .35s cubic-bezier(.36,.07,.19,.97) both}
+
+/* title bar */
+.tb{
+  height:20px;background:#000;display:flex;align-items:center;
+  padding:0 5px;gap:5px;cursor:move;user-select:none;flex-shrink:0;
+}
+.mw:not(.top) .tb{
+  background:repeating-linear-gradient(to bottom,#000 0,#000 1px,#fff 1px,#fff 2px);
+}
+.cb{
+  width:11px;height:11px;border:1.5px solid #000;background:#fff;
+  cursor:pointer;flex-shrink:0;display:grid;place-items:center;
+  font-size:9px;line-height:1;
+}
+.mw.top .cb{background:#fff}
+.cb:hover{background:#000;color:#fff}
+.tt{
+  flex:1;text-align:center;font-family:var(--px);font-size:7px;
+  color:#fff;pointer-events:none;white-space:nowrap;overflow:hidden;
+}
+.mw:not(.top) .tt{color:#000}
+.zb{width:11px;height:11px;border:1.5px solid #000;background:#fff;cursor:pointer;flex-shrink:0}
+.zb:hover{background:#000}
+
+/* content */
+.wc{
+  flex:1;min-height:0;overflow-y:auto;padding:8px;
+  font-family:var(--mono);font-size:10px;line-height:1.65;color:#000;
+}
+.wc::-webkit-scrollbar{width:14px}
+.wc::-webkit-scrollbar-track{
+  background:repeating-conic-gradient(#888 0% 25%,#fff 0% 50%) 0 0/4px 4px;
+  border-left:1px solid #000;
+}
+.wc::-webkit-scrollbar-thumb{background:#000;border:1px solid #fff}
+.rh{
+  position:absolute;bottom:0;right:0;width:14px;height:14px;cursor:se-resize;
+  background:repeating-linear-gradient(-45deg,#000 0,#000 1px,transparent 1px,transparent 3px);
+}
+
+/* ── ICONS ── */
+#icons{position:absolute;right:6px;top:24px;display:flex;flex-direction:column;gap:12px}
+.ic{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;width:56px;
+}
+.ic:hover svg,.ic.sel svg{filter:invert(1)}
+.ic svg{width:28px;height:28px;image-rendering:pixelated}
+.il{
+  font-family:var(--px);font-size:5px;color:#000;text-align:center;
+  text-shadow:0 0 3px var(--screen-bg);line-height:1.4;
+}
+.ic.sel .il{background:#000;color:#fff}
+
+/* ── CONTENT COMPONENTS ── */
+.logo{
+  font-family:var(--px);font-size:13px;letter-spacing:2px;margin-bottom:4px;
+  animation:rgb 7s steps(1) infinite;
+}
+@keyframes rgb{
+  0%,100%{text-shadow:none;transform:none}
+  20%{text-shadow:-2px 0 #000,2px 0 #555;transform:translateX(-1px)}
+  40%{text-shadow:2px 0 #000,-2px 0 #555;transform:translateX(1px)}
+  60%{text-shadow:-1px 0 #333,1px 0 #888;transform:translateX(-1px)}
+  80%{text-shadow:none;transform:none}
+}
+.tag{font-family:var(--px);font-size:7px;color:#444;line-height:1.9;margin-bottom:8px}
+.ddiv{height:3px;background:repeating-linear-gradient(90deg,#000 0,#000 2px,transparent 2px,transparent 4px);margin:6px 0}
+.ppb{height:7px;border:1px solid #000;
+  background:repeating-conic-gradient(#888 0% 25%,#fff 0% 50%) 0 0/4px 4px;
+  position:relative;overflow:hidden;margin:5px 0;
+}
+.ppf{height:100%;background:#000;transition:width 1.2s steps(24)}
+.ph{font-family:var(--px);font-size:5px;color:#555;margin-top:2px}
+
+.si{display:flex;align-items:flex-start;gap:7px;padding:5px 0;border-bottom:1px solid #ccc;cursor:pointer}
+.si:last-child{border:none}
+.si:hover{background:#000;color:#fff;margin:0 -8px;padding-left:8px;padding-right:8px}
+.si:hover .sd{color:#aaa}
+.sic{font-size:14px;flex-shrink:0;width:18px;margin-top:1px}
+.sn{font-family:var(--px);font-size:6px;margin-bottom:2px}
+.sd{font-size:9px;color:#555}
+
+.cr{display:flex;align-items:flex-start;gap:7px;margin-bottom:9px}
+.cic{font-size:13px;flex-shrink:0;width:16px}
+.clb{font-family:var(--px);font-size:5px;color:#666;margin-bottom:2px}
+.cv{font-size:10px;font-family:var(--mono)}
+.soc{display:flex;gap:6px;margin-top:8px;padding-top:7px;border-top:1px solid #000}
+.sb{font-family:var(--px);font-size:6px;padding:4px 6px;border:1px solid #000;background:#fff;cursor:pointer}
+.sb:hover{background:#000;color:#fff}
+
+/* typing cursor */
+.tc::after{content:'▮';animation:blink 1s steps(1) infinite}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+
+/* glitch hover */
+@keyframes gh1{0%,100%{transform:none}25%{transform:translate(-2px,1px)}75%{transform:translate(2px,-1px)}}
+.gh:hover{animation:gh1 .25s steps(1) infinite,rgb .25s steps(1) infinite}
+
+/* ── GLITCH OVERLAY ── */
+#go{
+  position:absolute;inset:0;z-index:490;pointer-events:none;
+  opacity:0;mix-blend-mode:multiply;
+}
+@keyframes gscreen{
+  0%{opacity:0;transform:none}
+  30%{opacity:.4;transform:translateX(3px);
+    background:repeating-linear-gradient(90deg,transparent 0,transparent 38px,rgba(0,0,0,.4) 38px,rgba(0,0,0,.4) 40px)}
+  65%{opacity:.25;transform:translateX(-2px);
+    background:repeating-linear-gradient(90deg,transparent 0,transparent 70px,rgba(255,255,255,.2) 70px,rgba(255,255,255,.2) 74px)}
+  100%{opacity:0;transform:none}
+}
+#go.hit{animation:gscreen .18s steps(1) both}
+
+/* ── STATUS BAR ── */
+#sb{
+  position:absolute;bottom:0;left:0;right:0;height:16px;
+  background:var(--screen-bg);border-top:1px solid #000;
+  display:flex;align-items:center;padding:0 6px;gap:10px;z-index:300;
+}
+.sti{font-family:var(--px);font-size:5px;color:#444;cursor:pointer;white-space:nowrap}
+.sti:hover{color:#000}
+</style>
+</head>
+<body>
+
+<!-- BOOT -->
+<div id="boot">
+  <svg class="hm" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <rect x="5" y="2" width="22" height="28" rx="3" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    <rect x="8" y="5" width="16" height="13" fill="#eee" stroke="#000" stroke-width="1"/>
+    <rect x="11" y="9" width="2" height="2" fill="#000"/>
+    <rect x="19" y="9" width="2" height="2" fill="#000"/>
+    <rect x="11" y="13" width="2" height="1" fill="#000"/>
+    <rect x="13" y="14" width="6" height="1" fill="#000"/>
+    <rect x="19" y="13" width="2" height="1" fill="#000"/>
+    <rect x="10" y="21" width="12" height="3" rx="1" fill="#ccc" stroke="#000" stroke-width="1"/>
+    <rect x="11" y="22" width="7" height="1" fill="#999"/>
+    <rect x="7" y="28" width="4" height="2" rx="1" fill="#000"/>
+    <rect x="21" y="28" width="4" height="2" rx="1" fill="#000"/>
+  </svg>
+  <div id="wt">Welcome to Macintosh</div>
+  <div id="bb"><div id="bf"></div></div>
+</div>
+
+<!-- MONITOR -->
+<div id="mon">
+  <div id="bezel">
+    <div id="scr">
+      <div id="go"></div>
+
+      <!-- DESKTOP -->
+      <div id="desk">
+
+        <!-- MENUBAR -->
+        <div id="mb">
+          <div class="mi app" id="ma">&#63743;
+            <div class="drop">
+              <div class="di">About Dopamina…</div>
+              <div class="dsep"></div>
+              <div class="di" onclick="doGlitch()">Riavvia Sistema</div>
+              <div class="dsep"></div>
+              <div class="di">Versione 1.0.86</div>
+            </div>
+          </div>
+          <div class="mi bold" style="pointer-events:none;font-size:6px;">Dopamina</div>
+          <div class="mi" id="mf">File
+            <div class="drop">
+              <div class="di" onclick="openW('wa')">About</div>
+              <div class="di" onclick="openW('ws')">Servizi</div>
+              <div class="di" onclick="openW('wc')">Contatti</div>
+              <div class="dsep"></div>
+              <div class="di" onclick="closeAll()">Chiudi tutto</div>
+            </div>
+          </div>
+          <div class="mi" id="me">Modifica
+            <div class="drop">
+              <div class="di" onclick="doGlitch()">Glitch Mode</div>
+              <div class="di">Seleziona tutto</div>
+            </div>
+          </div>
+          <div class="mi" id="msv">Servizi
+            <div class="drop">
+              <div class="di">Web Development</div>
+              <div class="di">Branding</div>
+              <div class="di">Social Media</div>
+              <div class="di">Advertising</div>
+              <div class="di">3D &amp; WebGL</div>
+            </div>
+          </div>
+          <div id="clk">00:00</div>
+        </div>
+
+        <!-- ABOUT WINDOW -->
+        <div class="mw top" id="wa" style="left:16px;top:28px;width:240px;height:205px;">
+          <div class="tb">
+            <div class="cb" onclick="closeW('wa')"></div>
+            <span class="tt gh">DOPAMINA.APP</span>
+            <div class="zb" onclick="maxW('wa')"></div>
+          </div>
+          <div class="wc">
+            <div class="logo gh">DOPAMINA</div>
+            <div class="ddiv"></div>
+            <div class="tag">Light up your vision</div>
+            <div id="atxt" class="tc"></div>
+            <div class="ddiv"></div>
+            <div class="ppb"><div class="ppf" id="cpf" style="width:0%"></div></div>
+            <div class="ph">CREATIVITÀ: <span id="cpct">0</span>%</div>
+          </div>
+          <div class="rh"></div>
+        </div>
+
+        <!-- SERVICES WINDOW -->
+        <div class="mw" id="ws" style="left:268px;top:28px;width:210px;height:210px;">
+          <div class="tb">
+            <div class="cb" onclick="closeW('ws')"></div>
+            <span class="tt">SERVIZI.LIST</span>
+            <div class="zb" onclick="maxW('ws')"></div>
+          </div>
+          <div class="wc">
+            <div class="si gh"><span class="sic">▣</span><div><div class="sn">WEB DEV</div><div class="sd">Siti web strategici per il tuo business</div></div></div>
+            <div class="si gh"><span class="sic">◈</span><div><div class="sn">BRANDING</div><div class="sd">Identità visiva e carattere del brand</div></div></div>
+            <div class="si gh"><span class="sic">◎</span><div><div class="sn">SOCIAL MEDIA</div><div class="sd">Contenuti e strategie per il pubblico</div></div></div>
+            <div class="si gh"><span class="sic">▶</span><div><div class="sn">ADVERTISING</div><div class="sd">Campagne originali su misura</div></div></div>
+            <div class="si gh"><span class="sic">◉</span><div><div class="sn">3D &amp; WebGL</div><div class="sd">Ambienti digitali immersivi</div></div></div>
+          </div>
+          <div class="rh"></div>
+        </div>
+
+        <!-- CONTACT WINDOW -->
+        <div class="mw" id="wc" style="left:16px;top:244px;width:230px;height:150px;">
+          <div class="tb">
+            <div class="cb" onclick="closeW('wc')"></div>
+            <span class="tt">CONTATTI.TXT</span>
+            <div class="zb" onclick="maxW('wc')"></div>
+          </div>
+          <div class="wc">
+            <div class="cr"><span class="cic">@</span><div><div class="clb">EMAIL</div><div class="cv">hello@dopamina.it</div></div></div>
+            <div class="cr"><span class="cic">☎</span><div><div class="clb">TEL</div><div class="cv">(+39) 393 049 7799</div></div></div>
+            <div class="cr"><span class="cic">◉</span><div><div class="clb">SEDE</div><div class="cv">Via Mola Vecchia 4<br>Frosinone 03100</div></div></div>
+            <div class="soc">
+              <span class="sb" onclick="doGlitch()">IG</span>
+              <span class="sb" onclick="doGlitch()">LI</span>
+              <span class="sb" onclick="doGlitch()">YT</span>
+            </div>
+          </div>
+          <div class="rh"></div>
+        </div>
+
+        <!-- DESKTOP ICONS -->
+        <div id="icons">
+          <div class="ic" ondblclick="openW('wa')" onclick="selIcon(this)">
+            <svg viewBox="0 0 32 32"><rect x="2" y="5" width="28" height="22" rx="3" fill="#fff" stroke="#000" stroke-width="1.5"/><rect x="5" y="9" width="14" height="9" fill="#ddd" stroke="#000" stroke-width="1"/><circle cx="23" cy="13" r="4" fill="#fff" stroke="#000" stroke-width="1"/><circle cx="23" cy="13" r="2" fill="#000"/><rect x="5" y="20" width="7" height="2" fill="#aaa"/></svg>
+            <span class="il">Dopamina HD</span>
+          </div>
+          <div class="ic" ondblclick="openW('ws')" onclick="selIcon(this)">
+            <svg viewBox="0 0 32 32"><rect x="2" y="9" width="28" height="19" rx="2" fill="#fff" stroke="#000" stroke-width="1.5"/><rect x="2" y="6" width="11" height="5" rx="2" fill="#fff" stroke="#000" stroke-width="1.5"/><rect x="5" y="15" width="16" height="2" fill="#aaa"/><rect x="5" y="19" width="11" height="2" fill="#aaa"/></svg>
+            <span class="il">Servizi</span>
+          </div>
+          <div class="ic" ondblclick="openW('wc')" onclick="selIcon(this)">
+            <svg viewBox="0 0 32 32"><polygon points="4,2 22,2 28,8 28,30 4,30" fill="#fff" stroke="#000" stroke-width="1.5"/><polygon points="22,2 22,8 28,8" fill="#ccc" stroke="#000" stroke-width="1"/><rect x="8" y="12" width="14" height="2" fill="#aaa"/><rect x="8" y="16" width="14" height="2" fill="#aaa"/><rect x="8" y="20" width="9" height="2" fill="#aaa"/></svg>
+            <span class="il">Contatti</span>
+          </div>
+          <div class="ic" onclick="selIcon(this)">
+            <svg viewBox="0 0 32 32"><rect x="7" y="8" width="18" height="20" rx="1" fill="#fff" stroke="#000" stroke-width="1.5"/><rect x="5" y="6" width="22" height="4" fill="#fff" stroke="#000" stroke-width="1.5"/><rect x="12" y="4" width="8" height="4" fill="#fff" stroke="#000" stroke-width="1.5"/><rect x="11" y="14" width="2" height="9" fill="#bbb"/><rect x="15" y="14" width="2" height="9" fill="#bbb"/><rect x="19" y="14" width="2" height="9" fill="#bbb"/></svg>
+            <span class="il">Cestino</span>
+          </div>
+        </div>
+
+        <!-- STATUS BAR -->
+        <div id="sb">
+          <span class="sti" onclick="openW('wa')">◉ Dopamina</span>
+          <span class="sti">■ 128K</span>
+          <span class="sti" id="smsg">Sistema pronto</span>
+        </div>
+
+      </div><!-- /desk -->
+    </div><!-- /scr -->
+  </div><!-- /bezel -->
+  <div id="mbot"><div id="fslot"></div><div id="led"></div></div>
+</div><!-- /mon -->
+
+<script>
+/* ── BOOT ── */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const b=document.getElementById('boot');
+    b.classList.add('out');
+    setTimeout(()=>{b.style.display='none';bootDone()},620);
+  },3600);
+});
+
+function bootDone(){
+  document.querySelectorAll('.mw').forEach((w,i)=>{
+    setTimeout(()=>spawnAnim(w),i*180);
+  });
+  setTimeout(typeAbout,500);
+  setTimeout(()=>{
+    document.getElementById('cpf').style.width='94%';
+    counter('cpct',0,94,1100);
+  },900);
+  setTimeout(startStatusLoop,2000);
+  setInterval(maybeGlitch, 5000);
+}
+
+/* ── TYPING ── */
+const atext="Costruiamo legami autentici tra persone e brand. Strategia, tecnologia e analisi dati al servizio della creatività che crea dipendenza.";
+let aidx=0;
+function typeAbout(){
+  const el=document.getElementById('atxt');
+  if(!el||aidx>=atext.length)return;
+  el.textContent=atext.slice(0,++aidx);
+  setTimeout(typeAbout,22+Math.random()*18);
+}
+
+/* ── CLOCK ── */
+function tick(){
+  const n=new Date();
+  document.getElementById('clk').textContent=
+    String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+}
+setInterval(tick,1000);tick();
+
+/* ── WINDOWS ── */
+let z=50;
+function spawnAnim(w){w.classList.add('spawn');w.addEventListener('animationend',()=>w.classList.remove('spawn'),{once:true})}
+function front(w){
+  document.querySelectorAll('.mw').forEach(x=>x.classList.remove('top'));
+  w.style.zIndex=++z;w.classList.add('top');
+}
+function openW(id){
+  const w=document.getElementById(id);
+  if(!w)return;
+  w.classList.remove('gone');
+  front(w);spawnAnim(w);closeMens();
+}
+function closeW(id){
+  const w=document.getElementById(id);
+  if(!w)return;
+  w.style.transition='transform .18s steps(4),opacity .18s steps(4)';
+  w.style.transform='scale(0)';w.style.opacity='0';
+  setTimeout(()=>{
+    w.classList.add('gone');
+    w.style.transform='';w.style.opacity='';w.style.transition='';
+  },200);
+}
+function closeAll(){['wa','ws','wc'].forEach(closeW);closeMens()}
+document.querySelectorAll('.mw').forEach(w=>{
+  w.addEventListener('mousedown',()=>front(w));
+  w.addEventListener('touchstart',()=>front(w),{passive:true});
+});
+
+/* maximize */
+function maxW(id){
+  const w=document.getElementById(id),s=document.getElementById('scr');
+  if(w.dataset.max==='1'){
+    w.style.cssText=w.dataset.prev||'';w.dataset.max='0';
+  } else {
+    w.dataset.prev=w.getAttribute('style')||'';
+    w.style.left='3px';w.style.top='22px';
+    w.style.width=(s.offsetWidth-56)+'px';
+    w.style.height=(s.offsetHeight-52)+'px';
+    w.dataset.max='1';
+  }
+}
+
+/* ── DRAG ── */
+let drag=null,ox=0,oy=0;
+document.querySelectorAll('.tb').forEach(tb=>{
+  tb.addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('cb')||e.target.classList.contains('zb'))return;
+    drag=tb.parentElement;
+    const r=drag.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;
+    e.preventDefault();
+  });
+  tb.addEventListener('touchstart',e=>{
+    if(e.target.classList.contains('cb')||e.target.classList.contains('zb'))return;
+    drag=tb.parentElement;
+    const r=drag.getBoundingClientRect(),t=e.touches[0];
+    ox=t.clientX-r.left;oy=t.clientY-r.top;
+  },{passive:true});
+});
+function moveDrag(cx,cy){
+  if(!drag)return;
+  const p=drag.parentElement,pr=p.getBoundingClientRect();
+  const nx=Math.max(0,Math.min(cx-pr.left-ox,pr.width-drag.offsetWidth));
+  const ny=Math.max(20,Math.min(cy-pr.top-oy,pr.height-drag.offsetHeight));
+  drag.style.left=nx+'px';drag.style.top=ny+'px';
+}
+document.addEventListener('mousemove',e=>moveDrag(e.clientX,e.clientY));
+document.addEventListener('touchmove',e=>{const t=e.touches[0];moveDrag(t.clientX,t.clientY)},{passive:true});
+document.addEventListener('mouseup',()=>drag=null);
+document.addEventListener('touchend',()=>drag=null);
+
+/* ── RESIZE ── */
+let resizing=null,rox=0,roy=0,rw0=0,rh0=0;
+document.querySelectorAll('.rh').forEach(rh=>{
+  rh.addEventListener('mousedown',e=>{
+    resizing=rh.parentElement;
+    rox=e.clientX;roy=e.clientY;
+    rw0=resizing.offsetWidth;rh0=resizing.offsetHeight;
+    e.preventDefault();e.stopPropagation();
+  });
+});
+document.addEventListener('mousemove',e=>{
+  if(!resizing)return;
+  resizing.style.width=Math.max(140,rw0+(e.clientX-rox))+'px';
+  resizing.style.height=Math.max(80,rh0+(e.clientY-roy))+'px';
+});
+document.addEventListener('mouseup',()=>resizing=null);
+
+/* ── MENUS ── */
+document.querySelectorAll('.mi').forEach(m=>{
+  if(!m.querySelector('.drop'))return;
+  m.addEventListener('click',e=>{
+    const was=m.classList.contains('on');
+    closeMens();if(!was)m.classList.add('on');
+  });
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.mi'))closeMens()});
+function closeMens(){document.querySelectorAll('.mi').forEach(m=>m.classList.remove('on'))}
+
+/* ── GLITCH ── */
+function doGlitch(){
+  const go=document.getElementById('go'),s=document.getElementById('scr');
+  go.classList.remove('hit');void go.offsetWidth;go.classList.add('hit');
+  s.style.transform='translate(2px,-1px)';
+  setTimeout(()=>{s.style.transform='translate(-2px,1px)';
+    setTimeout(()=>{s.style.transform='';go.classList.remove('hit')},90);
+  },90);
+  closeMens();
+}
+function maybeGlitch(){if(Math.random()>.6)doGlitch()}
+
+/* ── COUNTER ── */
+function counter(id,a,b,ms){
+  const el=document.getElementById(id);if(!el)return;
+  const steps=20,iv=ms/steps,inc=(b-a)/steps;let c=a;
+  const t=setInterval(()=>{c+=inc;if(c>=b){c=b;clearInterval(t)}el.textContent=Math.round(c)},iv);
+}
+
+/* ── STATUS ── */
+const msgs=['Sistema pronto','RAM: 128K','Creatività: MAX','Brand.exe running…','Caricamento idee…','ERROR: troppa dopamina','hello@dopamina.it','♥ Light up your vision'];
+let si=0;
+function startStatusLoop(){
+  si=(si+1)%msgs.length;
+  const el=document.getElementById('smsg');if(el)el.textContent=msgs[si];
+  setTimeout(startStatusLoop,2800+Math.random()*2000);
+}
+
+/* ── ICONS ── */
+function selIcon(ic){
+  document.querySelectorAll('.ic').forEach(i=>i.classList.remove('sel'));
+  ic.classList.add('sel');
+}
+document.getElementById('desk').addEventListener('click',e=>{
+  if(!e.target.closest('.ic'))document.querySelectorAll('.ic').forEach(i=>i.classList.remove('sel'));
+});
+</script>
+</body>
+</html>
