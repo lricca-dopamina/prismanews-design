@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PrismaNews.AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & VARS ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#B9091B;
+  --bg:#F5F0E2;
+  --bg2:#EBE4D2;
+  --surface:#F5F0E2;
+  --text:#232323;
+  --text2:#797264;
+  --text3:#AEA68C;
+  --border:#D0C7AA;
+  --pill-bg:#EBE4D2;
+  --nav-bg:#EBE4D2;
+  --nav-border:#D0C7AA;
+  --ticker-bg:#EBE4D2;
+  --card-bg:#F5F0E2;
+  --progress-track:#AEA68C;
+  --progress-gold:#CFA200;
+  --font-serif:'Libre Baskerville', Georgia, serif;
+  --font-body:'Libre Baskerville', Georgia, serif;
+  --font-mono:'IBM Plex Mono', monospace;
+  --font-scale:1;
+  --header-h:58px;
+  --nav-h:64px;
+}
+[data-theme="dark"]{
+  --bg:#0F0F0F;
+  --bg2:#1A1A1A;
+  --surface:#1A1A1A;
+  --text:#F0EAD8;
+  --text2:#B0A898;
+  --text3:#706860;
+  --border:#2A2A2A;
+  --pill-bg:#2A2A2A;
+  --nav-bg:#111111;
+  --nav-border:#2A2A2A;
+  --ticker-bg:#1A1A1A;
+  --card-bg:#1A1A1A;
+  --progress-track:#2A2A2A;
+}
+html,body{
+  width:100%;height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:calc(15px * var(--font-scale));
+  line-height:1.55;
+  overflow:hidden;
+}
+/* ── LAYOUT ── */
+#app{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;
+  background:var(--bg);
+  max-width:430px;margin:0 auto;
+  box-shadow:0 0 40px rgba(0,0,0,.15);
+}
+/* ── HEADER ── */
+#header{
+  flex-shrink:0;
+  height:var(--header-h);
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;
+  z-index:100;
+}
+.logo{
+  display:flex;align-items:center;
+  text-decoration:none;
+}
+.logo-svg{
+  height:22px;
+  width:auto;
+}
+.header-controls{
+  display:flex;align-items:center;gap:6px;
+}
+.ctrl-btn{
+  display:flex;align-items:center;justify-content:center;
+  height:28px;border-radius:6px;
+  border:1px solid var(--border);
+  background:var(--pill-bg);
+  cursor:pointer;
+  color:var(--text);
+  font-size:11px;font-family:var(--font-mono);
+  transition:background .15s;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.ctrl-btn:active{background:var(--border);}
+.ctrl-lang{width:32px;font-size:14px;}
+.ctrl-aa{width:32px;font-weight:600;}
+.ctrl-theme{width:32px;font-size:14px;}
+/* ── CATEGORY PILLS ── */
+#cats{
+  flex-shrink:0;
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+#cats::-webkit-scrollbar{display:none;}
+.cat-pill{
+  flex-shrink:0;
+  height:30px;padding:0 12px;
+  border-radius:15px;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--text2);
+  font-family:var(--font-mono);
+  font-size:12px;font-weight:500;
+  letter-spacing:.04em;
+  cursor:pointer;
+  white-space:nowrap;
+  display:flex;align-items:center;
+  transition:background .15s,color .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cat-pill.active{
+  background:var(--red);
+  color:#fff;
+  border-color:var(--red);
+}
+/* ── TICKER ── */
+#ticker{
+  flex-shrink:0;
+  height:30px;
+  background:var(--ticker-bg);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  overflow:hidden;
+  gap:8px;
+  padding-left:12px;
+}
+.ticker-icon{
+  flex-shrink:0;
+  color:var(--red);
+  font-size:13px;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ticker-track{
+  flex:1;overflow:hidden;
+  position:relative;
+}
+.ticker-inner{
+  display:flex;align-items:center;
+  white-space:nowrap;
+  animation:ticker 30s linear infinite;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.05em;
+  color:var(--text2);
+}
+.ticker-inner:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-sep{margin:0 8px;color:var(--border);}
+/* ── SCREENS ── */
+#screens{
+  flex:1;overflow:hidden;
+  position:relative;
+}
+.screen{
+  position:absolute;inset:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:none;
+  display:none;
+  background:var(--bg);
+}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{display:block;}
+/* ── SCREEN PADDING ── */
+.screen-inner{padding:14px 14px 20px;}
+/* ── SECTION HEADER ── */
+.sec-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:12px;
+}
+.sec-title{
+  font-family:var(--font-mono);
+  font-size:12px;font-weight:500;
+  letter-spacing:.08em;
+  color:var(--text2);
+  text-transform:uppercase;
+}
+.sec-link{
+  font-family:var(--font-mono);
+  font-size:11px;font-weight:500;
+  letter-spacing:.06em;
+  color:var(--red);
+  text-decoration:none;
+  text-transform:uppercase;
+}
+/* ── CAROUSEL CONTAINER ── */
+#carousel-wrap{
+  margin:0 -14px 0;
+  position:relative;
+}
+#carousel-track{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  gap:10px;
+  padding:0 14px;
+  /* peek: padding-right shows edge of next card */
+  padding-right:42px;
+  -webkit-overflow-scrolling:touch;
+}
+#carousel-track::-webkit-scrollbar{display:none;}
+/* ── HERO CARD ── */
+.hero-card{
+  flex:0 0 calc(100% - 28px); /* full width minus padding, leaving peek */
+  scroll-snap-align:start;
+  border-radius:2px;
+  overflow:hidden;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.hero-img-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:342/216;
+  overflow:hidden;
+}
+.hero-img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+}
+.hero-img-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:10px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.2) 0%,transparent 35%,rgba(0,0,0,.55) 100%);
+}
+.hero-img-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.hero-badge{
+  background:#F2EDE4;
+  color:#232323;
+  font-family:var(--font-mono);
+  font-size:11px;font-weight:500;
+  padding:4px 10px;
+  border-radius:10px;
+}
+.hero-img-meta{
+  background:rgba(35,35,35,0.72);
+  color:#fff;
+  font-family:var(--font-mono);
+  font-size:12px;font-weight:400;
+  padding:4px 10px;
+  border-radius:11px;
+  letter-spacing:.03em;
+  align-self:flex-start;
+}
+/* ── HERO CARD BODY ── */
+.hero-card-body{
+  padding:12px 12px 10px;
+}
+.hero-title{
+  font-family:var(--font-serif);
+  font-size:calc(16px * var(--font-scale));
+  font-weight:700;
+  line-height:1.25;
+  color:var(--text);
+  margin-bottom:10px;
+}
+.audio-btn{
+  width:24px;height:24px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--pill-bg);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:10px;
+  -webkit-tap-highlight-color:transparent;
+}
+.hero-date{
+  font-family:var(--font-mono);
+  font-size:9px;
+  color:var(--red);
+  letter-spacing:.04em;
+  margin-bottom:8px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.hero-lead{
+  font-size:calc(12px * var(--font-scale));
+  color:var(--text2);
+  line-height:1.6;
+  text-align:justify;
+}
+/* ── PROGRESS BAR ── */
+.progress-wrap{
+  margin-top:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.progress-track-wrap{
+  flex:1;
+  position:relative;
+}
+.progress-bar{
+  display:flex;
+  height:12px;
+  border-radius:3px;
+  overflow:hidden;
+}
+.prog-seg{
+  flex:1;
+  background:var(--progress-track);
+}
+.prog-seg.active{
+  background:var(--progress-gold);
+}
+.prog-divider{
+  width:1.5px;
+  flex-shrink:0;
+  background:var(--bg);
+}
+.progress-marker{
+  position:absolute;
+  top:100%;
+  transform:translateX(-50%) translateY(2px);
+  width:7px;height:6px;
+  background:var(--text2);
+  clip-path:polygon(50% 0%,0% 100%,100% 100%);
+}
+.progress-pct{
+  font-family:var(--font-mono);
+  font-size:13px;
+  font-weight:500;
+  color:var(--text2);
+  white-space:nowrap;
+  display:flex;align-items:center;gap:5px;
+  padding-top:1px;
+}
+.progress-info{
+  width:13px;height:13px;
+  border-radius:50%;
+  background:var(--text2);
+  color:var(--bg);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);
+  font-size:8px;
+  font-weight:600;
+  line-height:1;
+  padding-top:0;
+  cursor:pointer;
+  flex-shrink:0;
+  /* fix optical centering of "i" glyph */
+  padding-bottom:0.5px;
+}
+/* ── DOTS ── */
+.carousel-dots{
+  display:flex;justify-content:center;gap:5px;
+  padding:8px 0 2px;
+}
+.dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--border);
+  transition:background .2s,transform .2s;
+}
+.dot.active{
+  background:var(--red);
+  transform:scale(1.2);
+}
+/* ── ARTICLE LIST ITEM ── */
+.art-item{
+  padding:20px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.art-item:last-child{border-bottom:none;}
+.art-cat-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.art-cat{
+  font-family:var(--font-mono);
+  font-size:12px;font-weight:500;
+  letter-spacing:.08em;
+  color:var(--red);
+  text-transform:uppercase;
+}
+.art-meta{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--text2);
+  display:flex;align-items:center;gap:8px;
+}
+.meta-bars{
+  display:flex;gap:1px;align-items:center;
+}
+.meta-bar{width:9px;height:9px;border-radius:1px;background:var(--progress-track);}
+.meta-bar.active{width:11px;height:11px;}
+.art-headline{
+  font-family:var(--font-serif);
+  font-size:calc(16px * var(--font-scale));
+  font-weight:700;
+  line-height:1.3;
+  color:var(--text);
+}
+/* ── CARD (Per te) ── */
+.card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+  margin-bottom:14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.card-img-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/10;
+  overflow:hidden;
+}
+.card-img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+}
+.card-badge{
+  position:absolute;top:8px;left:8px;
+  background:rgba(255,255,255,.88);
+  color:#111;
+  font-family:var(--font-mono);
+  font-size:8px;
+  padding:2px 7px;border-radius:3px;
+}
+.card-img-meta{
+  position:absolute;bottom:8px;left:8px;
+  color:rgba(255,255,255,.85);
+  font-family:var(--font-mono);
+  font-size:11px;
+}
+.card-body{padding:10px 12px 12px;}
+.card-title{
+  font-family:var(--font-serif);
+  font-size:calc(16px * var(--font-scale));
+  font-weight:700;
+  line-height:1.25;
+  color:var(--text);
+  margin-bottom:8px;
+}
+/* ── CRONOLOGIA LIST ── */
+.cron-item{
+  padding:20px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.cron-item:last-child{border-bottom:none;}
+.cron-cat-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.cron-cat{
+  font-family:var(--font-mono);
+  font-size:10px;font-weight:500;
+  letter-spacing:.1em;
+  color:var(--red);
+  text-transform:uppercase;
+}
+.cron-meta{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text2);
+}
+.cron-headline{
+  font-family:var(--font-serif);
+  font-size:calc(16px * var(--font-scale));
+  font-weight:700;
+  line-height:1.3;
+  color:var(--text);
+}
+/* ── PROFILO ── */
+.section-label{
+  font-family:var(--font-mono);
+  font-size:13px;
+  font-style:italic;
+  color:var(--red);
+  font-weight:600;
+  margin-bottom:12px;
+  margin-top:4px;
+}
+.profile-card{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:16px;
+}
+.profile-avatar{
+  width:64px;height:64px;
+  border-radius:4px;
+  object-fit:cover;
+  flex-shrink:0;
+  background:var(--pill-bg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+}
+.profile-info{flex:1;}
+.profile-name{
+  font-family:var(--font-mono);
+  font-size:13px;font-weight:600;
+  color:var(--text);
+  margin-bottom:3px;
+}
+.profile-email{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--text3);
+  margin-bottom:8px;
+}
+.profile-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--text);
+  color:var(--bg);
+  font-family:var(--font-mono);
+  font-size:9px;font-weight:500;
+  letter-spacing:.06em;
+  padding:5px 10px;
+  border-radius:3px;
+  text-transform:uppercase;
+}
+.badge-icon{font-size:10px;}
+.badge-date{
+  opacity:.6;
+  border-left:1px solid rgba(255,255,255,.3);
+  padding-left:8px;
+}
+.badge-arrow{opacity:.6;}
+.divider{
+  height:1px;
+  background:var(--border);
+  margin:16px 0;
+}
+.tags-wrap{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-bottom:4px;
+}
+.tag{
+  padding:4px 10px;
+  border:1px solid var(--border);
+  border-radius:3px;
+  font-family:var(--font-mono);
+  font-size:8.5px;
+  letter-spacing:.05em;
+  color:var(--text2);
+  text-transform:uppercase;
+}
+.settings-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-label{
+  font-family:var(--font-mono);
+  font-size:9.5px;
+  letter-spacing:.06em;
+  color:var(--text3);
+  text-transform:uppercase;
+}
+.settings-select{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--text);
+  background:var(--pill-bg);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:5px 8px;
+  appearance:none;
+  -webkit-appearance:none;
+  padding-right:22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 7px center;
+  cursor:pointer;
+}
+.toggle-group{
+  display:flex;
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+}
+.toggle-btn{
+  padding:5px 10px;
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:.04em;
+  color:var(--text2);
+  background:var(--pill-bg);
+  cursor:pointer;
+  border-right:1px solid var(--border);
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s,color .15s;
+}
+.toggle-btn:last-child{border-right:none;}
+.toggle-btn.active{
+  background:var(--text);
+  color:var(--bg);
+}
+/* ── BOTTOM NAV ── */
+#nav{
+  flex-shrink:0;
+  height:var(--nav-h);
+  background:var(--nav-bg);
+  border-top:1px solid var(--nav-border);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.nav-tab{
+  flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;
+  cursor:pointer;
+  color:var(--text);
+  opacity:0.6;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .15s,opacity .15s;
+}
+.nav-tab.active{color:var(--red);opacity:1;}
+.nav-tab svg{display:block;fill:currentColor;}
+/* ── ARTICLE DETAIL OVERLAY (REDESIGN) ── */
+#article-overlay{
+  position:fixed;
+  top:var(--header-h);
+  bottom:var(--nav-h);
+  left:0;right:0;
+  max-width:430px;margin:0 auto;
+  z-index:200;
+  display:none;
+  flex-direction:column;
+  background:var(--bg);
+}
+#article-overlay.open{display:flex;}
+
+/* IMAGE SECTION */
+.ov-img-section{
+  flex-shrink:0;
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  overflow:hidden;
+}
+.ov-img-section img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+}
+.ov-img-grad-top{
+  position:absolute;top:0;left:0;right:0;
+  height:50%;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.45),transparent);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:10px;
+  pointer-events:none;
+}
+.ov-img-grad-bottom{
+  position:absolute;bottom:0;left:0;right:0;
+  height:55%;
+  background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);
+  display:flex;align-items:flex-end;
+  padding:10px;
+}
+.ov-img-nav{
+  width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+  pointer-events:all;
+}
+.ov-nav-btn{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.3);
+  padding:8px 14px;
+  border-radius:3px;
+  background:rgba(0,0,0,0.25);
+  cursor:pointer;
+  letter-spacing:.05em;
+  font-weight:500;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s;
+}
+.ov-nav-btn:active{background:rgba(0,0,0,0.5);}
+.ov-img-cat{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:500;
+  color:rgba(255,255,255,0.95);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+/* META BAR */
+.ov-meta-bar{
+  flex-shrink:0;
+  display:flex;align-items:center;
+  padding:8px 14px;
+  min-height:30px;
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;
+  scrollbar-width:none;
+  white-space:nowrap;
+  gap:0;
+}
+.ov-meta-bar::-webkit-scrollbar{display:none;}
+.ov-meta-bar span{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.05em;
+  color:var(--text3);
+  text-transform:uppercase;
+}
+.ov-meta-bar .ov-meta-cat{color:var(--red);}
+.ov-meta-sep{color:var(--border)!important;margin:0 6px;}
+
+/* SCROLLABLE BODY */
+.ov-body{
+  flex:1;overflow-y:auto;scrollbar-width:none;
+  padding:16px 14px 28px;
+}
+.ov-body::-webkit-scrollbar{display:none;}
+
+.ov-date-line{
+  font-family:var(--font-mono);
+  font-size:9px;
+  color:var(--red);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.ov-title{
+  font-family:var(--font-serif);
+  font-size:calc(20px * var(--font-scale));
+  font-weight:700;
+  line-height:1.2;
+  color:var(--text);
+  margin-bottom:12px;
+}
+.ov-lead{
+  font-size:calc(13px * var(--font-scale));
+  color:var(--text2);
+  line-height:1.65;
+  font-style:italic;
+  margin-bottom:16px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:16px;
+}
+.ov-text p{
+  font-size:calc(14px * var(--font-scale));
+  color:var(--text2);
+  line-height:1.75;
+  text-align:justify;
+  margin-bottom:14px;
+}
+.ov-text p:first-child::first-letter{
+  float:left;
+  font-family:var(--font-serif);
+  font-size:3.2em;
+  font-weight:700;
+  line-height:0.85;
+  margin-right:5px;
+  margin-top:4px;
+  color:var(--red);
+}
+.ov-action-bar{
+  display:flex;gap:8px;
+  margin:16px 0;
+  flex-wrap:wrap;
+}
+.ov-action-btn{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--text2);
+  border:1px solid var(--border);
+  height:42px;
+  padding:0 14px;
+  border-radius:4px;
+  cursor:pointer;
+  background:transparent;
+  font-weight:500;
+  flex:1;
+  min-width:calc(50% - 4px);
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s;
+}
+.ov-action-btn:active{background:var(--border);}
+
+/* DIVERGENZA */
+.ov-section-title{
+  font-family:var(--font-serif);
+  font-size:17px;
+  color:var(--text);
+  margin-bottom:4px;
+  line-height:1.3;
+}
+.ov-section-title em{font-style:italic;color:var(--red);}
+.ov-section-meta{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text2);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.ov-press-card{
+  border-top:1px solid var(--border);
+  padding:12px 0;
+}
+.ov-press-header{
+  display:flex;align-items:baseline;gap:4px;
+  margin-bottom:6px;
+}
+.ov-press-name{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.06em;
+  color:var(--text);
+  text-transform:uppercase;
+}
+.ov-press-slash{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text2);
+}
+.ov-press-tone{
+  font-family:var(--font-mono);
+  font-size:11px;
+  font-style:italic;
+  color:var(--text2);
+}
+.ov-press-tags{
+  display:flex;flex-wrap:wrap;gap:5px;
+  margin-bottom:8px;
+}
+.ov-press-tag{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:3px 10px;
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text2);
+}
+.ov-press-text{
+  font-size:12px;
+  color:var(--text2);
+  line-height:1.6;
+}
+
+/* FONTI */
+.ov-sources-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:10px;
+  margin-bottom:12px;
+}
+.ov-source-cell{
+  display:flex;align-items:center;gap:7px;
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:7px 9px;
+}
+.ov-source-flag{font-size:14px;line-height:1;}
+.ov-source-name{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.ov-show-more{
+  display:block;
+  width:100%;
+  padding:10px 0;
+  border:none;
+  border-top:1px solid var(--border);
+  background:transparent;
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:var(--red);
+  cursor:pointer;
+  text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* keep back-btn style used by overlay close */
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--text2);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.back-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+/* ── TRANSITIONS ── */
+.screen{transition:opacity .2s;}
+.screen.active{opacity:1;}
+/* ── SMALL UTILS ── */
+.red{color:var(--red);}
+.mt8{margin-top:8px;}
+.mt14{margin-top:14px;}
+
+/* ── OVERLAY MOBILE OPTIMIZATIONS ── */
+
+/* ── RADAR ── */
+.ov-radar-wrap{width:100%;aspect-ratio:1;margin:16px 0 8px;position:relative;}
+.ov-radar-canvas{width:100%;height:100%;display:block;}
+.ov-radar-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-bottom:16px;}
+.ov-radar-legend-item{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;color:var(--text2);letter-spacing:.04em;}
+.ov-radar-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── FONTI ACCORDION ── */
+.ov-country-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ov-country-left{display:flex;align-items:center;gap:10px;}
+.ov-country-flag{font-size:18px;line-height:1;}
+.ov-country-name{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--text);letter-spacing:.04em;}
+.ov-country-count{font-family:var(--font-mono);font-size:12px;color:var(--text3);}
+.ov-country-arrow{font-family:var(--font-mono);font-size:11px;color:var(--text3);transition:transform .2s;display:inline-block;}
+.ov-country-row.open .ov-country-arrow{transform:rotate(180deg);}
+.ov-country-sources{display:none;padding:0 14px;background:var(--bg2);}
+.ov-country-row.open + .ov-country-sources{display:block;}
+.ov-country-source-item{padding:10px 0;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:13px;color:var(--text2);}
+.ov-country-source-item:last-child{border-bottom:none;}
+
+/* ── ARTICOLI CORRELATI ── */
+.ov-correlati{margin-top:28px;padding:0;}
+.ov-correlati-title{font-family:var(--font-serif);font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px;}
+.ov-correlati-title em{font-style:italic;color:var(--red);}
+.ov-correlati-item{display:flex;flex-direction:column;gap:6px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ov-correlati-item:first-of-type{border-top:1px solid var(--border);}
+.ov-correlati-cat{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--red);letter-spacing:.08em;text-transform:uppercase;}
+.ov-correlati-headline{font-family:var(--font-serif);font-size:calc(15px * var(--font-scale));font-weight:700;line-height:1.3;color:var(--text);}
+.ov-correlati-meta{font-family:var(--font-mono);font-size:11px;color:var(--text2);}
+.ov-leggi-piu{display:block;width:100%;margin-top:16px;padding:14px 0;border:1px solid var(--border);border-radius:3px;background:transparent;font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--red);text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ov-leggi-piu:active{background:var(--bg2);}
+
+/* ── OVERLAY FOOTER ── */
+.ov-footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  margin-top:24px;
+  overflow:hidden;
+}
+/* Sezione superiore del footer */
+.ov-footer-top{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:22px 18px 22px;
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+/* Watermark grande SOLO nella sezione superiore — tutto visibile, allineato a sinistra */
+.ov-footer-watermark{
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  height:100%;
+  width:auto;
+  opacity:0.25;
+  pointer-events:none;
+  color:var(--border);
+}
+/* Logo wrapper */
+.ov-footer-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  z-index:1;
+  position:relative;
+}
+.ov-footer-logo-svg{
+  width:32px;
+  height:auto;
+  flex-shrink:0;
+  color:var(--text);
+}
+.ov-footer-wordmark{
+  font-family:var(--font-mono);
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:.1em;
+  color:var(--text);
+}
+.ov-footer-wordmark em{
+  font-style:normal;
+  font-weight:400;
+}
+/* Social icons */
+.ov-footer-socials{
+  display:flex;align-items:center;gap:10px;
+  z-index:1;
+  position:relative;
+}
+.ov-footer-social-btn{
+  width:36px;height:36px;
+  border-radius:7px;
+  background:#AEA68C;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--bg2);
+  text-decoration:none;
+  transition:opacity .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.ov-footer-social-btn.round{border-radius:50%;}
+.ov-footer-social-btn svg{display:block;}
+.ov-footer-social-btn:active{opacity:.7;}
+/* Sezione inferiore — nessun watermark */
+.ov-footer-bottom{
+  display:flex;align-items:center;justify-content:flex-start;gap:0;
+  padding:16px 18px 30px;
+  flex-wrap:wrap;
+}
+.ov-footer-copy{
+  font-family:var(--font-serif);
+  font-size:13px;
+  color:var(--text);
+  letter-spacing:.01em;
+}
+.ov-footer-sep{
+  font-family:var(--font-serif);
+  font-size:13px;
+  color:var(--text);
+  margin:0 6px;
+}
+.ov-footer-link{
+  font-family:var(--font-serif);
+  font-size:13px;
+  color:var(--red);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  letter-spacing:.01em;
+}
+
+/* ── SITE FOOTER (tutte le pagine) ── */
+/* Il footer rompe fuori dal padding dello screen-inner per arrivare ai bordi */
+.site-footer{
+  margin: 28px -14px -20px;
+}
+
+/* ── AUDIO BTN (overlay) ── */
+.ov-audio-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--pill-bg);display:flex;align-items:center;justify-content:center;color:var(--text2);cursor:pointer;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header id="header">
+    <a class="logo" href="#">
+      <!-- Logo estratto dal Figma SVG originale -->
+      <svg class="logo-svg" viewBox="28 63 140 28" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <!-- Triangolo PRISMA -->
+        <path d="M40.6918 65.7143L30.0832 87.0766C29.8232 87.5987 30.2042 88.2114 30.7867 88.2114H51.9736C52.5562 88.2114 52.9371 87.5987 52.6771 87.0766L42.0988 65.7163C41.8105 65.1338 40.9801 65.1338 40.6898 65.7163L40.6918 65.7143ZM38.5814 85.4479L40.5809 81.4649C40.8712 80.8864 41.6956 80.8864 41.9859 81.4649L43.9854 85.4479C44.2475 85.97 43.8685 86.5868 43.284 86.5868H39.2869C38.7023 86.5868 38.3214 85.972 38.5854 85.4479H38.5814ZM46.6139 86.1534L42.5926 78.1612C42.4817 77.9395 42.4817 77.6774 42.5926 77.4557L43.3747 75.8956C43.665 75.3171 44.4894 75.3171 44.7796 75.8956L49.5729 85.4479C49.835 85.97 49.456 86.5868 48.8715 86.5868H47.3154C47.0191 86.5868 46.7469 86.4195 46.6139 86.1534Z" fill="var(--text)"/>
+        <!-- PRISMANEWS wordmark -->
+        <g fill="var(--text)">
+          <path d="M65.9338 74.4372V76.7778C65.9338 79.6619 64.5431 81.2323 61.7146 81.2323H60.3753V88.0018H57.5425V69.9827H61.7103C64.5431 69.9827 65.9295 71.5531 65.9295 74.4372H65.9338ZM60.3753 72.5586V78.6606H61.7146C62.6132 78.6606 63.1053 78.2498 63.1053 76.9618V74.2574C63.1053 72.9694 62.6175 72.5586 61.7146 72.5586H60.3753Z"/>
+          <path d="M73.5677 88.0018C73.4136 87.5396 73.3109 87.2572 73.3109 85.7895V82.9568C73.3109 81.2836 72.7461 80.6675 71.4581 80.6675H70.4782V88.0018H67.6454V69.9827H71.9202C74.8557 69.9827 76.1137 71.3477 76.1137 74.1248V75.5411C76.1137 77.394 75.5232 78.605 74.2609 79.1955C75.6772 79.786 76.1394 81.151 76.1394 83.0295V85.8109C76.1394 86.6838 76.1651 87.33 76.4475 87.9975H73.5634L73.5677 88.0018ZM70.4782 72.5586V78.0915H71.5865C72.6434 78.0915 73.2852 77.6293 73.2852 76.1873V74.4115C73.2852 73.1235 72.8488 72.5586 71.8432 72.5586H70.4782Z"/>
+          <path d="M78.1592 69.9827H80.9919V88.0018H78.1592V69.9827Z"/>
+          <path d="M86.9527 69.7773C89.7084 69.7773 91.1205 71.4247 91.1205 74.3088V74.8736H88.4418V74.1291C88.4418 72.8411 87.9283 72.3533 87.0254 72.3533C86.1225 72.3533 85.609 72.8411 85.609 74.1291C85.609 77.8347 91.1419 78.5322 91.1419 83.6799C91.1419 86.564 89.6998 88.2115 86.9227 88.2115C84.1456 88.2115 82.7036 86.564 82.7036 83.6799V82.5717H85.3822V83.8596C85.3822 85.1476 85.9471 85.6098 86.85 85.6098C87.7528 85.6098 88.3177 85.1476 88.3177 83.8596C88.3177 80.154 82.7849 79.4565 82.7849 74.3088C82.7849 71.4247 84.2012 69.7773 86.9527 69.7773Z"/>
+          <path d="M98.8783 82.777L100.808 69.9827H104.745V88.0018H102.066V75.079L100.111 88.0018H97.432L95.3224 75.263V88.0018H92.8534V69.9827H96.7901L98.874 82.7728L98.8783 82.777Z"/>
+          <path d="M116.367 88.0018H113.508L113.021 84.7326H109.546L109.058 88.0018H106.457L109.341 69.9827H113.483L116.367 88.0018ZM109.905 82.2849H112.636L111.27 73.1748L109.905 82.2849Z"/>
+          <path d="M121.189 88.0018H120.107V69.9827H121.652L127.056 85.1947V69.9827H128.139V88.0018H126.825L121.189 71.9425V88.0018Z"/>
+          <path d="M136.269 78.3225V79.4051H131.352V86.9192H137.27V88.0018H130.167V69.9827H137.27V71.0653H131.352V78.3225H136.269Z"/>
+          <path d="M143.53 88.0018H141.883L138.973 69.9827H140.133L142.837 86.4057L145.46 70.0597H146.723L149.247 86.3543L151.845 69.9827H152.901L150.017 88.0018H148.473L146.055 73.2519L143.535 88.0018H143.53Z"/>
+          <path d="M162.32 74.3345V74.7196H161.186V74.2574C161.186 72.3533 160.467 70.9112 158.507 70.9112C156.547 70.9112 155.828 72.3276 155.828 74.2318C155.828 78.6092 162.341 78.6863 162.341 83.65C162.341 86.2516 161.207 88.1558 158.456 88.1558C155.704 88.1558 154.57 86.2516 154.57 83.65V82.7214H155.704V83.727C155.704 85.6569 156.449 87.0476 158.434 87.0476C160.42 87.0476 161.164 85.6569 161.164 83.727C161.164 79.4009 154.651 79.3239 154.651 74.3088C154.651 71.6044 155.837 69.8543 158.486 69.8286C161.216 69.8286 162.32 71.7328 162.32 74.3345Z"/>
+        </g>
+      </svg>
+    </a>
+    <div class="header-controls">
+      <button class="ctrl-btn ctrl-lang" id="btn-lang" title="Lingua">🇮🇹</button>
+      <button class="ctrl-btn ctrl-aa" id="btn-aa" title="Dimensione testo">Aa</button>
+      <button class="ctrl-btn ctrl-theme" id="btn-theme" title="Tema">
+        <svg id="theme-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.5 8.5A5.5 5.5 0 0 1 4.5 1.5a6 6 0 1 0 8 7z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- CATEGORY PILLS -->
+  <div id="cats">
+    <div class="cat-pill active" data-cat="tutti">Tutti</div>
+    <div class="cat-pill" data-cat="economy">Economy</div>
+    <div class="cat-pill" data-cat="politics">Politics</div>
+    <div class="cat-pill" data-cat="technology">Technology</div>
+    <div class="cat-pill" data-cat="geopolitics">Geopolitics</div>
+    <div class="cat-pill" data-cat="health">Health & Science</div>
+    <div class="cat-pill" data-cat="finance">Finance</div>
+    <div class="cat-pill" data-cat="law">Law & Regulation</div>
+    <div class="cat-pill" data-cat="energy">Energy & Climate</div>
+    <div class="cat-pill" data-cat="society">Society</div>
+  </div>
+
+  <!-- TICKER -->
+  <div id="ticker">
+    <span class="ticker-icon"><svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="0.5,9 3.5,5 6,7 10,2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="8,2.5 10,2.5 10,4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <div class="ticker-track">
+      <div class="ticker-inner" id="ticker-inner"></div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div id="screens">
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="screen-inner">
+        <div class="sec-head">
+          <span class="sec-title">Trending News</span>
+          <a class="sec-link" href="#">See All</a>
+        </div>
+
+        <!-- HERO CAROUSEL (horizontal scroll-snap) -->
+        <div id="carousel-wrap">
+          <div id="carousel-track"></div>
+        </div>
+        <div class="carousel-dots" id="hero-dots" style="padding:14px 0 18px;"></div>
+        <div style="border-bottom:1px solid var(--border);margin:0 0 0 0;"></div>
+
+        <!-- ARTICLE LIST -->
+        <div id="home-list"></div>
+      </div>
+    </div>
+
+    <!-- PER TE -->
+    <div class="screen" id="screen-perte">
+      <div class="screen-inner">
+        <div class="sec-head">
+          <span class="sec-title">Per te</span>
+          <a class="sec-link" href="#">See All</a>
+        </div>
+        <div id="perte-list"></div>
+      </div>
+    </div>
+
+    <!-- CRONOLOGIA -->
+    <div class="screen" id="screen-cron">
+      <div class="screen-inner">
+        <div class="sec-head">
+          <span class="sec-title">Cronologia</span>
+          <a class="sec-link" href="#">Cancella</a>
+        </div>
+        <div id="cron-list"></div>
+      </div>
+    </div>
+
+    <!-- PROFILO -->
+    <div class="screen" id="screen-profilo">
+      <div class="screen-inner">
+        <div class="section-label">Profilo</div>
+        <div class="profile-card">
+          <div class="profile-avatar">👤</div>
+          <div class="profile-info">
+            <div class="profile-name">Massimiliano Melillo</div>
+            <div class="profile-email">m.melillo@dopamina.it</div>
+            <div class="profile-badge">
+              <span class="badge-icon">▲</span>
+              <span>PLATINUM</span>
+              <span class="badge-date">Dal Maggio 2026</span>
+              <span class="badge-arrow">→</span>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="section-label" style="margin-bottom:10px;">Settori Prioritari <span style="font-style:normal;font-size:11px;color:var(--text3);font-family:var(--font-mono);">ⓘ</span></div>
+        <div class="tags-wrap">
+          <span class="tag">Economy</span><span class="tag">Politics</span>
+          <span class="tag">Technology</span><span class="tag">Geopolitics</span>
+          <span class="tag">Health &amp; Science</span><span class="tag">Finance</span>
+          <span class="tag">Law &amp; Regulation</span><span class="tag">Energy &amp; Climate</span>
+          <span class="tag">Society</span>
+        </div>
+        <div class="divider"></div>
+        <div class="section-label">Impostazioni</div>
+        <div class="settings-row">
+          <span class="settings-label">Lingua Primaria</span>
+          <select class="settings-select">
+            <option>ITALIANO</option><option>ENGLISH</option><option>FRANÇAIS</option><option>ESPAÑOL</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">Lingue Secondarie</span>
+          <select class="settings-select">
+            <option>IT, EN, FR</option><option>IT, EN</option><option>IT, FR</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">Aspetto</span>
+          <div class="toggle-group" id="theme-toggle">
+            <div class="toggle-btn" data-theme="light">CHIARO</div>
+            <div class="toggle-btn" data-theme="dark">SCURO</div>
+            <div class="toggle-btn active" data-theme="auto">AUTO</div>
+          </div>
+        </div>
+        <div class="settings-row" style="border-bottom:none;">
+          <span class="settings-label">Dimensione Testo</span>
+          <div class="toggle-group" id="font-toggle">
+            <div class="toggle-btn" data-size="small">S</div>
+            <div class="toggle-btn active" data-size="medium">M</div>
+            <div class="toggle-btn" data-size="large">L</div>
+          </div>
+        </div>
+      </div>
+      <div id="profilo-footer"></div>
+    </div>
+
+  </div><!-- /screens -->
+
+  <!-- BOTTOM NAV -->
+  <nav id="nav">
+    <div class="nav-tab active" data-tab="home">
+      <svg width="26" height="20" viewBox="0 0 26 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24.3659 0H4.58369C4.19769 0 3.85995 0.341498 3.85995 0.731781V15.6113C3.85995 16.1968 3.3292 16.6846 2.75021 16.587C2.26772 16.4895 1.92997 16.0504 1.92997 15.5626V4.87854C1.92997 4.58583 1.73698 4.39069 1.44748 4.39069H0.72374C0.337745 4.39069 0 4.73219 0 5.12247V17.5628C0 18.636 0.868488 19.5142 1.92997 19.5142H3.85995H23.1597C24.2212 19.5142 25.0896 18.636 25.0896 17.5628V0.731781C25.0896 0.341498 24.7519 0 24.3659 0ZM13.5098 14.1478C13.5098 14.4405 13.3168 14.6356 13.0273 14.6356H7.2374C6.9479 14.6356 6.75491 14.4405 6.75491 14.1478V13.1721C6.75491 12.8794 6.9479 12.6842 7.2374 12.6842H13.0273C13.3168 12.6842 13.5098 12.8794 13.5098 13.1721V14.1478ZM13.5098 10.2449C13.5098 10.5377 13.3168 10.7328 13.0273 10.7328H7.2374C6.9479 10.7328 6.75491 10.5377 6.75491 10.2449V9.26923C6.75491 8.97652 6.9479 8.78138 7.2374 8.78138H13.0273C13.3168 8.78138 13.5098 8.97652 13.5098 9.26923V10.2449ZM22.1947 14.1478C22.1947 14.4405 22.0017 14.6356 21.7122 14.6356H15.9223C15.6328 14.6356 15.4398 14.4405 15.4398 14.1478V13.1721C15.4398 12.8794 15.6328 12.6842 15.9223 12.6842H21.7122C22.0017 12.6842 22.1947 12.8794 22.1947 13.1721V14.1478ZM22.1947 10.2449C22.1947 10.5377 22.0017 10.7328 21.7122 10.7328H15.9223C15.6328 10.7328 15.4398 10.5377 15.4398 10.2449V9.26923C15.4398 8.97652 15.6328 8.78138 15.9223 8.78138H21.7122C22.0017 8.78138 22.1947 8.97652 22.1947 9.26923V10.2449ZM22.1947 6.34211C22.1947 6.63482 22.0017 6.82996 21.7122 6.82996H7.2374C6.9479 6.82996 6.75491 6.63482 6.75491 6.34211V3.41498C6.75491 3.12227 6.9479 2.92713 7.2374 2.92713H21.7122C22.0017 2.92713 22.1947 3.12227 22.1947 3.41498V6.34211Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="nav-tab" data-tab="perte">
+      <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.19635 13.1561L5.40806 13.623C6.31384 15.5138 7.74074 17.1009 9.51716 18.1943L9.847 18.3894C10.0003 18.4763 10.0003 18.699 9.847 18.786C9.73577 18.8491 9.6258 18.9142 9.51716 18.981C7.74074 20.0743 6.31384 21.6616 5.40806 23.5523L5.19635 24.0191C5.11341 24.2075 4.84855 24.2075 4.7656 24.0191L4.5539 23.5523C3.64812 21.6616 2.22122 20.0743 0.444798 18.981C0.336151 18.9142 0.226183 18.8491 0.114958 18.786C-0.0383193 18.699 -0.0383193 18.4763 0.114958 18.3894L0.444798 18.1943C2.22122 17.1009 3.64812 15.5138 4.5539 13.623L4.7656 13.1561C4.84855 12.9679 5.11341 12.9679 5.19635 13.1561ZM16.2852 0.247158C16.4057 0.520863 16.5264 0.794405 16.6556 1.06411C18.2407 4.37299 20.7378 7.15056 23.8466 9.06385C24.0367 9.18088 24.2291 9.29467 24.4239 9.4052C24.6921 9.55737 24.6921 9.94713 24.4239 10.0993C24.2291 10.2099 24.0367 10.3236 23.8466 10.4407C20.7378 12.3538 18.2407 15.1315 16.6556 18.4404C16.5264 18.71 16.4057 18.9836 16.2852 19.2574C16.14 19.5868 15.6765 19.5868 15.5313 19.2574C15.4108 18.9836 15.2901 18.71 15.1609 18.4404C13.5758 15.1315 11.0787 12.3538 7.96995 10.4407C7.7798 10.3236 7.58737 10.2099 7.39272 10.0993C7.12449 9.94713 7.12449 9.55737 7.39272 9.4052C7.58737 9.29467 7.7798 9.18088 7.96995 9.06385C11.0787 7.15056 13.5758 4.37299 15.1609 1.06411C15.2899 0.794832 15.4108 0.520951 15.5313 0.247158C15.6765 -0.0823861 16.14 -0.0823861 16.2852 0.247158Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="nav-tab" data-tab="cron">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.5359 0.233154C17.7807 0.233154 22.8443 5.29402 22.8445 11.5378C22.8445 17.7818 17.7808 22.8435 11.5359 22.8435C5.38586 22.8433 0.382434 17.9342 0.232178 11.821C0.225719 11.5592 0.32406 11.3047 0.504639 11.115C0.685096 10.9256 0.933528 10.8159 1.19507 10.8093C1.4569 10.8029 1.71141 10.9002 1.90112 11.0808C2.09077 11.2614 2.20033 11.5104 2.20679 11.7722C2.26785 14.2056 3.27761 16.519 5.02026 18.2185C6.76311 19.918 9.10157 20.869 11.5359 20.8689C16.6907 20.8689 20.8699 16.6916 20.8699 11.5378C20.8697 6.38425 16.6906 2.20679 11.5359 2.20679C9.75659 2.20663 8.01439 2.71554 6.5144 3.67261C5.11783 4.56372 3.98566 5.8091 3.2312 7.27905H5.24683C5.50859 7.27912 5.75997 7.38302 5.94507 7.56812C6.13015 7.75326 6.23412 8.00457 6.23413 8.26636C6.23413 8.52814 6.13014 8.77945 5.94507 8.9646C5.75997 9.1497 5.50859 9.2536 5.24683 9.25366H1.47144C1.14286 9.25364 0.827797 9.12272 0.595459 8.89038C0.363227 8.65804 0.232178 8.34291 0.232178 8.0144V4.23999C0.232178 3.9783 0.336296 3.72687 0.52124 3.54175C0.706315 3.35667 0.957758 3.25278 1.21948 3.25269C1.48133 3.25269 1.73257 3.3566 1.91772 3.54175C2.10288 3.72691 2.20679 3.97814 2.20679 4.23999V5.14917C3.16603 3.74838 4.4302 2.57828 5.90894 1.73022C7.62153 0.748069 9.56166 0.232487 11.5359 0.233154Z" fill="currentColor" stroke="currentColor" stroke-width="0.464623"/>
+        <path d="M11.2865 5.76904C11.5483 5.76904 11.7996 5.87303 11.9848 6.05811C12.1699 6.24323 12.2738 6.49454 12.2738 6.75635V11.7202L15.3002 13.4497L15.3041 13.4526C15.5249 13.5858 15.6855 13.7998 15.7504 14.0493C15.8152 14.2988 15.7796 14.5638 15.6518 14.7876C15.5239 15.0114 15.3137 15.1768 15.0658 15.2476C14.8181 15.3183 14.5523 15.2889 14.3256 15.1665L14.3207 15.1636L10.7973 13.1499C10.4891 12.9745 10.2993 12.6483 10.2992 12.2935V6.75635C10.2993 6.49454 10.4032 6.24323 10.5883 6.05811C10.7734 5.87298 11.0247 5.76908 11.2865 5.76904Z" fill="currentColor" stroke="currentColor" stroke-width="0.464623"/>
+      </svg>
+    </div>
+    <div class="nav-tab" data-tab="profilo">
+      <svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.613 11.6757C13.8371 11.6757 16.4508 9.06198 16.4508 5.83784C16.4508 2.61369 13.8371 0 10.613 0C7.38884 0 4.77515 2.61369 4.77515 5.83784C4.77515 9.06198 7.38884 11.6757 10.613 11.6757Z" fill="currentColor"/>
+        <path d="M10.6132 14.5948C4.76368 14.5948 0 18.5179 0 23.3516C0 23.6785 0.256865 23.9354 0.583784 23.9354H20.6426C20.9696 23.9354 21.2264 23.6785 21.2264 23.3516C21.2264 18.5179 16.4628 14.5948 10.6132 14.5948Z" fill="currentColor"/>
+      </svg>
+    </div>
+  </nav>
+
+</div><!-- /app -->
+
+<!-- ARTICLE OVERLAY -->
+<div id="article-overlay">
+
+  <!-- 1. IMAGE SECTION -->
+  <div class="ov-img-section">
+    <img id="ov-img" src="" alt="">
+    <div class="ov-img-grad-top">
+      <div style="display:flex;align-items:flex-start;gap:8px;">
+        <span class="hero-badge" id="ov-time"></span>
+      </div>
+      <span class="hero-img-meta" id="ov-outlets"></span>
+    </div>
+    <div class="ov-img-grad-bottom">
+      <div class="ov-img-nav">
+        <button class="ov-nav-btn" id="ov-prec">← PREC.</button>
+        <span class="ov-img-cat" id="ov-cat"></span>
+        <button class="ov-nav-btn" id="ov-succ">SUCC. →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. META BAR -->
+  <div class="ov-meta-bar" id="ov-meta-bar"></div>
+
+  <!-- 3. SCROLLABLE BODY -->
+  <div class="ov-body" id="ov-body">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="ov-date-line" id="ov-date"></div>
+      <button class="ov-audio-btn" title="Ascolta">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 6.5H1v5h2l4 3.5v-12L3 6.5z" fill="currentColor"/><path d="M13.5 4C15 5.5 16 7.1 16 9s-1 3.5-2.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 6.5C12 7.3 12.5 8.1 12.5 9s-.5 1.7-1.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="ov-title" id="ov-title"></div>
+    <div class="ov-lead" id="ov-lead"></div>
+    <div class="ov-text" id="ov-text"></div>
+    <div class="ov-action-bar">
+      <button class="ov-action-btn">▲ Utile</button>
+      <button class="ov-action-btn">▽ Non Utile</button>
+      <button class="ov-action-btn">↗ Condividi</button>
+      <button class="ov-action-btn">⊞ Salva</button>
+    </div>
+
+    <!-- 4. DIVERGENZA -->
+    <div id="ov-divergenza"></div>
+
+    <!-- 5. FONTI -->
+    <div id="ov-fonti"></div>
+
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const ARTICLES = [
+  {
+    id:0,cat:'Society',lingue:12,articoli:204,time:'5 Ore fa',
+    testate:31,readTime:3,
+    date:'Lun 25 maggio 2026 · 20:00 CET',
+    title:'Ferrari Luce, l\'elettrica che rompe la tradizione: debutto a Roma, ma la Borsa frena',
+    lead:'La prima enciclica "Magnifica Humanitas" denuncia il dominio tecnologico, supera la teoria della guerra giusta e chiede perdono per la schiavitù. Al fianco del Papa, il cofondatore di Anthropic sfida la deregulation americana.',
+    body:`<p>Era attesa come la "Rerum novarum del XXI secolo" e non ha deluso le aspettative. A centotrentacinque anni esatti dalla storica enciclica di Leone XIII sulla questione operaia, papa Leone XIV ha consegnato al mondo una mappa morale per l'era degli algoritmi.</p><p>"Magnifica Humanitas", presentata personalmente dal Pontefice nella Sala Nervi del Vaticano davanti a tremila persone — tra cui Chris Olah, non è soltanto un documento dottrinale: è un atto politico e profetico che chiama a «disarmare l'intelligenza artificiale», strappandola alla logica del profitto e della potenza geopolitica.</p><p>Il testo — centrotrenta pagine che spaziano dalla teologia alla critica del capitalismo digitale — si apre con due icone bibliche: la Torre di Babele, simbolo dell'orgoglio uniformante, e Gerusalemme ricostruita, immagine di una città in cui Dio e l'umanità abitano insieme.</p>`,
+    pct:55,img:'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&q=80',
+    pressGroups:[
+      {name:'Gruppo Cattolico',tone:'reverenziale',tags:['Dottrina','Vaticano'],text:'L\'enciclica rappresenta un punto di svolta nella riflessione della Chiesa sulla tecnologia. I vescovi europei hanno accolto con entusiasmo il richiamo alla "dignità digitale".',radarValues:[0.9,0.3,0.7,0.8,0.6]},
+      {name:'Media Progressisti',tone:'critico-analitico',tags:['AI','Politica'],text:'Osservatori laici sottolineano le contraddizioni: il Vaticano critica il capitalismo digitale ma usa piattaforme proprietarie per diffondere il messaggio papale a milioni di fedeli.',radarValues:[0.5,0.8,0.9,0.4,0.7]},
+      {name:'Tech Press',tone:'scettico',tags:['Silicon Valley','Deregulation'],text:'La stampa tecnologica anglosassone evidenzia come la presenza di Chris Olah all\'evento abbia trasformato una cerimonia religiosa in un evento di PR per Anthropic.',radarValues:[0.3,0.9,0.6,0.2,0.5]}
+    ],
+    sourcesByCountry:[
+      {flag:'🇮🇹',country:'ITALIA',sources:['Corriere della Sera','La Repubblica','Avvenire','Vatican News']},
+      {flag:'🇬🇧',country:'REGNO UNITO',sources:['The Guardian','The Times','BBC News']},
+      {flag:'🇺🇸',country:'USA',sources:['New York Times','Washington Post','NPR']},
+      {flag:'🇫🇷',country:'FRANCIA',sources:['Le Monde','La Croix']},
+      {flag:'🇩🇪',country:'GERMANIA',sources:['Der Spiegel','Frankfurter Allgemeine']}
+    ]
+  },
+  {
+    id:1,cat:'Politics',lingue:4,articoli:31,time:'1 Ora fa',
+    testate:18,readTime:2,
+    date:'Lun 25 maggio 2026 · 21:15 CET',
+    title:'G7 a Taormina: accordo unanime sul tetto globale alle emissioni industriali entro il 2035',
+    lead:'I sette grandi hanno firmato la Dichiarazione di Taormina, impegnandosi a ridurre le emissioni industriali del 45% rispetto ai livelli del 2010. Il testo è ancora oggetto di interpretazioni divergenti tra Washington e Berlino.',
+    body:`<p>Al termine di tre giorni di negoziati serrati nel teatro greco di Taormina, i leader del G7 hanno apposto la firma sulla Dichiarazione congiunta in materia di clima e transizione energetica. L'accordo prevede un tetto vincolante alle emissioni industriali entro il 2035, con un meccanismo di revisione biennale.</p><p>La delegazione americana ha tuttavia rilasciato una nota interpretativa che attenua gli obblighi di compliance per il settore manifatturiero, elemento che ha suscitato le riserve della cancelliera tedesca. Gli analisti sottolineano che la dichiarazione, pur unanime nella forma, lascia margini di ambiguità sostanziali sulla natura vincolante delle soglie concordate.</p>`,
+    pct:18,img:'https://images.unsplash.com/photo-1555848962-6e79363ec58f?w=800&q=80',
+    pressGroups:[
+      {name:'Stampa Europea',tone:'ottimista',tags:['Clima','Accordo'],text:'I media europei esaltano il risultato come storico, sottolineando l\'impegno dell\'UE a guidare la transizione verde anche senza un accordo vincolante al 100%.',radarValues:[0.8,0.4,0.7,0.9,0.6]},
+      {name:'Media USA',tone:'cauto',tags:['Industria','Compliance'],text:'La nota interpretativa americana viene descritta come una "vittoria" per il settore manifatturiero, con gli analisti di Wall Street che prevedono impatti limitati sui profitti industriali.',radarValues:[0.4,0.7,0.5,0.3,0.8]}
+    ],
+    sourcesByCountry:[
+      {flag:'🇮🇹',country:'ITALIA',sources:['Il Sole 24 Ore','Corriere della Sera','La Stampa']},
+      {flag:'🇩🇪',country:'GERMANIA',sources:['Frankfurter Allgemeine','Handelsblatt','Der Spiegel']},
+      {flag:'🇫🇷',country:'FRANCIA',sources:['Les Echos','Le Figaro']},
+      {flag:'🇬🇧',country:'REGNO UNITO',sources:['Financial Times','The Guardian']},
+      {flag:'🇺🇸',country:'USA',sources:['Washington Post','Bloomberg','Politico']}
+    ]
+  },
+  {
+    id:2,cat:'Geopolitics',lingue:6,articoli:150,time:'3 Ore fa',
+    testate:24,readTime:4,
+    date:'Lun 25 maggio 2026 · 18:00 CET',
+    title:'Nella bozza su Hormuz Teheran gestisce il transito con l\'Oman, gli Usa si ritirano',
+    lead:'Il testo provvisorio dell\'accordo sullo stretto di Hormuz assegna a Teheran un ruolo centrale nella gestione dei transiti commerciali, mentre Washington annuncia il ritiro delle proprie unità navali.',
+    body:`<p>Secondo fonti diplomatiche che hanno avuto accesso alla bozza preliminare, l'accordo prevede la creazione di un corridoio di transito gestito congiuntamente da Iran e Oman per le petroliere che attraversano lo Stretto di Hormuz.</p><p>La Casa Bianca ha confermato il ritiro graduale delle unità della Quinta Flotta, aprendo uno scenario geopolitico senza precedenti per la regione del Golfo. I mercati del petrolio hanno reagito con un rialzo immediato del 4,2%.</p>`,
+    pct:42,img:'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=80',
+    pressGroups:[
+      {name:'Media del Golfo',tone:'favorevole',tags:['Iran','Oman','Petrolio'],text:'Le testate del Golfo descrivono l\'accordo come un riequilibrio necessario, con Muscat nel ruolo di mediatore affidabile tra le potenze regionali.',radarValues:[0.7,0.3,0.8,0.9,0.5]},
+      {name:'Stampa Occidentale',tone:'allarmato',tags:['USA','Quinta Flotta','Rischio'],text:'I media atlantici avvertono sui rischi per la libera navigazione e sulle possibili conseguenze per i prezzi energetici globali in caso di crisi futura nello Stretto.',radarValues:[0.3,0.9,0.6,0.2,0.7]},
+      {name:'Analisti Energetici',tone:'tecnico',tags:['Petrolio','Mercati'],text:'Analisti specializzati evidenziano che il +4,2% del Brent riflette l\'incertezza ma potrebbe stabilizzarsi se l\'accordo diventasse operativo entro i prossimi 60 giorni.',radarValues:[0.5,0.6,0.9,0.5,0.4]}
+    ],
+    sourcesByCountry:[
+      {flag:'🇮🇷',country:'IRAN',sources:['IRNA','Press TV']},
+      {flag:'🇴🇲',country:'OMAN',sources:['Times of Oman','Oman Observer']},
+      {flag:'🇸🇦',country:'ARABIA SAUDITA',sources:['Arab News','Al Arabiya','Saudi Gazette']},
+      {flag:'🇬🇧',country:'REGNO UNITO',sources:['Reuters','The Guardian','Financial Times']},
+      {flag:'🇺🇸',country:'USA',sources:['Bloomberg','Wall Street Journal','AP']}
+    ]
+  },
+  {
+    id:3,cat:'Technology',lingue:9,articoli:88,time:'7 Ore fa',
+    testate:15,readTime:3,
+    date:'Lun 25 maggio 2026 · 13:00 CET',
+    title:'OpenAI lancia GPT-6 con capacità di ragionamento autonomo: primo test nei tribunali di Singapore',
+    lead:'Il nuovo modello supera i benchmark umani nel ragionamento legale e scientifico. Singapore è il primo paese ad autorizzarne l\'uso come assistente nei procedimenti civili.',
+    body:`<p>GPT-6, presentato questa mattina al Singapore Tech Forum, segna un salto qualitativo rispetto ai predecessori. Il modello è in grado di costruire catene di ragionamento multilivello senza supervisione umana diretta.</p><p>Il Ministero della Giustizia di Singapore ha firmato un accordo pilota per l'integrazione del sistema nelle udienze civili di primo grado. I giudici potranno interrogare il modello su precedenti giurisprudenziali e ricevere analisi contestualizzate in tempo reale.</p>`,
+    pct:71,img:'https://images.unsplash.com/photo-1677756119517-756a188d2d94?w=800&q=80',
+    pressGroups:[
+      {name:'Tech Media',tone:'entusiasta',tags:['AI','Benchmark','GPT-6'],text:'Le testate tecnologiche descrivono GPT-6 come un cambio di paradigma, con particolare attenzione ai benchmark che superano le performance umane su testi legali complessi.',radarValues:[0.9,0.5,0.8,0.4,0.7]},
+      {name:'Stampa Giuridica',tone:'prudente',tags:['Giustizia','Etica','Singapore'],text:'Le riviste specializzate in diritto sollevano interrogativi sull\'accountability del modello in caso di errori e sulla tutela delle parti vulnerabili nei procedimenti.',radarValues:[0.4,0.7,0.6,0.8,0.5]}
+    ],
+    sourcesByCountry:[
+      {flag:'🇸🇬',country:'SINGAPORE',sources:['Straits Times','Channel NewsAsia','TODAY']},
+      {flag:'🇺🇸',country:'USA',sources:['TechCrunch','Wired','The Verge','MIT Tech Review']},
+      {flag:'🇯🇵',country:'GIAPPONE',sources:['Nikkei Asia','Asahi Shimbun']},
+      {flag:'🇩🇪',country:'GERMANIA',sources:['Heise Online','c\'t Magazin']},
+      {flag:'🇫🇷',country:'FRANCIA',sources:['Le Monde Informatique','01net']}
+    ]
+  },
+  {
+    id:4,cat:'Economy',lingue:8,articoli:132,time:'9 Ore fa',
+    testate:28,readTime:5,
+    date:'Lun 25 maggio 2026 · 11:00 CET',
+    title:'BCE alza i tassi di 25 punti base: Lagarde avverte sull\'inflazione dei servizi',
+    lead:'La Banca Centrale Europea ha votato a maggioranza per un rialzo dei tassi di interesse, contrastando la pressione inflazionistica persistente nel settore dei servizi dell\'eurozona.',
+    body:`<p>Il Consiglio Direttivo della BCE ha approvato oggi con 19 voti favorevoli e 7 contrari un ulteriore rialzo dei tassi di riferimento di 25 punti base. Il tasso sulle operazioni di rifinanziamento principali sale così al 4,75%.</p><p>Christine Lagarde, nella conferenza stampa successiva, ha sottolineato che l'inflazione nei servizi rimane "ostinatamente elevata" e che la BCE è pronta a nuovi interventi se i dati non mostreranno un miglioramento sostenuto entro il terzo trimestre.</p>`,
+    pct:38,img:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80',
+    pressGroups:[
+      {name:'Media Finanziari',tone:'neutro-tecnico',tags:['BCE','Tassi','Inflazione'],text:'Le testate economiche si concentrano sui dati macro: il tasso al 4,75% è il livello più alto dal 2001, e i futures sui tassi scontano ora un\'altra mossa a settembre.',radarValues:[0.6,0.8,0.9,0.5,0.4]},
+      {name:'Stampa Popolare',tone:'preoccupato',tags:['Mutui','Famiglie','Costo vita'],text:'La stampa generalista sottolinea l\'impatto sui mutui a tasso variabile: si stima un aumento medio di 35 euro al mese per chi ha contratti attivi in eurozona.',radarValues:[0.8,0.6,0.4,0.3,0.7]},
+      {name:'Media Tedeschi',tone:'favorevole',tags:['Rigore','Bundesbank'],text:'In Germania l\'aumento viene accolto positivamente come segnale di rigore monetario, in linea con la tradizione della Bundesbank di prioritizzare la stabilità dei prezzi.',radarValues:[0.5,0.9,0.7,0.8,0.3]}
+    ],
+    sourcesByCountry:[
+      {flag:'🇩🇪',country:'GERMANIA',sources:['Frankfurter Allgemeine','Handelsblatt','Die Zeit']},
+      {flag:'🇫🇷',country:'FRANCIA',sources:['Les Echos','Le Figaro','BFM Business']},
+      {flag:'🇮🇹',country:'ITALIA',sources:['Il Sole 24 Ore','Corriere della Sera','Milano Finanza']},
+      {flag:'🇬🇧',country:'REGNO UNITO',sources:['Financial Times','The Economist']},
+      {flag:'🇳🇱',country:'PAESI BASSI',sources:['NRC Handelsblad','Het Financieele Dagblad']}
+    ]
+  },
+  {
+    id:5,cat:'Health & Science',lingue:11,articoli:246,time:'2 Ore fa',
+    testate:12,readTime:2,
+    date:'Lun 25 maggio 2026 · 20:30 CET',
+    title:'Vaccino universale antinfluenzale: trial di fase III con risultati senza precedenti, 94% di efficacia',
+    lead:'Un consorzio di ricercatori europei e americani annuncia i risultati preliminari del più grande trial clinico mai condotto su un vaccino antinfluenzale ad ampio spettro.',
+    body:`<p>I risultati del trial HORIZON-FLU, condotto su oltre 80.000 partecipanti in 22 paesi, mostrano un'efficacia del 94% contro tutti i ceppi influenzali testati, compresi i sottotipi H5N1 e H3N2 altamente patogeni.</p><p>Il vaccino, basato sulla tecnologia mRNA di seconda generazione sviluppata congiuntamente da BioNTech, Moderna e l'Istituto Pasteur di Parigi, potrebbe rendere obsolete le formulazioni stagionali annuali. L'EMA ha già aperto una procedura di revisione accelerata.</p>`,
+    pct:85,img:'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&q=80',
+    pressGroups:[
+      {name:'Stampa Scientifica',tone:'cauto-ottimista',tags:['mRNA','EMA','Trial'],text:'Le riviste mediche sottolineano che i dati sono ancora preliminari e la peer review è in corso. La procedura EMA accelerata non garantisce un\'approvazione entro l\'anno.',radarValues:[0.6,0.4,0.9,0.7,0.5]},
+      {name:'Media Generalisti',tone:'entusiasta',tags:['Vaccino','Influenza','Salute'],text:'La stampa popolare annuncia "la fine dell\'influenza stagionale", con titoli che amplificano i risultati senza contestualizzare le cautele espresse dai ricercatori.',radarValues:[0.9,0.7,0.4,0.3,0.8]}
+    ],
+    sourcesByCountry:[
+      {flag:'🇫🇷',country:'FRANCIA',sources:['Institut Pasteur News','Le Monde Santé','AFP']},
+      {flag:'🇩🇪',country:'GERMANIA',sources:['BioNTech News','Spiegel Gesundheit','Ärzteblatt']},
+      {flag:'🇺🇸',country:'USA',sources:['STAT News','The New England Journal','Nature','Science']},
+      {flag:'🇬🇧',country:'REGNO UNITO',sources:['The Lancet','BMJ','BBC Health']},
+      {flag:'🇮🇹',country:'ITALIA',sources:['Corriere Salute','La Repubblica Salute']}
+    ]
+  }
+];
+
+const TICKER_ITEMS = [
+  'IRAN E HORMUZ','GUERRA RUSSIA-UCRAINA','CALDO RECORD IN EUROPA','CRISI GAZA-HAMAS',
+  'EPIDEMIA DI EBOLA','TEST MISSILISTICO NORDCOREANO','REGOLAZIONE DELL\'AI',
+  'BORSE E FERRARI ELETTRICA','CASO GARLASCO-SEMPIO','HAJJ 2026','WORLD CUP 2026'
+];
+
+// ── STATE ──
+let currentTab = 'home';
+let heroIdx = 0;
+let theme = 'auto';
+let fontScale = 'medium';
+let overlayIdx = 0;
+
+// ── TICKER ──
+function buildTicker(){
+  const items = [...TICKER_ITEMS,...TICKER_ITEMS];
+  document.getElementById('ticker-inner').innerHTML =
+    items.map(t=>`<span>${t}</span><span class="ticker-sep">|</span>`).join('');
+}
+
+// ── PROGRESS BAR HELPER ──
+const SEG_COLORS = ['#0096A7','#CFA200','#B9091B'];
+function progressHTML(pct){
+  const seg = pct<33?0:pct<67?1:2;
+  // marker at exact pct across full bar width
+  const markerLeft = pct+'%';
+  const segs = [0,1,2].map(i =>
+    `<div class="prog-seg${i===seg?' active':''}"${i===seg?` style="background:${SEG_COLORS[i]}"`:''}></div>`
+  ).join('<div class="prog-divider"></div>');
+  return `<div class="progress-wrap">
+    <div class="progress-track-wrap">
+      <div class="progress-bar">${segs}</div>
+      <div class="progress-marker" style="left:${markerLeft}"></div>
+    </div>
+    <div class="progress-pct"><span>${pct}%</span><span class="progress-info">i</span></div>
+  </div>`;
+}
+
+// ── SHARED FOOTER HTML ──
+function footerHTML(extraClass=''){
+  return `
+  <div class="ov-footer ${extraClass}">
+    <div class="ov-footer-top">
+      <!-- Watermark grande: SOLO nella sezione superiore, posizionato a sinistra -->
+      <svg class="ov-footer-watermark" viewBox="38 0 122 121" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M96.5374 2.57516L40.5321 115.352C39.1594 118.108 41.1706 121.343 44.246 121.343H156.097C159.172 121.343 161.184 118.108 159.811 115.352L103.965 2.58581C102.443 -0.489539 98.0592 -0.489539 96.5268 2.58581L96.5374 2.57516ZM85.396 106.754L95.9522 85.7265C97.4845 82.6724 101.837 82.6724 103.369 85.7265L113.925 106.754C115.309 109.51 113.308 112.766 110.222 112.766H89.1204C86.0345 112.766 84.0232 109.521 85.4173 106.754H85.396ZM127.802 110.478L106.572 68.2854C105.987 67.1148 105.987 65.7315 106.572 64.5609L110.701 56.3245C112.233 53.2705 116.586 53.2705 118.118 56.3245L143.423 106.754C144.807 109.51 142.806 112.766 139.72 112.766H131.505C129.941 112.766 128.504 111.883 127.802 110.478Z" fill="currentColor"/>
+      </svg>
+      <!-- Logo: stesso dell'header -->
+      <div class="ov-footer-logo">
+        <svg class="ov-footer-logo-svg" viewBox="28 63 26 27" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <path d="M40.6918 65.7143L30.0832 87.0766C29.8232 87.5987 30.2042 88.2114 30.7867 88.2114H51.9736C52.5562 88.2114 52.9371 87.5987 52.6771 87.0766L42.0988 65.7163C41.8105 65.1338 40.9801 65.1338 40.6898 65.7163L40.6918 65.7143ZM38.5814 85.4479L40.5809 81.4649C40.8712 80.8864 41.6956 80.8864 41.9859 81.4649L43.9854 85.4479C44.2475 85.97 43.8685 86.5868 43.284 86.5868H39.2869C38.7023 86.5868 38.3214 85.972 38.5854 85.4479H38.5814ZM46.6139 86.1534L42.5926 78.1612C42.4817 77.9395 42.4817 77.6774 42.5926 77.4557L43.3747 75.8956C43.665 75.3171 44.4894 75.3171 44.7796 75.8956L49.5729 85.4479C49.835 85.97 49.456 86.5868 48.8715 86.5868H47.3154C47.0191 86.5868 46.7469 86.4195 46.6139 86.1534Z" fill="currentColor"/>
+        </svg>
+        <span class="ov-footer-wordmark">PRISMA<em>NEWS</em></span>
+      </div>
+      <!-- Social icons -->
+      <div class="ov-footer-socials">
+        <a href="https://linkedin.com" class="ov-footer-social-btn" title="LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="https://facebook.com" class="ov-footer-social-btn round" title="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://instagram.com" class="ov-footer-social-btn round" title="Instagram">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+      </div>
+    </div>
+    <!-- Sezione inferiore: NESSUN watermark -->
+    <div class="ov-footer-bottom">
+      <span class="ov-footer-copy">© 2026 PrismaNews</span>
+      <span class="ov-footer-sep">·</span>
+      <a href="https://prismanews.ai/privacy" class="ov-footer-link">Privacy</a>
+      <span class="ov-footer-sep">·</span>
+      <a href="https://prismanews.ai/condizioni" class="ov-footer-link">Condizioni</a>
+    </div>
+  </div>`;
+}
+
+// ── HERO CAROUSEL ──
+function buildCarousel(){
+  const track = document.getElementById('carousel-track');
+  track.innerHTML = ARTICLES.map((a,i)=>`
+    <div class="hero-card" data-idx="${i}">
+      <div class="hero-img-wrap">
+        <img class="hero-img" src="${a.img}" alt="" loading="${i===0?'eager':'lazy'}">
+        <div class="hero-img-overlay">
+          <div class="hero-img-top">
+            <span class="hero-badge">${a.time}</span>
+          </div>
+          <span class="hero-img-meta">${a.lingue} Lingue · ${a.articoli} Articoli</span>
+        </div>
+      </div>
+      <div class="hero-card-body">
+        <div class="hero-title">${a.title}</div>
+        ${progressHTML(a.pct)}
+      </div>
+    </div>
+  `).join('');
+
+  track.querySelectorAll('.hero-card').forEach(card=>{
+    card.addEventListener('click',()=>openOverlay(+card.dataset.idx));
+  });
+
+  renderDots();
+
+  // update active dot on scroll
+  track.addEventListener('scroll',()=>{
+    const idx = Math.round(track.scrollLeft / track.clientWidth);
+    heroIdx = Math.max(0, Math.min(idx, ARTICLES.length-1));
+    renderDots();
+  },{passive:true});
+}
+function renderDots(){
+  const el = document.getElementById('hero-dots');
+  el.innerHTML = ARTICLES.map((_,i)=>`<div class="dot${i===heroIdx?' active':''}"></div>`).join('');
+  // dots are clickable
+  el.querySelectorAll('.dot').forEach((d,i)=>{
+    d.addEventListener('click',()=>{
+      const track = document.getElementById('carousel-track');
+      track.scrollTo({left: i * track.clientWidth, behavior:'smooth'});
+    });
+  });
+}
+
+// ── HOME LIST ──
+function metaBars(pct){
+  const seg = pct<33?0:pct<67?1:2;
+  return `<div class="meta-bars">
+    <div class="meta-bar${seg===0?' active':''}"${seg===0?` style="background:${SEG_COLORS[0]}"`:''} ></div>
+    <div class="meta-bar${seg===1?' active':''}"${seg===1?` style="background:${SEG_COLORS[1]}"`:''} ></div>
+    <div class="meta-bar${seg===2?' active':''}"${seg===2?` style="background:${SEG_COLORS[2]}"`:''} ></div>
+  </div>`;
+}
+// SEG_COLORS defined above in progressHTML section
+function buildHomeList(){
+  const el = document.getElementById('home-list');
+  el.innerHTML = ARTICLES.map((a,i)=>`
+    <div class="art-item" data-idx="${i}">
+      <div class="art-cat-row">
+        <span class="art-cat">${a.cat}</span>
+        <div class="art-meta">${a.lingue} Lingue · ${a.articoli} Articoli ${metaBars(a.pct)}</div>
+      </div>
+      <div class="art-headline">${a.title}</div>
+    </div>
+  `).join('') + footerHTML('site-footer');
+  el.querySelectorAll('.art-item').forEach(el=>{
+    el.addEventListener('click',()=>openOverlay(+el.dataset.idx));
+  });
+}
+
+// ── PER TE ──
+function buildPerteList(){
+  const el = document.getElementById('perte-list');
+  el.innerHTML = ARTICLES.map((a,i)=>`
+    <div class="card" data-idx="${i}">
+      <div class="card-img-wrap">
+        <img class="card-img" src="${a.img}" alt="" loading="lazy">
+        <span class="card-badge">${a.time}</span>
+        <span class="card-img-meta">${a.lingue} Lingue · ${a.articoli} Articoli</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${a.title}</div>
+        ${progressHTML(a.pct)}
+      </div>
+    </div>
+  `).join('');
+  el.querySelectorAll('.card').forEach(el=>{
+    el.addEventListener('click',()=>openOverlay(+el.dataset.idx));
+  });
+  el.insertAdjacentHTML('beforeend', footerHTML('site-footer'));
+}
+
+// ── CRONOLOGIA ──
+function buildCronList(){
+  const el = document.getElementById('cron-list');
+  const shuffled = [...ARTICLES].reverse().concat([...ARTICLES]);
+  el.innerHTML = shuffled.map((a,i)=>`
+    <div class="cron-item" data-idx="${i%ARTICLES.length}">
+      <div class="cron-cat-row">
+        <span class="cron-cat">${a.cat}</span>
+        <div class="art-meta">${a.lingue} Lingue · ${a.articoli} Articoli ${metaBars(a.pct)}</div>
+      </div>
+      <div class="cron-headline">${a.title}</div>
+    </div>
+  `).join('') + footerHTML('site-footer');
+  el.querySelectorAll('.cron-item').forEach(el=>{
+    el.addEventListener('click',()=>openOverlay(+el.dataset.idx));
+  });
+}
+
+// ── OVERLAY ──
+function openOverlay(idx){
+  overlayIdx = idx;
+  renderOverlay();
+  document.getElementById('article-overlay').classList.add('open');
+}
+
+const RADAR_COLORS = ['#B9091B','#0096A7','#CFA200','#7C3AED','#059669'];
+
+function drawRadar(canvasId, groups){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const size = canvas.offsetWidth;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const cx = size/2, cy = size/2;
+  const r = size * 0.30;
+  const axes = ['TONO','TEMPERATURA','FOCUS','POSIZIONAMENTO','ORIZZONTE'];
+  const n = axes.length;
+  const angleStep = (Math.PI*2)/n;
+  const startAngle = -Math.PI/2;
+
+  // Draw grid rings
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+  const labelColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
+  [0.25,0.5,0.75,1].forEach(level=>{
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const angle = startAngle + i*angleStep;
+      const x = cx + Math.cos(angle)*r*level;
+      const y = cy + Math.sin(angle)*r*level;
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // Draw axes
+  for(let i=0;i<n;i++){
+    const angle = startAngle + i*angleStep;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(angle)*r, cy + Math.sin(angle)*r);
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Draw axis labels
+  const labelFontSize = Math.max(10, Math.round(size * 0.038));
+  ctx.font = `600 ${labelFontSize}px 'IBM Plex Mono', monospace`;
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(35,35,35,0.6)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for(let i=0;i<n;i++){
+    const angle = startAngle + i*angleStep;
+    const lx = cx + Math.cos(angle)*(r + labelFontSize*2.2);
+    const ly = cy + Math.sin(angle)*(r + labelFontSize*2.2);
+    ctx.fillText(axes[i], lx, ly);
+  }
+
+  // Draw data polygons
+  groups.forEach((g,gi)=>{
+    const vals = g.radarValues || [0.5,0.5,0.5,0.5,0.5];
+    const color = RADAR_COLORS[gi % RADAR_COLORS.length];
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const angle = startAngle + i*angleStep;
+      const x = cx + Math.cos(angle)*r*vals[i];
+      const y = cy + Math.sin(angle)*r*vals[i];
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = color+'33';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+}
+
+function renderDivergenza(a){
+  const cards = a.pressGroups.map(g=>`
+    <div class="ov-press-card">
+      <div class="ov-press-header">
+        <span class="ov-press-name">${g.name}</span>
+        <span class="ov-press-slash">/</span>
+        <span class="ov-press-tone">${g.tone}</span>
+      </div>
+      <div class="ov-press-tags">${g.tags.map(t=>`<span class="ov-press-tag">${t}</span>`).join('')}</div>
+      <p class="ov-press-text">${g.text}</p>
+    </div>
+  `).join('');
+
+  const legendItems = a.pressGroups.map((g,gi)=>`
+    <div class="ov-radar-legend-item">
+      <div class="ov-radar-dot" style="background:${RADAR_COLORS[gi%RADAR_COLORS.length]}"></div>
+      <span>${g.name.toUpperCase()}</span>
+    </div>
+  `).join('');
+
+  return `
+    <div style="margin-top:28px;">
+      <div class="ov-section-title">Come la stessa storia <em>è raccontata altrove.</em></div>
+      <div class="ov-section-meta">${a.pressGroups.length} GRUPPI EDITORIALI · ${a.lingue} LINGUE</div>
+      ${progressHTML(a.pct)}
+      <div class="ov-radar-wrap"><canvas class="ov-radar-canvas" id="ov-radar"></canvas></div>
+      <div class="ov-radar-legend" id="ov-radar-legend">${legendItems}</div>
+      ${cards}
+    </div>
+  `;
+}
+
+function toggleCountry(row){
+  row.classList.toggle('open');
+  const src = row.nextElementSibling;
+  if(src && src.classList.contains('ov-country-sources')){
+    src.style.display = src.style.display === 'block' ? 'none' : 'block';
+  }
+}
+
+function renderFonti(a){
+  const sbc = a.sourcesByCountry || [];
+  const totalSources = sbc.reduce((s,c)=>s+c.sources.length,0);
+  const accordionRows = sbc.map(c=>`
+    <div class="ov-country-row" onclick="toggleCountry(this)">
+      <div class="ov-country-left">
+        <span class="ov-country-flag">${c.flag}</span>
+        <span class="ov-country-name">${c.country}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="ov-country-count">${c.sources.length} ${c.sources.length===1?'fonte':'fonti'}</span>
+        <span class="ov-country-arrow">▼</span>
+      </div>
+    </div>
+    <div class="ov-country-sources">
+      ${c.sources.map(s=>`<div class="ov-country-source-item">${s}</div>`).join('')}
+    </div>
+  `).join('');
+
+  return `
+    <div class="ov-section-title" style="margin-top:24px">Questa notizia <em>è apparsa su</em></div>
+    <div class="ov-section-meta">${a.testate} TESTATE · ${a.lingue} LINGUE · FINESTRA 24 ORE</div>
+    <div class="ov-fonti-accordion" id="ov-fonti-list">
+      ${accordionRows}
+    </div>
+  `;
+}
+
+function renderCorrelati(a){
+  // pick 3 other articles
+  const others = ARTICLES.filter((_,i)=>i!==overlayIdx).slice(0,3);
+  if(!others.length) return '';
+  const items = others.map((art,i)=>`
+    <div class="ov-correlati-item" onclick="openOverlay(${ARTICLES.indexOf(art)})">
+      <span class="ov-correlati-cat">${art.cat}</span>
+      <span class="ov-correlati-headline">${art.title}</span>
+      <span class="ov-correlati-meta">${art.lingue} Lingue · ${art.articoli} Articoli · ${art.time}</span>
+    </div>
+  `).join('');
+  return `
+    <div class="ov-correlati">
+      <div class="ov-correlati-title">Articoli <em>correlati</em></div>
+      ${items}
+      <button class="ov-leggi-piu">Leggi di più →</button>
+    </div>
+  `;
+}
+
+function renderOverlay(){
+  const a = ARTICLES[overlayIdx];
+  document.getElementById('ov-img').src = a.img;
+  document.getElementById('ov-time').textContent = a.time;
+  document.getElementById('ov-outlets').textContent = `${a.lingue} Lingue · ${a.articoli} Articoli`;
+  document.getElementById('ov-cat').textContent = a.cat.toUpperCase();
+
+  // meta bar
+  document.getElementById('ov-meta-bar').innerHTML = `
+    <span class="ov-meta-cat">${a.cat.toUpperCase()}</span>
+    <span class="ov-meta-sep"> | </span>
+    <span>${a.testate} TESTATE</span>
+    <span class="ov-meta-sep"> | </span>
+    <span>${a.lingue} LINGUE</span>
+    <span class="ov-meta-sep"> | </span>
+    <span>${a.readTime} MIN LETTURA</span>
+    <span class="ov-meta-sep"> | </span>
+    <span>AGG. ${a.date.split('·')[1]?.trim() || '—'}</span>
+  `;
+
+  document.getElementById('ov-date').textContent = '● ' + a.date.toUpperCase();
+  document.getElementById('ov-title').textContent = a.title;
+  document.getElementById('ov-lead').textContent = a.lead;
+  document.getElementById('ov-text').innerHTML = a.body;
+
+  document.getElementById('ov-divergenza').innerHTML = renderDivergenza(a);
+  document.getElementById('ov-fonti').innerHTML = renderFonti(a) + renderCorrelati(a) + footerHTML();
+
+  setTimeout(()=>drawRadar('ov-radar', a.pressGroups), 50);
+
+  document.getElementById('ov-body').scrollTop = 0;
+}
+
+document.getElementById('ov-prec').onclick=()=>{overlayIdx=(overlayIdx-1+ARTICLES.length)%ARTICLES.length;renderOverlay();}
+document.getElementById('ov-succ').onclick=()=>{overlayIdx=(overlayIdx+1)%ARTICLES.length;renderOverlay();}
+
+const btnBack = document.getElementById('btn-back');
+if(btnBack) btnBack.onclick=()=>{
+  document.getElementById('article-overlay').classList.remove('open');
+};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('article-overlay').classList.remove('open');});
+
+// ── NAV ──
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    const t = tab.dataset.tab;
+    // close article overlay if open
+    document.getElementById('article-overlay').classList.remove('open');
+    document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-'+t).classList.add('active');
+    currentTab = t;
+    // Ticker solo sulla home
+    document.getElementById('ticker').style.display = t === 'home' ? '' : 'none';
+  });
+});
+
+// ── CATEGORY PILLS ──
+document.querySelectorAll('.cat-pill').forEach(pill=>{
+  pill.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
+    pill.classList.add('active');
+  });
+});
+
+// ── THEME ──
+const MOON_SVG = `<svg viewBox="0 0 14 14" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 8.5A5.5 5.5 0 0 1 4.5 1.5a6 6 0 1 0 8 7z" fill="currentColor"/></svg>`;
+const SUN_SVG  = `<svg viewBox="0 0 14 14" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="2.8" fill="currentColor"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.93 2.93l1.06 1.06M10.01 10.01l1.06 1.06M2.93 11.07l1.06-1.06M10.01 3.99l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+function applyTheme(t){
+  const btn = document.getElementById('btn-theme');
+  if(t==='auto'){
+    const dark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+    document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+    btn.innerHTML = dark ? SUN_SVG : MOON_SVG;
+  } else {
+    document.documentElement.setAttribute('data-theme',t);
+    btn.innerHTML = t==='dark' ? SUN_SVG : MOON_SVG;
+  }
+}
+document.getElementById('btn-theme').addEventListener('click',()=>{
+  const curr = document.documentElement.getAttribute('data-theme');
+  const next = curr==='dark'?'light':'dark';
+  theme = next;
+  applyTheme(next);
+  // sync profilo toggles
+  document.querySelectorAll('#theme-toggle .toggle-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.theme===next);
+  });
+});
+document.querySelectorAll('#theme-toggle .toggle-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#theme-toggle .toggle-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    theme = b.dataset.theme;
+    applyTheme(b.dataset.theme);
+  });
+});
+
+// ── FONT SIZE ──
+const FONT_SCALES = {small:0.85,medium:1,large:1.18};
+function applyFontSize(s){
+  document.documentElement.style.setProperty('--font-scale',FONT_SCALES[s]);
+}
+document.getElementById('btn-aa').addEventListener('click',()=>{
+  const sizes = ['small','medium','large'];
+  const idx = sizes.indexOf(fontScale);
+  fontScale = sizes[(idx+1)%sizes.length];
+  applyFontSize(fontScale);
+  document.querySelectorAll('#font-toggle .toggle-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.size===fontScale);
+  });
+});
+document.querySelectorAll('#font-toggle .toggle-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#font-toggle .toggle-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    fontScale = b.dataset.size;
+    applyFontSize(b.dataset.size);
+  });
+});
+
+// swipe is now native CSS scroll-snap on #carousel-track
+
+// ── INIT ──
+buildTicker();
+buildCarousel();
+buildHomeList();
+buildPerteList();
+buildCronList();
+document.getElementById('profilo-footer').innerHTML = footerHTML('site-footer');
+applyTheme('auto');
+
+// Sync system theme changes
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{
+  if(theme==='auto') applyTheme('auto');
+});
+</script>
+</body>
+</html>
