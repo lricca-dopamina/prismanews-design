@@ -651,10 +651,9 @@ html,body{
   max-width:430px;margin:0 auto;
   z-index:200;
   display:none;
-  flex-direction:column;
   background:var(--bg);
 }
-#article-overlay.open{display:flex;}
+#article-overlay.open{display:block;}
 
 /* IMAGE SECTION */
 .ov-img-section{
@@ -736,9 +735,9 @@ html,body{
 .ov-meta-bar .ov-meta-cat{color:var(--red);}
 .ov-meta-sep{color:var(--border)!important;margin:0 6px;}
 
-/* SCROLLABLE BODY */
+/* SCROLLABLE BODY — occupa tutto l'overlay */
 .ov-body{
-  flex:1;overflow-y:auto;scrollbar-width:none;
+  height:100%;overflow-y:auto;scrollbar-width:none;
   padding:16px 14px 28px;
 }
 .ov-body::-webkit-scrollbar{display:none;}
@@ -1276,30 +1275,32 @@ html,body{
 <!-- ARTICLE OVERLAY -->
 <div id="article-overlay">
 
-  <!-- 1. IMAGE SECTION -->
-  <div class="ov-img-section">
-    <img id="ov-img" src="" alt="">
-    <div class="ov-img-grad-top">
-      <div style="display:flex;align-items:flex-start;gap:8px;">
-        <span class="hero-badge" id="ov-time"></span>
-      </div>
-      <span class="hero-img-meta" id="ov-outlets"></span>
-    </div>
-    <div class="ov-img-grad-bottom">
-      <div class="ov-img-nav">
-        <button class="ov-nav-btn" id="ov-prec">← PREC.</button>
-        <span class="ov-img-cat" id="ov-cat"></span>
-        <button class="ov-nav-btn" id="ov-succ">SUCC. →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. META BAR -->
-  <div class="ov-meta-bar" id="ov-meta-bar"></div>
-
-  <!-- 3. SCROLLABLE BODY -->
+  <!-- tutto scrolla insieme dentro ov-body -->
   <div class="ov-body" id="ov-body">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+
+    <!-- 1. IMAGE SECTION (margini negativi per tutta larghezza) -->
+    <div class="ov-img-section" style="margin:-16px -14px 0;">
+      <img id="ov-img" src="" alt="">
+      <div class="ov-img-grad-top">
+        <div style="display:flex;align-items:flex-start;gap:8px;">
+          <span class="hero-badge" id="ov-time"></span>
+        </div>
+        <span class="hero-img-meta" id="ov-outlets"></span>
+      </div>
+      <div class="ov-img-grad-bottom">
+        <div class="ov-img-nav">
+          <button class="ov-nav-btn" id="ov-prec">← PREC.</button>
+          <span class="ov-img-cat" id="ov-cat"></span>
+          <button class="ov-nav-btn" id="ov-succ">SUCC. →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. META BAR (margini negativi per tutta larghezza) -->
+    <div class="ov-meta-bar" id="ov-meta-bar" style="margin:0 -14px;"></div>
+
+    <!-- 3. CONTENUTO -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 10px;">
       <div class="ov-date-line" id="ov-date"></div>
       <button class="ov-audio-btn" title="Ascolta">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 6.5H1v5h2l4 3.5v-12L3 6.5z" fill="currentColor"/><path d="M13.5 4C15 5.5 16 7.1 16 9s-1 3.5-2.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 6.5C12 7.3 12.5 8.1 12.5 9s-.5 1.7-1.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
