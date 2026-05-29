@@ -47,6 +47,9 @@
   --card-bg:#1A1A1A;
   --progress-track:#2A2A2A;
 }
+html{
+  background:var(--bg2); /* mostra --bg2 durante il rubber-band overscroll iOS in fondo */
+}
 html,body{
   width:100%;height:100%;
   background:var(--bg);
@@ -1064,11 +1067,6 @@ html,body{
 /* ── SITE FOOTER (tutte le pagine) ── */
 .site-footer{
   margin-top: 28px;
-}
-/* Estende il bg del footer oltre il bordo inferiore (scroll bounce) */
-.ov-footer{
-  padding-bottom: 120px !important;
-  margin-bottom: -120px;
 }
 
 /* ── AUDIO BTN (overlay) ── */
