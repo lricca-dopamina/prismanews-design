@@ -62,7 +62,7 @@ html,body{
 #app{
   position:fixed;inset:0;
   display:flex;flex-direction:column;
-  background:var(--bg);
+  background:var(--bg2);
   max-width:430px;margin:0 auto;
   box-shadow:0 0 40px rgba(0,0,0,.15);
 }
@@ -180,13 +180,12 @@ html,body{
   overflow-x:hidden;
   scrollbar-width:none;
   display:none;
-  /* bg2 = colore del footer; quando si scrolla oltre il fondo su iOS si vede bg2 */
-  background:var(--bg2);
+  background:var(--bg);
 }
 .screen::-webkit-scrollbar{display:none;}
 .screen.active{display:block;}
 /* ── SCREEN PADDING ── */
-.screen-inner{padding:14px 14px 20px;background:var(--bg);}
+.screen-inner{padding:14px 14px 20px;}
 /* ── SECTION HEADER ── */
 .sec-head{
   display:flex;align-items:baseline;justify-content:space-between;
@@ -968,7 +967,6 @@ html,body{
 .ov-footer{
   background:var(--bg2);
   border-top:1px solid var(--border);
-  margin-top:24px;
   overflow:hidden;
 }
 /* Sezione superiore del footer */
@@ -977,7 +975,7 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:22px 18px 22px;
+  padding:30px 18px 22px;
   border-bottom:1px solid var(--border);
   overflow:hidden;
 }
@@ -1066,7 +1064,13 @@ html,body{
 
 /* ── SITE FOOTER (tutte le pagine) ── */
 .site-footer{
-  margin-top: 28px;
+  margin-top: 0;
+}
+/* Nel body dell'articolo il footer deve annullare il padding laterale di ov-body */
+.ov-body .site-footer{
+  margin-left: -14px;
+  margin-right: -14px;
+  margin-bottom: -28px;
 }
 
 /* ── AUDIO BTN (overlay) ── */
@@ -1314,7 +1318,7 @@ html,body{
     <!-- 4. DIVERGENZA -->
     <div id="ov-divergenza"></div>
 
-    <!-- 5. FONTI -->
+    <!-- 5. FONTI + FOOTER -->
     <div id="ov-fonti"></div>
 
   </div>
@@ -1839,7 +1843,7 @@ function renderOverlay(){
   document.getElementById('ov-text').innerHTML = a.body;
 
   document.getElementById('ov-divergenza').innerHTML = renderDivergenza(a);
-  document.getElementById('ov-fonti').innerHTML = renderFonti(a) + renderCorrelati(a) + footerHTML();
+  document.getElementById('ov-fonti').innerHTML = renderFonti(a) + renderCorrelati(a) + footerHTML('site-footer');
 
   setTimeout(()=>drawRadar('ov-radar', a.pressGroups), 50);
 
