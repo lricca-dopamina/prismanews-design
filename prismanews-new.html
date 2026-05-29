@@ -1062,9 +1062,13 @@ html,body{
 }
 
 /* ── SITE FOOTER (tutte le pagine) ── */
-/* Il footer rompe fuori dal padding dello screen-inner per arrivare ai bordi */
 .site-footer{
-  margin: 28px -14px -20px;
+  margin-top: 28px;
+}
+/* Estende il bg del footer oltre il bordo inferiore (scroll bounce) */
+.ov-footer{
+  padding-bottom: 120px !important;
+  margin-bottom: -120px;
 }
 
 /* ── AUDIO BTN (overlay) ── */
@@ -1145,11 +1149,12 @@ html,body{
           <div id="carousel-track"></div>
         </div>
         <div class="carousel-dots" id="hero-dots" style="padding:14px 0 18px;"></div>
-        <div style="border-bottom:1px solid var(--border);margin:0 0 0 0;"></div>
+        <div style="border-bottom:1px solid var(--border);"></div>
 
         <!-- ARTICLE LIST -->
         <div id="home-list"></div>
       </div>
+      <div id="home-footer"></div>
     </div>
 
     <!-- PER TE -->
@@ -1161,6 +1166,7 @@ html,body{
         </div>
         <div id="perte-list"></div>
       </div>
+      <div id="perte-footer"></div>
     </div>
 
     <!-- CRONOLOGIA -->
@@ -1172,6 +1178,7 @@ html,body{
         </div>
         <div id="cron-list"></div>
       </div>
+      <div id="cron-footer"></div>
     </div>
 
     <!-- PROFILO -->
@@ -1587,10 +1594,11 @@ function buildHomeList(){
       </div>
       <div class="art-headline">${a.title}</div>
     </div>
-  `).join('') + footerHTML('site-footer');
+  `).join('');
   el.querySelectorAll('.art-item').forEach(el=>{
     el.addEventListener('click',()=>openOverlay(+el.dataset.idx));
   });
+  document.getElementById('home-footer').innerHTML = footerHTML('site-footer');
 }
 
 // ── PER TE ──
@@ -1612,7 +1620,7 @@ function buildPerteList(){
   el.querySelectorAll('.card').forEach(el=>{
     el.addEventListener('click',()=>openOverlay(+el.dataset.idx));
   });
-  el.insertAdjacentHTML('beforeend', footerHTML('site-footer'));
+  document.getElementById('perte-footer').innerHTML = footerHTML('site-footer');
 }
 
 // ── CRONOLOGIA ──
@@ -1627,10 +1635,11 @@ function buildCronList(){
       </div>
       <div class="cron-headline">${a.title}</div>
     </div>
-  `).join('') + footerHTML('site-footer');
+  `).join('');
   el.querySelectorAll('.cron-item').forEach(el=>{
     el.addEventListener('click',()=>openOverlay(+el.dataset.idx));
   });
+  document.getElementById('cron-footer').innerHTML = footerHTML('site-footer');
 }
 
 // ── OVERLAY ──
