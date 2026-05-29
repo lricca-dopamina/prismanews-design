@@ -30,6 +30,8 @@
   --font-mono:'IBM Plex Mono', monospace;
   --font-scale:1;
   --header-h:58px;
+  --cats-h:47px;
+  --topbar-h:calc(var(--header-h) + var(--cats-h));
   --nav-h:64px;
 }
 [data-theme="dark"]{
@@ -46,9 +48,6 @@
   --ticker-bg:#1A1A1A;
   --card-bg:#1A1A1A;
   --progress-track:#2A2A2A;
-}
-html{
-  background:var(--bg2); /* mostra --bg2 durante il rubber-band overscroll iOS in fondo */
 }
 html,body{
   width:100%;height:100%;
@@ -181,12 +180,13 @@ html,body{
   overflow-x:hidden;
   scrollbar-width:none;
   display:none;
-  background:var(--bg);
+  /* bg2 = colore del footer; quando si scrolla oltre il fondo su iOS si vede bg2 */
+  background:var(--bg2);
 }
 .screen::-webkit-scrollbar{display:none;}
 .screen.active{display:block;}
 /* ── SCREEN PADDING ── */
-.screen-inner{padding:14px 14px 20px;}
+.screen-inner{padding:14px 14px 20px;background:var(--bg);}
 /* ── SECTION HEADER ── */
 .sec-head{
   display:flex;align-items:baseline;justify-content:space-between;
@@ -646,7 +646,7 @@ html,body{
 /* ── ARTICLE DETAIL OVERLAY (REDESIGN) ── */
 #article-overlay{
   position:fixed;
-  top:var(--header-h);
+  top:var(--topbar-h);
   bottom:var(--nav-h);
   left:0;right:0;
   max-width:430px;margin:0 auto;
@@ -1824,8 +1824,6 @@ function renderOverlay(){
 
   // meta bar
   document.getElementById('ov-meta-bar').innerHTML = `
-    <span class="ov-meta-cat">${a.cat.toUpperCase()}</span>
-    <span class="ov-meta-sep"> | </span>
     <span>${a.testate} TESTATE</span>
     <span class="ov-meta-sep"> | </span>
     <span>${a.lingue} LINGUE</span>
