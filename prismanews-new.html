@@ -1951,6 +1951,24 @@ buildCronList();
 document.getElementById('profilo-footer').innerHTML = footerHTML('site-footer');
 applyTheme('auto');
 
+// ── URL SCREEN PARAM (per import Figma) ──
+// Uso: ?screen=home | perte | cron | profilo | articolo
+(function(){
+  const p = new URLSearchParams(location.search).get('screen');
+  if(!p) return;
+  const map = {home:'home',perte:'perte',cron:'cron',profilo:'profilo'};
+  if(map[p]){
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelector(`.nav-tab[data-tab="${map[p]}"]`)?.classList.add('active');
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-'+map[p])?.classList.add('active');
+    document.getElementById('ticker').style.display = p==='home' ? '' : 'none';
+  }
+  if(p==='articolo'){
+    openOverlay(0);
+  }
+})();
+
 // Sync system theme changes
 window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{
   if(theme==='auto') applyTheme('auto');
