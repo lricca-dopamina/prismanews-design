@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script>
+/* Risolve le foto locali (img/...) rispetto alla cartella del file, comunque venga servita/condivisa la pagina */
+addEventListener('DOMContentLoaded',function(){
+  var dir=location.href.replace(/[#?].*$/,'').replace(/\/[^\/]*\.html?$/i,'/').replace(/([^\/])$/,'$1/');
+  document.querySelectorAll('img').forEach(function(im){
+    var s=im.getAttribute('src')||'';
+    if(s.indexOf('img/')===0){ im.src=dir+s; }
+  });
+});
+</script>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Humans.tech — Lavora con noi</title>
+<link rel="stylesheet" href="https://use.typekit.net/hkv0tso.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════ TOKEN DAL FIGMA ════════ */
+:root{
+  --v:#4437F3; --dk:#050620; --nv:#1E1E2D; --w:#FFFFFF; --g:#EFEFEF;
+  --m:#6E6E94; --hz:#C1C1DA; --dv:#DCD9FF; --o:#FF6B00;
+  --f:"neue-haas-grotesk-display","Helvetica Neue",Arial,sans-serif;
+  --fm:"DM Mono","JetBrains Mono",monospace;
+  --s:cubic-bezier(.16,1,.3,1);
+  /* asterisco brand come maschera/decoro */
+  --ast:path('M50 0 C55 32 68 45 100 50 C68 55 55 68 50 100 C45 68 32 55 0 50 C32 45 45 32 50 0 Z');
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--f);background:var(--dk);color:var(--w);-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none}
+@media(hover:none){body{cursor:auto}}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.w{max-width:1368px;margin:0 auto;padding:0 56px}
+@media(max-width:760px){.w{padding:0 24px}}
+
+/* ════════ CUSTOM CURSOR ════════ */
+.cur{position:fixed;top:0;left:0;width:12px;height:12px;border-radius:50%;background:var(--v);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s,border .25s;box-shadow:0 0 16px rgba(68,55,243,.6)}
+.cur.big{width:60px;height:60px;background:rgba(68,55,243,.18);border:1.5px solid var(--v);box-shadow:0 0 24px rgba(68,55,243,.3)}
+/* su sezioni blu: cursore bianco a bassa opacità (così resta visibile) */
+.cur.light{background:rgba(255,255,255,.65);box-shadow:0 0 16px rgba(255,255,255,.35)}
+.cur.light.big{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.85);box-shadow:0 0 24px rgba(255,255,255,.25)}
+@media(hover:none){.cur{display:none}}
+
+/* ════════ REVEAL ════════ */
+[data-a]{opacity:0;transition:opacity 1s var(--s),transform 1s var(--s);will-change:opacity,transform}
+[data-a="up"]{transform:translateY(56px)}
+[data-a="left"]{transform:translateX(-56px)}
+[data-a="right"]{transform:translateX(56px)}
+[data-a="scale"]{transform:scale(.92)}
+[data-a="clip"]{clip-path:inset(0 0 100% 0)}
+[data-a="fade"]{transform:none}
+[data-a].go{opacity:1;transform:none}
+[data-a="clip"]{clip-path:inset(0 0 100% 0)}
+[data-a="clip"].go{clip-path:inset(0 0 0 0)}
+[data-d="1"]{transition-delay:.1s}[data-d="2"]{transition-delay:.2s}
+[data-d="3"]{transition-delay:.3s}[data-d="4"]{transition-delay:.4s}[data-d="5"]{transition-delay:.5s}
+
+/* word reveal */
+.wr .word{display:inline-block;opacity:0;transform:translateY(38px) rotate(2deg);transition:opacity .7s var(--s),transform .7s var(--s)}
+.wr.go .word{opacity:1;transform:none}
+
+/* ════════ PROGRESS ════════ */
+#pb{position:fixed;top:0;left:0;height:2px;background:var(--v);z-index:9000;transition:width .1s linear}
+
+/* ════════ ANN ════════ */
+.ann{position:sticky;top:0;z-index:800;background:#0a021a;border-bottom:1px solid rgba(130,100,255,.18);padding:6px 56px;display:flex;align-items:center;gap:10px;font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.32);transition:transform .4s var(--s)}
+body.top-hidden .ann{transform:translateY(-100%)}
+body.top-hidden nav{transform:translateY(-180px)}
+.ann b{color:#ff0079}.ann em{margin-left:auto;opacity:.22;font-style:normal}
+
+/* ════════ NAV ════════ */
+nav{position:fixed;top:46px;left:0;right:0;z-index:700;padding:0 40px;transition:transform .4s var(--s)}
+.ni{max-width:1368px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid rgba(5,6,32,.06);border-radius:14px;padding:12px 24px;box-shadow:0 6px 24px rgba(5,6,32,.10)}
+.nlo img{height:32px;display:block}.nlo-fb{font-weight:500;font-size:17px;letter-spacing:-.02em;color:var(--dk)}
+.nm{display:flex;gap:30px;font-family:var(--fm);font-size:14px;font-weight:400;letter-spacing:0;color:#1E1E2D}.nm a{transition:.2s}.nm a:hover{color:var(--v)}
+.ni .btn{font-family:var(--fm);font-size:14px;font-weight:400;padding:14px 20px}
+.ni .bk{background:var(--g);color:var(--v);border:none}.ni .bk:hover{background:#e3e3e3}
+.ni .bv{background:var(--v);color:#fff}.ni .bv:hover{background:#5547ff}
+.nc{display:flex;gap:8px}
+@media(max-width:880px){.nm{display:none}}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-weight:500;font-size:15px;padding:15px 24px;border-radius:11px;transition:.25s;cursor:none;border:none;text-decoration:none;letter-spacing:0;white-space:nowrap}
+@media(hover:none){.btn{cursor:pointer}}
+.bv{background:var(--v);color:var(--w)}.bv:hover{background:#5547ff;transform:translateY(-2px);box-shadow:0 10px 30px rgba(68,55,243,.4)}
+.bk{background:transparent;color:var(--w);border:1px solid rgba(255,255,255,.2)}.bk:hover{background:rgba(255,255,255,.08)}
+.bw{background:var(--w);color:var(--nv)}.bw:hover{background:var(--g);transform:translateY(-2px)}
+.bg{background:var(--g);color:var(--nv)}.bg:hover{background:#fff;transform:translateY(-2px)}
+.bwl{background:rgba(255,255,255,.12);color:var(--w);border:1px solid rgba(255,255,255,.28)}.bwl:hover{background:rgba(255,255,255,.2)}
+
+/* ════════ (TOC rimossa) ════════ */
+.td-removed{display:none}
+.td{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);transition:.3s;cursor:none;position:relative;display:none}
+.td.on{background:var(--v);transform:scale(2)}
+.tdl{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:9px;font-family:var(--fm);white-space:nowrap;color:var(--w);opacity:0;pointer-events:none;transition:.2s}
+.td:hover .tdl{opacity:1}
+
+/* asterisco decorativo */
+.ast{display:inline-block;animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ════════ 01 · HERO ════════ */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(to top,var(--dk) 0%,var(--v) 78.8%);position:relative;overflow:visible}
+.hp-c{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hp{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,255,.4);animation:hpd linear infinite}
+@keyframes hpd{from{transform:translateY(100vh);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateY(-6vh) translateX(30px);opacity:0}}
+/* asterischi fluttuanti */
+.float-ast{position:absolute;color:rgba(255,255,255,.10);pointer-events:none;animation:floatA ease-in-out infinite}
+@keyframes floatA{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-30px) rotate(60deg)}}
+/* hero photo cards (come Figma) */
+.hero-photo{position:absolute;z-index:1;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(5,6,32,.5);animation:floatP ease-in-out infinite}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(68,55,243,.1),rgba(5,6,32,.35))}
+/* coppia sinistra sovrapposta */
+.hp-l{left:2vw;top:36%;width:192px;height:252px;transform:rotate(-6deg);z-index:1}
+.hp-l2{left:7vw;top:20%;width:150px;height:198px;transform:rotate(8deg);z-index:2}
+/* coppia destra sovrapposta */
+.hp-r{right:2vw;top:34%;width:196px;height:258px;transform:rotate(6deg);z-index:1}
+.hp-r2{right:7vw;top:18%;width:150px;height:198px;transform:rotate(-8deg);z-index:2}
+@keyframes floatP{0%,100%{transform:translateY(0) rotate(var(--rot,0))}50%{transform:translateY(-22px) rotate(var(--rot,0))}}
+/* card che appaiono dopo un po' */
+.hero-photo.late{opacity:0;transition:opacity 1.1s var(--s)}
+.hero-photo.late.show{opacity:1}
+@media(max-width:1100px){.hero-photo{display:none}}
+.h-in{position:relative;z-index:2;padding:168px 0 0;text-align:center}
+.h-ey{display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;font-family:var(--fm);font-size:11px;color:var(--nv);text-transform:uppercase;letter-spacing:.12em;background:#fff;border-radius:100px;padding:7px 16px 7px 12px;box-shadow:0 2px 12px rgba(5,6,32,.18)}
+.hd{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 7px 2px rgba(255,255,255,.55);animation:hda 2s ease-in-out infinite}
+@keyframes hda{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.35)}50%{box-shadow:0 0 0 7px rgba(34,197,94,.1)}}
+.h-h1{font-size:clamp(56px,8vw,120px);font-weight:500;line-height:.98;letter-spacing:-.035em;color:var(--w);max-width:1106px;margin:0 auto 24px}
+.h-h1 em{font-style:italic}
+.h-sub{font-size:clamp(16px,1.7vw,30px);color:var(--g);max-width:840px;margin:0 auto 40px;line-height:1.35}
+.h-sub strong{font-weight:700;color:var(--w)}
+.h-ctas{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:72px;flex-wrap:wrap}
+.h-st{border-top:1px solid rgba(255,255,255,.15);display:flex;max-width:1368px;margin:0 auto}
+.h-s{flex:1;padding:30px 0;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+.h-s:last-child{border-right:none}
+.h-sn{font-size:clamp(30px,4vw,54px);font-weight:500;letter-spacing:-.03em;line-height:1}
+.h-sl{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.45);margin-top:5px;text-transform:uppercase;letter-spacing:.08em}
+.h-wave{line-height:0;position:relative;z-index:2;margin-bottom:-2px}
+.h-wave svg{display:block;width:100%}
+
+/* award marquee */
+.as{background:var(--w);padding:28px 0;overflow:hidden}
+.at{display:flex;gap:56px;align-items:center;animation:ama 30s linear infinite;width:max-content}
+@keyframes ama{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ai{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.ai img{height:48px;width:auto;opacity:1;object-fit:contain}
+.ai .ai-statista{height:26px;width:auto;display:block}
+.ai span{font-size:14px;color:var(--nv);white-space:nowrap;font-weight:500}
+.asep{display:none}
+
+/* ════════ 02 · MANIFESTO — solo testo ════════ */
+#manifesto{background:linear-gradient(0deg,var(--nv) 0%,var(--v) 100%);padding:56px 0 40px;position:relative;overflow:hidden;contain:paint}
+#manifesto .man-bg-img{position:absolute;inset:0;background:url('img/manifesto-bg.jpg') center/cover no-repeat;opacity:.82;z-index:0;pointer-events:none;mix-blend-mode:screen}
+.man-st{font-size:clamp(28px,3.8vw,62px);font-weight:500;line-height:1.05;letter-spacing:-.03em;margin-bottom:40px;max-width:1100px}
+.man-lead{font-size:clamp(20px,2.2vw,32px);color:rgba(255,255,255,.78);line-height:1.45;max-width:840px}
+.man-lead em{font-style:normal;color:var(--w);font-weight:500}
+.man-lead-2{color:rgba(255,255,255,.5);margin-top:32px;font-size:clamp(18px,1.8vw,24px)}
+#manifesto .w{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.man-spline{position:relative;height:620px;border-radius:24px;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.man-spline iframe{width:140%;height:140%;margin:-20% -20%;border:0;display:block;pointer-events:none}
+@media(max-width:900px){#manifesto .w{grid-template-columns:1fr}.man-spline{height:320px}}
+/* blob dinamici sfondo manifesto */
+#manifesto::before,#manifesto::after{content:'';position:absolute;border-radius:50%;filter:blur(50px);opacity:.25;pointer-events:none;z-index:0;will-change:transform}
+#manifesto::before{width:700px;height:700px;left:-15%;top:-30%;background:radial-gradient(circle,#7c3aed,#4437F3);animation:blobA 14s ease-in-out infinite alternate}
+#manifesto::after{width:600px;height:600px;right:-10%;bottom:-30%;background:radial-gradient(circle,#4437F3,#06b6d4);animation:blobB 18s ease-in-out infinite alternate}
+#manifesto .w{position:relative;z-index:1}
+.man-scroll{position:relative;z-index:1}
+@keyframes blobA{0%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,60px) scale(1.15)}100%{transform:translate(-40px,100px) scale(0.9)}}
+@keyframes blobB{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,-80px) scale(1.2)}100%{transform:translate(40px,-40px) scale(0.85)}}
+.man-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.man-bg-svg{width:100%;height:100%;position:absolute;inset:0;will-change:transform}
+/* brush strokes: feTurbulence STATICO (cachato), anima solo opacity = zero CPU per frame */
+.bs{opacity:0}
+@keyframes bsFade{
+  0%   {opacity:0}
+  8%   {opacity:1}
+  55%  {opacity:1}
+  75%  {opacity:0}
+  100% {opacity:0}
+}
+.bs1{animation:bsFade 12s ease-in-out 0s infinite}
+.bs2{animation:bsFade 14s ease-in-out 2.4s infinite}
+.bs3{animation:bsFade 11s ease-in-out 4.8s infinite}
+.bs4{animation:bsFade 13s ease-in-out 7.2s infinite}
+.bs5{animation:bsFade 12s ease-in-out 9.6s infinite}
+.man-scroll{display:flex;justify-content:center;padding:32px 0 0}
+.man-scroll-arrow{width:36px;height:36px;border:1.5px solid rgba(255,255,255,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:scrollBounce 1.8s ease-in-out infinite;cursor:none}
+.man-scroll-arrow svg{width:14px;height:14px;color:#fff}
+@keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(7px);opacity:1}}
+
+/* ════════ 03 · PROGETTI ════════ */
+#progetti{background:linear-gradient(to bottom,var(--v) 5%,var(--dk) 90%);padding:120px 0}
+.prj-top{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:96px;align-items:end}
+@media(max-width:760px){.prj-top{grid-template-columns:1fr}}
+.prj-h{font-size:clamp(34px,4.5vw,64px);font-weight:500;line-height:1.05;letter-spacing:-.02em}
+.prj-body{font-size:clamp(15px,1.4vw,22px);color:rgba(255,255,255,.7);line-height:1.5}
+/* ── marquee leggero loghi clienti ── */
+.prj-clients{overflow:hidden;margin:0;padding:32px 0 40px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.pcm-track{display:flex;gap:72px;align-items:center;width:max-content;animation:ama 38s linear infinite;opacity:.85}
+.pcm-track img{height:46px;width:auto;object-fit:contain;filter:brightness(0) invert(1);opacity:.92}
+.prj-clients-lbl{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);text-align:center;margin:0 0 40px;display:flex;align-items:center;justify-content:center;gap:10px}
+.prj-clients-lbl svg{width:12px;height:12px;color:var(--dv)}
+/* ── preview card + glass al cursore (Figma) ── */
+.prj-sc{overflow:hidden;position:relative;cursor:grab;padding:0;user-select:none;-webkit-user-select:none;display:flex;flex-direction:row}
+.prj-sc::-webkit-scrollbar{display:none}
+.prj-track{display:flex;gap:20px;padding-left:56px;width:max-content;will-change:transform}
+.pc{flex-shrink:0;width:320px;height:420px;border-radius:24px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.18);scroll-snap-align:start;cursor:none}
+.pc.ph{border-style:dashed}
+.pc-prev{position:absolute;inset:0;transition:transform .6s var(--s)}
+.pc-prev img{width:100%;height:100%;object-fit:cover}
+.pc:hover .pc-prev{transform:scale(1.06)}
+.pc-prev::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,32,.2) 0%,rgba(5,6,32,.7) 100%)}
+.pc-face{position:absolute;top:24px;left:24px;right:24px;z-index:2;display:flex;align-items:center;justify-content:space-between}
+.pc-chip{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--w);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(5px);padding:5px 12px;border-radius:100px}
+.pc-title{position:absolute;bottom:26px;left:26px;right:26px;z-index:2;font-size:28px;font-weight:500;line-height:1.1;letter-spacing:-.01em;transition:.4s var(--s)}
+.pc:hover .pc-title{opacity:.82;transform:translateY(-2px)}
+.pc-detail{display:none}
+/* glass card che segue il cursore */
+#pglass{position:fixed;z-index:8000;width:408px;background:rgba(255,255,255,.14);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.4);border-radius:22px;padding:24px;box-shadow:0 24px 60px rgba(5,6,32,.45);opacity:0;transform:scale(.92);transition:opacity .25s var(--s),transform .25s var(--s);pointer-events:none}
+#pglass.on{opacity:1;transform:scale(1)}
+.gl-n{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.7);letter-spacing:.1em;margin-bottom:16px}
+/* campi come box bordati, label + valore allineati */
+.pf{display:flex;align-items:center;gap:16px;border:1px solid rgba(255,255,255,.22);border-radius:13px;padding:14px 18px;margin-top:10px}
+.pf:first-of-type{margin-top:0}
+.pfl{flex-shrink:0;width:58px;font-family:var(--fm);font-size:9px;text-transform:uppercase;color:rgba(255,255,255,.55);letter-spacing:.08em;line-height:1.35}
+.pfv{flex:1;font-size:14px;color:var(--w);line-height:1.4}.pfv strong{font-weight:700}
+.pfo{color:#fff;font-weight:700;font-size:15px}
+.ptags{display:flex;flex-wrap:wrap;gap:6px}
+.ptag{font-family:var(--fm);font-size:9px;padding:4px 9px;border-radius:6px;background:rgba(255,255,255,.18);color:#fff}
+.scroll-hint{margin-top:20px;text-align:right;font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.4)}
+.nda-bar{margin-top:40px;padding:24px 30px;border-radius:14px;background:var(--v);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nda-bar p{font-size:16px;color:rgba(255,255,255,.85);line-height:1.5}.nda-bar strong{color:var(--w)}
+@media(max-width:760px){.nda-bar{flex-direction:column;align-items:flex-start}}
+
+/* ════════ 04 · ENTRA IN CAMPO ════════ */
+#campo{background:linear-gradient(0deg,var(--nv) 0%,var(--v) 100%);padding:160px 0}
+.campo-g{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+@media(max-width:760px){.campo-g{grid-template-columns:1fr}}
+.campo-h{font-size:clamp(36px,4.5vw,68px);font-weight:500;line-height:1.02;letter-spacing:-.025em;margin-bottom:32px}
+.campo-b{font-size:clamp(16px,1.5vw,28px);color:rgba(255,255,255,.78);line-height:1.45}
+.campo-b em{font-style:italic}.campo-b strong{font-weight:700;color:var(--w)}
+.campo-boxes{display:flex;flex-direction:column;gap:14px}
+.cbox{border:1px solid var(--g);border-radius:17px;padding:24px 26px;font-size:clamp(16px,1.5vw,24px);color:var(--w);line-height:1.4;transition:.35s var(--s);cursor:none}
+.cbox:hover{background:rgba(255,255,255,.06);transform:translateX(8px)}
+
+/* ════════ 05 · COME LAVORIAMO — PINNED SCROLL-DRIVEN ════════ */
+#metodo{background:var(--nv);position:relative;height:420vh}
+.met-pin{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+.met-inner{width:100%;max-width:1368px;margin:0 auto;padding:0 56px;display:grid;grid-template-columns:300px 1fr;gap:60px;align-items:center}
+@media(max-width:760px){.met-inner{grid-template-columns:1fr;gap:24px}}
+.met-side{}
+.met-lb{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.14em;margin-bottom:18px}
+.met-side h2{font-size:clamp(32px,3.5vw,52px);font-weight:500;line-height:1.05;letter-spacing:-.02em}
+/* progress dots */
+.met-prog{display:flex;flex-direction:column;gap:14px;margin-top:40px}
+.met-pi{display:flex;align-items:center;gap:12px;font-family:var(--fm);font-size:12px;color:rgba(255,255,255,.3);transition:.4s}
+.met-pi .dotbar{width:32px;height:2px;background:rgba(255,255,255,.2);transition:.4s}
+.met-pi.on{color:var(--w)}
+.met-pi.on .dotbar{width:56px;background:var(--v)}
+.met-stage-wrap{position:relative;min-height:60vh}
+.met-stage{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(40px) scale(.96);transition:opacity .6s var(--s),transform .6s var(--s);pointer-events:none}
+.met-stage.on{opacity:1;transform:none;pointer-events:auto}
+.met-num{font-family:var(--fm);font-size:14px;color:var(--v);margin-bottom:16px}
+.met-kw{font-size:clamp(48px,8vw,128px);font-weight:500;letter-spacing:-.04em;line-height:.95;margin-bottom:24px;color:var(--w)}
+.met-d{font-size:clamp(16px,1.6vw,24px);color:rgba(255,255,255,.6);line-height:1.5;max-width:600px}
+.met-d em{color:var(--w);font-style:normal;font-weight:500}
+
+/* ════════ 06 · CRESCERE ════════ */
+#crescere{background:var(--nv);padding:120px 0 0;overflow:visible}
+.cres-title{padding:0 56px;margin-bottom:48px;position:relative}
+.ct1,.ct2{font-size:clamp(56px,10vw,162px);font-weight:500;line-height:.88;letter-spacing:-.035em;white-space:nowrap}
+.ct2{margin-top:-.06em}
+.ct2 em{font-style:italic;color:var(--v)}
+.gc-row{display:flex;gap:18px;padding:32px 56px 60px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x mandatory;align-items:flex-start}
+.gc-row::-webkit-scrollbar{display:none}
+.gc{flex-shrink:0;width:398px;height:519px;border-radius:28px;overflow:hidden;position:relative;scroll-snap-align:start;cursor:none;transition:.45s var(--s)}
+/* posizioni alternate (come Figma) */
+.gc:nth-child(even){margin-top:72px}
+.gc:hover{transform:translateY(-8px)}
+.gc-ph{position:absolute;inset:0}
+.gc-ph img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .8s var(--s)}
+.gc:hover .gc-ph img{transform:scale(1.07)}
+/* sfumatura più scura per leggibilità */
+.gc::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,#050620 0%,rgba(5,6,32,.82) 26%,rgba(30,30,45,.35) 50%,rgba(5,6,32,.1) 72%,transparent 100%);z-index:1}
+/* asterisco brand sull'angolo card */
+.gc-ast{position:absolute;top:18px;right:18px;z-index:2;color:var(--w);opacity:.85;animation:spin 18s linear infinite}
+.gc-info{position:absolute;bottom:0;left:0;right:0;padding:22px;z-index:2}
+.gc-entry{font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;letter-spacing:.36px}
+.gc-result{font-size:13px;font-weight:700;color:var(--w);line-height:1.5;margin-top:5px}
+.gc-name{font-size:15px;font-weight:500;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.18)}
+.cres-team{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:100px 56px;border-top:1px solid rgba(255,255,255,.08);margin-top:32px}
+@media(max-width:760px){.cres-team{grid-template-columns:1fr}}
+.ct-h{font-size:clamp(36px,4vw,68px);font-weight:500;line-height:1.02;letter-spacing:-.025em;margin-bottom:24px}
+.ct-b{font-size:clamp(15px,1.4vw,24px);color:var(--w);line-height:1.35;margin-bottom:32px}
+/* dot cluster animato (motivo dal Figma) */
+.dotcluster{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:14px;width:100%;max-width:340px;aspect-ratio:1}
+.dotcell{border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);transition:.5s var(--s);opacity:0;transform:scale(0)}
+.dotcluster.go .dotcell{opacity:1;transform:scale(1)}
+.dotcell.acc{background:rgba(68,55,243,.4);border-color:var(--v);animation:dpulse 3s ease-in-out infinite}
+@keyframes dpulse{0%,100%{box-shadow:0 0 0 0 rgba(68,55,243,.4)}50%{box-shadow:0 0 0 14px rgba(68,55,243,0)}}
+/* morph cerchio blu ⇄ Spark Humans */
+.dotcell.morph{background:none;border:none;display:flex;align-items:center;justify-content:center;position:relative}
+.dotcell.morph .mcircle{position:absolute;inset:0;border-radius:50%;background:var(--v);animation:mCircle 4.5s ease-in-out infinite;animation-delay:var(--mdelay,0s)}
+.dotcell.morph svg{position:relative;z-index:1;width:66%;height:66%;color:var(--v);animation:mSpark 4.5s ease-in-out infinite;animation-delay:var(--mdelay,0s)}
+@keyframes mCircle{
+  0%,16%{transform:scale(1);opacity:1;box-shadow:0 0 16px rgba(68,55,243,.5)}
+  42%,58%{transform:scale(.35);opacity:0;box-shadow:0 0 0 rgba(68,55,243,0)}
+  84%,100%{transform:scale(1);opacity:1;box-shadow:0 0 16px rgba(68,55,243,.5)}
+}
+@keyframes mSpark{
+  0%,16%{transform:scale(0) rotate(-120deg);opacity:0;filter:drop-shadow(0 0 0 rgba(68,55,243,0))}
+  42%,58%{transform:scale(1.08) rotate(0deg);opacity:1;filter:drop-shadow(0 0 18px rgba(68,55,243,.65))}
+  84%,100%{transform:scale(0) rotate(120deg);opacity:0;filter:drop-shadow(0 0 0 rgba(68,55,243,0))}
+}
+
+/* ════════ 07 · SEDE — full-screen scroll media ════════ */
+#sede{background:var(--w);color:var(--nv);padding:96px 0 0}
+/* titolo FUORI dalla foto */
+.sede-head{margin-bottom:40px}
+.sede-head h2{font-size:clamp(36px,5vw,80px);font-weight:500;line-height:1.0;letter-spacing:-.03em;color:var(--nv);max-width:1000px}
+.sede-head .sub{font-family:var(--fm);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--m);margin-top:14px}
+/* media: foto pulita, ben visibile */
+.sede-media{height:74vh;position:relative;overflow:hidden;border-radius:32px;transition:none;will-change:margin,width,border-radius}
+.sede-media-inner{position:absolute;inset:0;will-change:transform,border-radius}
+.sede-media-inner img{width:100%;height:100%;object-fit:cover}
+.sede-media-inner::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,32,.12) 0%,transparent 30%,transparent 70%,rgba(5,6,32,.18) 100%)}
+.sede-body-wrap{padding-top:40px;padding-bottom:0}
+.sede-g{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:56px}
+@media(max-width:760px){.sede-g{grid-template-columns:1fr}}
+.sede-b{font-size:17px;color:#424267;line-height:1.6;margin-bottom:16px}
+.sede-b strong{color:var(--nv)}
+/* gallery strip immagini sede */
+.sede-gallery{overflow:hidden;position:relative;padding:0 0 48px;scrollbar-width:none}
+.sede-gallery::-webkit-scrollbar{display:none}
+.sg-track{display:flex;gap:20px;width:max-content;animation:sgScroll 36s linear infinite;will-change:transform}
+@keyframes sgScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.sg-item{flex-shrink:0;width:400px;height:280px;border-radius:24px;overflow:hidden;position:relative}
+.sg-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--s)}
+.sg-item:hover img{transform:scale(1.05)}
+.sg-cap{position:absolute;bottom:14px;left:16px;font-family:var(--fm);font-size:11px;color:var(--w);background:rgba(5,6,32,.5);padding:4px 10px;border-radius:6px;backdrop-filter:blur(6px)}
+.sg-ph-item{background:linear-gradient(135deg,#1a1a3e,#0d0d2b);display:flex;align-items:center;justify-content:center}
+.sg-ph-item .sg-cap{position:static;background:rgba(255,255,255,.15)}
+
+/* ════════ 08 · BEST WORKPLACE ════════ */
+#awards{background:var(--v);padding:96px 0}
+.aw-card{position:relative;border-radius:20px;overflow:hidden;margin-bottom:64px;min-height:560px;display:flex;align-items:center;justify-content:center;padding-top:120px}
+.aw-card .aw-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.aw-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,32,.72) 14%,rgba(35,25,160,.85) 100%);z-index:1}
+/* badge GPTW agli angoli (come Figma) */
+.aw-badge{position:absolute;top:32px;z-index:3;height:108px;width:auto;object-fit:contain}
+.aw-badge.bl{left:46px}
+.aw-badge.br{right:46px}
+.aw-text{position:relative;z-index:2;text-align:center;padding:0 48px 60px;max-width:920px}
+/* bottone icona-box + label (come Figma) */
+.aw-btn{position:relative;display:inline-flex;align-items:center;gap:14px;color:#fff;font-family:var(--fm);font-weight:500;font-size:15px;letter-spacing:0;padding-right:24px;background:rgba(255,255,255,.12);border-radius:13px}
+.aw-btn::before{content:'';position:absolute;left:0;top:0;width:52px;height:100%;border-radius:13px;background:var(--g);transition:width .4s var(--s);z-index:0}
+.aw-btn:hover::before{width:100%}
+.aw-btn-ico{position:relative;z-index:1;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:transparent}
+.aw-btn .aw-btn-lb{position:relative;z-index:1;transition:color .3s var(--s)}
+.aw-btn:hover .aw-btn-lb{color:var(--dk)}
+.aw-btn-ico svg{width:22px;height:22px;color:var(--v)}
+@media(max-width:680px){.aw-badge{height:72px;top:20px}.aw-badge.bl{left:20px}.aw-badge.br{right:20px}}
+.aw-h{font-size:clamp(36px,5vw,72px);font-weight:500;line-height:1.02;letter-spacing:-.025em;margin-bottom:22px}
+.aw-b{font-size:clamp(16px,1.6vw,26px);color:rgba(255,255,255,.9);line-height:1.4;margin-bottom:32px}
+.aw-b strong{font-weight:700}
+.aw-p{font-size:clamp(15px,1.4vw,24px);color:var(--w);text-align:center;max-width:894px;margin:0 auto 48px;line-height:1.3}
+.aw-3{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;max-width:896px;margin:0 auto}
+@media(max-width:760px){.aw-3{grid-template-columns:1fr;gap:32px}}
+.aw-s{text-align:center}
+.aw-s .ico{margin-bottom:14px;display:flex;justify-content:center;color:#fff}
+.aw-s .ico svg{width:46px;height:46px}
+.aw-s .ico img{width:46px;height:46px}
+.proc-tim svg{width:20px;height:20px;color:var(--v)}
+.ben-ico svg{width:26px;height:26px;color:var(--v)}
+.ben-ico img{width:26px;height:26px}
+.aw-st{font-size:clamp(18px,1.6vw,24px);font-weight:700;color:var(--w);line-height:1.2}
+.aw-ss{font-size:16px;color:rgba(255,255,255,.75);margin-top:6px}
+.aw-ss em{font-style:italic}
+
+/* ════════ 09 · PROCESSO + BENEFIT ════════ */
+#processo{background:linear-gradient(180deg,var(--w) 0%,var(--v) 72%,var(--v) 100%);padding:120px 0 128px}
+.proc-h{font-size:clamp(32px,4.5vw,72px);font-weight:500;text-align:center;max-width:1130px;margin:0 auto 80px;line-height:1.08;letter-spacing:-.02em;background:linear-gradient(-90deg,var(--dk) 2%,var(--v) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.proc-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:72px}
+@media(max-width:760px){.proc-3{grid-template-columns:1fr}}
+.proc-c{background:linear-gradient(to top,var(--w) 0%,var(--dv) 100%);border-radius:16px;padding:28px;min-height:380px;display:flex;flex-direction:column;justify-content:flex-start;transition:.4s var(--s);cursor:none}
+.proc-c:hover{transform:translateY(-8px);box-shadow:0 24px 56px rgba(0,0,0,.2)}
+.proc-tim{display:inline-flex;align-items:center;gap:6px;background:rgba(68,55,243,.12);border-radius:9px;padding:5px 14px 5px 6px}
+.proc-tm{font-size:20px;font-weight:500;color:var(--v)}
+.proc-ch{font-size:clamp(22px,2vw,40px);font-weight:500;color:var(--v);line-height:1.15;margin:28px 0 16px;letter-spacing:-.01em}
+.proc-cd{font-size:17px;color:var(--nv);line-height:1.55}.proc-cd em{font-weight:600;font-style:normal}
+/* ingrediente segreto — blocco centrato standalone */
+/* ingrediente segreto: 2 colonne con foto (Figma) */
+.ingr-g{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin:24px 0 96px}
+@media(max-width:760px){.ingr-g{grid-template-columns:1fr;gap:32px}}
+.ingr-h{font-size:clamp(28px,3.5vw,56px);font-weight:500;color:var(--w);margin-bottom:24px;letter-spacing:-.02em}
+.ingr-b{font-size:18px;color:rgba(255,255,255,.85);line-height:1.6;margin-bottom:20px}.ingr-b strong{font-weight:600;color:var(--w)}
+.ingr-photos{position:relative;height:440px;max-width:560px;margin:0 auto}
+.ingr-photo{position:absolute;border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(5,6,32,.4)}
+.ingr-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.ingr-photo.p1{width:320px;height:300px;top:0;left:0;transform:rotate(-4deg);z-index:2}
+.ingr-photo.p2{width:320px;height:300px;bottom:0;right:0;transform:rotate(4deg);z-index:1}
+@media(max-width:760px){.ingr-photos{height:380px;max-width:100%}.ingr-photo.p1,.ingr-photo.p2{width:74%;height:64%}}
+/* benefit — full width, heading + 2 card con loghi */
+.ben-block{}
+.ben-h-txt{font-size:clamp(32px,4vw,64px);font-weight:500;color:var(--w);margin-bottom:16px;letter-spacing:-.025em}
+.ben-sub{font-size:clamp(16px,1.5vw,22px);color:rgba(255,255,255,.8);line-height:1.55;margin-bottom:40px;max-width:900px}.ben-sub strong{font-weight:600;color:var(--w)}
+.ben-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:760px){.ben-grid{grid-template-columns:1fr}}
+.ben-c{background:linear-gradient(to top,var(--w) 0%,var(--dv) 100%);border-radius:24px;padding:36px;display:flex;flex-direction:column;transition:.4s var(--s);cursor:none}
+.ben-c:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(68,55,243,.16)}
+.ben-ico{width:52px;height:52px;background:var(--w);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(30,30,45,.08)}
+.ben-ct{font-size:clamp(24px,2.2vw,40px);font-weight:500;color:var(--v);line-height:1.15;margin:24px 0 14px;letter-spacing:-.015em}
+.ben-bd{font-size:18px;color:#424267;line-height:1.5;margin-bottom:auto}
+.ben-logos{display:flex;gap:28px;align-items:center;margin-top:32px;flex-wrap:wrap}
+.ben-logos img{height:34px;width:auto;opacity:1;object-fit:contain}
+
+/* ════════ 10 · CANDIDATURA ════════ */
+/* card arancione dentro sezione viola (Figma) */
+#candidatura{background:var(--v);padding:64px 0}
+.cand{background:var(--o);border-radius:24px;padding:48px 56px;display:flex;align-items:center;justify-content:space-between;gap:48px}
+@media(max-width:760px){.cand{flex-direction:column;align-items:flex-start;padding:36px 28px}}
+.cand-h{font-size:clamp(24px,3vw,48px);font-weight:500;color:var(--w);line-height:1.05;margin-bottom:16px;letter-spacing:-.02em}
+.cand-b{font-size:17px;color:rgba(255,255,255,.9);line-height:1.5;max-width:720px}.cand-b strong{color:var(--w);font-weight:600}
+/* bottone icona-box + label su arancione */
+.cand-btn{display:inline-flex;align-items:center;gap:14px;color:var(--w);font-weight:500;font-size:16px;letter-spacing:.33px;flex-shrink:0;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:17px;padding:7px 24px 7px 7px;transition:.25s var(--s)}
+.cand-btn:hover{background:rgba(255,255,255,.26);transform:translateY(-3px)}
+.cand-btn .ib{width:52px;height:52px;border-radius:13px;background:var(--w);display:flex;align-items:center;justify-content:center;transition:.25s var(--s)}
+.cand-btn .ib svg{width:22px;height:22px;color:var(--o)}
+
+/* team photo parallax */
+#teamphoto{height:600px;overflow:hidden;position:relative}
+#teamphoto img{width:100%;height:130%;object-fit:cover;object-position:center 95%;will-change:transform}
+#teamphoto::after{content:'';position:absolute;inset:0;background:linear-gradient(var(--v) 0%,var(--v) 12%,rgba(68,55,243,0) 30%,rgba(5,6,32,0) 80%,var(--w) 100%)}
+
+/* ════════ 11 · POSIZIONI ════════ */
+#posizioni{background:var(--w);color:var(--nv);padding:80px 0}
+.pos-h{font-size:clamp(48px,6.5vw,96px);font-weight:500;line-height:.98;letter-spacing:-.035em;margin-bottom:40px;text-align:center}
+.pos-filt{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.jobf{border:1px solid var(--nv);border-radius:15px;padding:0 22px;height:52px;display:inline-flex;align-items:center;gap:7px;font-size:17px;color:var(--nv);cursor:none;transition:.2s;background:transparent;font-family:var(--f);letter-spacing:.3px}
+.jf-ar{display:inline-block;transform:translateY(-2px);font-size:.85em}
+.jobf:hover,.jobf.on{background:var(--v);border-color:var(--v);color:var(--w)}
+.pos-sec{font-size:30px;font-weight:500;color:var(--nv);padding-bottom:14px;border-bottom:1px solid var(--g)}
+.pos-row{display:flex;align-items:center;padding:18px 16px;border-bottom:1px solid var(--g);gap:12px;cursor:none;transition:.2s;border-radius:12px}
+.pos-row:hover{background:#f5f4ff}
+/* CTA chiaro per ogni posizione */
+.pos-apply{display:inline-flex;align-items:center;gap:8px;background:var(--v);color:var(--w);font-family:var(--f);font-weight:500;font-size:14px;padding:11px 18px;border-radius:10px;flex-shrink:0;transition:.2s var(--s);text-decoration:none;letter-spacing:.2px;white-space:nowrap}
+.pos-apply .ar{transition:.2s var(--s)}
+.pos-row:hover .pos-apply{background:#5547ff}
+.pos-row:hover .pos-apply .ar{transform:translateX(3px)}
+.pos-ti{font-size:18px;color:var(--nv);line-height:1.4;letter-spacing:.3px;flex:1}
+.pos-dv{display:none}
+.pos-lo,.pos-ty{font-family:var(--fm);font-size:12px;color:var(--v);letter-spacing:.02em;white-space:nowrap;flex-shrink:0;background:rgba(68,55,243,.08);border:1px solid rgba(68,55,243,.2);padding:5px 12px;border-radius:100px}
+@media(max-width:760px){.pos-lo,.pos-ty,.pos-dv{display:none}}
+.pos-arr{width:52px;height:52px;border-radius:11px;background:var(--v);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.3s var(--s)}
+.pos-row:hover .pos-arr svg{transform:translate(2px,-2px)}
+.pos-arr svg{transition:.3s var(--s)}
+.pos-cta{margin-top:72px;text-align:center}
+/* titolo bicolore (viola + navy) come Figma */
+.pos-cta-t{font-size:clamp(28px,3.8vw,60px);font-weight:500;color:var(--nv);line-height:1.12;max-width:820px;margin:0 auto 40px;letter-spacing:-.02em}
+.pos-cta-t em{font-style:normal;color:var(--v)}
+/* box viola con testo + bottone icona (Figma) */
+.pos-cta-box{border-radius:18px;padding:36px 40px;background:var(--v);max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:40px;text-align:left}
+@media(max-width:760px){.pos-cta-box{flex-direction:column;align-items:flex-start;padding:28px}}
+.pos-cta-b{font-size:18px;color:rgba(255,255,255,.92);line-height:1.5;max-width:460px}.pos-cta-b strong{color:#fff;font-weight:600}
+.pos-cta-btn{position:relative;display:inline-flex;align-items:center;gap:14px;color:var(--w);font-family:var(--fm);font-weight:500;font-size:15px;letter-spacing:0;flex-shrink:0;padding-right:24px;background:rgba(255,255,255,.12);border-radius:12px}
+.pos-cta-btn::before{content:'';position:absolute;left:0;top:0;width:48px;height:100%;border-radius:12px;background:rgba(255,255,255,.22);transition:width .4s var(--s),background .3s var(--s);z-index:0}
+.pos-cta-btn:hover::before{width:100%;background:#fff}
+.pos-cta-btn .ib{position:relative;z-index:1;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:transparent}
+.pos-cta-btn .aw-btn-lb{position:relative;z-index:1;transition:color .3s var(--s)}
+.pos-cta-btn:hover .aw-btn-lb{color:var(--v)}
+.pos-cta-btn .ib svg{width:20px;height:20px;color:#fff;transition:color .3s var(--s)}
+.pos-cta-btn:hover .ib svg{color:var(--v)}
+
+/* ════════ FOOTER ════════ */
+footer{background:#08081c;color:#fff;padding:80px 0 26px;font-family:var(--f)}
+.ft-grid{display:grid;grid-template-columns:minmax(280px,1fr) 1px minmax(320px,1.2fr) auto;gap:0 56px;align-items:start}
+.ft-divider{width:1px;align-self:stretch;background:rgba(255,255,255,.12)}
+.ft-logo-w{display:flex;align-items:flex-start;gap:2px;font-weight:600;font-size:30px;letter-spacing:-.02em;color:#fff;line-height:1}
+.ft-logo-w .tech{font-weight:400}
+.ft-logo-w svg{width:17px;height:17px;color:var(--v);margin-top:-3px}
+.ft-tag{font-size:22px;font-weight:500;color:#fff;margin:8px 0 28px;letter-spacing:-.01em}
+.ft-badges{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.ft-badges img{height:46px;width:auto}
+.ft-fast{font-size:12px;font-weight:600;line-height:1.2;max-width:130px;color:#fff}
+.ft-desc{font-size:14px;line-height:1.6;color:rgba(255,255,255,.68);max-width:380px;margin:0 0 26px}
+.ft-desc a{color:#fff;text-decoration:underline;text-underline-offset:2px}
+.ft-social{display:flex;align-items:center;gap:12px;font-size:15px;color:rgba(255,255,255,.7)}
+.ft-social a{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;color:#fff;transition:.2s}
+.ft-social a:hover{color:var(--dv)}.ft-social svg{width:19px;height:19px}
+.ft-cta a{display:inline-flex;align-items:center;gap:14px;font-size:clamp(40px,4.6vw,66px);font-weight:500;color:#fff;letter-spacing:-.02em;line-height:1.2;transition:.3s}
+.ft-cta a:hover{gap:24px;color:var(--dv)}
+.ft-cta a svg{width:.62em;height:.62em;stroke-width:2.2}
+.ft-contact{margin-top:64px}
+.ft-mail{font-size:15px;color:rgba(255,255,255,.82);display:inline-block;margin-bottom:16px;text-decoration:none}
+.ft-mail:hover{color:#fff}
+.ft-locs{font-family:var(--fm);font-size:13px;letter-spacing:.04em;color:#fff;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ft-locs a{color:#fff;text-decoration:underline;text-underline-offset:3px}.ft-locs span{color:rgba(255,255,255,.35)}
+.ft-menu{display:flex;flex-direction:column;gap:15px}
+.ft-menu a{font-size:16px;color:#fff;text-decoration:none;transition:.2s;white-space:nowrap}
+.ft-menu a:hover{color:var(--dv)}
+.ft-lang{display:flex;align-items:center;gap:14px;margin-top:36px;font-family:var(--fm);font-size:13px}
+.ft-lang svg{width:17px;height:17px;color:rgba(255,255,255,.7)}
+.ft-lang a{color:rgba(255,255,255,.6);text-decoration:none}.ft-lang a.on{color:#fff}
+.ft-bottom{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);margin-top:60px;padding-top:22px}
+.ft-copy{font-size:12px;color:rgba(255,255,255,.5)}
+.ft-legal{display:flex;gap:20px;flex-wrap:wrap;font-size:12px}
+.ft-legal a{color:rgba(255,255,255,.5);text-decoration:none}.ft-legal a:hover{color:#fff}
+.ft-mock{font-family:var(--fm);font-size:9px;color:rgba(255,255,255,.2);margin-top:12px}
+@media(max-width:980px){.ft-grid{grid-template-columns:1fr;gap:40px}.ft-divider{display:none}.ft-contact{margin-top:28px}}
+/* video sede */
+.sede-video-el,.sede-img-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sede-video-el{z-index:1;opacity:0;transition:opacity .5s}
+.sede-video-el.playing{opacity:1}
+.sede-img-fallback{z-index:0}
+@media(max-width:760px){.sede-video-el{display:none}}
+.sg-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:#fff;font-family:var(--fm);font-size:14px;background:linear-gradient(135deg,#3a2f8a,#15163a)}
+.sg-ph small{opacity:.5;font-size:11px}
+/* CTA ripetuta "Ora tocca a te" */
+.tocca{display:flex;justify-content:center;padding:64px 0;background:var(--dk)}
+.tocca.on-light{background:var(--w)}
+/* sezioni nuove (placeholder brief) */
+.nsec{padding:96px 0}
+.nsec .w{max-width:1368px;margin:0 auto;padding:0 56px}
+.nsec.dark{background:var(--nv);color:#fff}
+.nsec.light{background:var(--w);color:var(--nv)}
+.nsec-k{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--v);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.nsec-h{font-size:clamp(34px,4vw,64px);font-weight:500;line-height:1.05;letter-spacing:-.02em;margin-bottom:28px;max-width:14ch}
+.nsec.dark .nsec-h{color:#fff}
+.nsec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:32px}
+.nsec-card{border-radius:18px;padding:28px;border:1px solid rgba(127,127,160,.2)}
+.nsec.dark .nsec-card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+.nsec.light .nsec-card{background:var(--g)}
+.nsec-card h4{font-size:20px;font-weight:600;margin-bottom:10px}
+.nsec-card p{font-size:15px;line-height:1.55;opacity:.7}
+.ph-note{font-family:var(--fm);font-size:12px;opacity:.45;margin-top:6px}
+.ph-logos{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin-top:24px}
+.ph-logo{width:130px;height:56px;border-radius:10px;background:rgba(127,127,160,.14);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;opacity:.7}
+.ph-timeline{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
+.ph-year{padding:10px 18px;border-radius:100px;border:1px solid rgba(68,55,243,.3);font-family:var(--fm);font-size:13px;color:var(--v)}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div id="pglass"></div>
+<div id="pb"></div>
+
+<div class="ann">
+  <b>MOCKUP · Dopamina × Humans.tech · build 4</b>
+</div>
+
+<nav>
+  <div class="ni">
+    <div class="nlo"><img src="img/humans-logo.svg" alt="Humans.tech"></div>
+    <div class="nm"><a href="#">Perché esistiamo</a><a href="#">Cosa facciamo</a><a href="#">Come lavoriamo</a><a href="#">Lavori realizzati</a><a href="#">Chi siamo</a><a href="#">Blog</a></div>
+    <div class="nc">
+      <button class="btn bk" data-c onclick="document.getElementById('posizioni').scrollIntoView({behavior:'smooth'})"><span class="btn-ar">→</span>Entra nel team</button>
+      <button class="btn bv" data-c><span class="btn-ar">→</span>Contattaci</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ 01 · HERO ══ -->
+<section id="hero">
+  <div class="hp-c" id="hpc"></div>
+  <!-- Spark Humans fluttuante (al posto delle stelline) -->
+  <svg class="float-ast" style="top:16%;left:9%;width:74px;height:74px;animation-duration:9s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
+  <svg class="float-ast" style="top:62%;right:11%;width:120px;height:120px;animation-duration:13s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
+  <svg class="float-ast" style="top:30%;right:24%;width:44px;height:44px;animation-duration:7s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
+  <!-- card foto laterali (come Figma) -->
+  <div class="hero-photo hp-l" style="--rot:-5deg;animation-duration:8s"><img src="img/p-carlo.png" loading="lazy" onerror="this.parentNode.style.background='linear-gradient(135deg,#5547ff,#2319a0)'"></div>
+  <div class="hero-photo hp-r" style="--rot:5deg;animation-duration:9.5s"><img src="img/p-mc1.png" loading="lazy" onerror="this.parentNode.style.background='linear-gradient(135deg,#5547ff,#2319a0)'"></div>
+  <div class="hero-photo hp-l2 late" style="--rot:6deg;animation-duration:7.5s"><img src="img/p-pasquale.png" loading="lazy" onerror="this.parentNode.style.background='linear-gradient(135deg,#8b7fec,#2319a0)'"></div>
+  <div class="hero-photo hp-r2 late" style="--rot:-7deg;animation-duration:8.5s"><img src="img/p-emanuele.png" loading="lazy" onerror="this.parentNode.style.background='linear-gradient(135deg,#8b7fec,#2319a0)'"></div>
+  <div class="h-in">
+    <div class="h-ey" data-a="fade"><div class="hd"></div>30 posizioni aperte</div>
+    <h1 class="h-h1 wr" data-a="up" data-d="1">
+      <span class="word">Diventa</span> <span class="word">il</span> <span class="word">prossimo</span><br>
+      <em><span class="word">Super</span> <span class="word">Human!</span></em>
+    </h1>
+    <p class="h-sub" data-a="up" data-d="2">Preparati a costruire <strong>prodotti</strong> che muovono <strong>KPI</strong> di business, generando <strong>impatto</strong> dalla prima riga di codice al go-live.</p>
+    <div class="h-ctas" data-a="up" data-d="3">
+      <a class="btn bv" data-c href="#posizioni">Guarda le posizioni aperte →</a>
+    </div>
+    <div class="h-st">
+      <div class="h-s" data-a="up" data-d="1"><div class="h-sn"><span data-cnt="700">0</span>+</div><div class="h-sl">Prodotti lanciati</div></div>
+      <div class="h-s" data-a="up" data-d="2"><div class="h-sn"><span data-cnt="10">0</span></div><div class="h-sl">Anni di AI</div></div>
+      <div class="h-s" data-a="up" data-d="3"><div class="h-sn"><span data-cnt="70">0</span>%</div><div class="h-sl">Clienti internazionali</div></div>
+      <div class="h-s" data-a="up" data-d="4"><div class="h-sn">IT+US</div><div class="h-sl">Frosinone · San Francisco</div></div>
+    </div>
+  </div>
+  <div class="h-wave"><svg viewBox="0 0 1920 50" preserveAspectRatio="none"><path d="M0,50 L0,25 Q240,0 480,25 Q720,50 960,25 Q1200,0 1440,25 Q1680,50 1920,25 L1920,50 Z" fill="#fff"/></svg></div>
+</section>
+
+<!-- award marquee -->
+<div class="as"><div class="at">
+  <div class="ai"><img src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces.png"><span>Best Workplaces Italia · Great Place to Work®</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+  <div class="ai"><img src="https://humans.tech/wp-content/uploads/2025/03/ft.png"><span>Europe's 1000 Fastest Growing · Financial Times</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+  <div class="ai"><img src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces-for-genz.png"><span>Best Workplaces for Gen Z</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+  <div class="ai"><svg class="ai-statista" viewBox="-5.37 -5.37 925.04 189.77" xmlns="http://www.w3.org/2000/svg"><path fill="#1E1E2D" d="m 365.2207,0 0,26.29297 28.89063,0 0,-26.29297 -28.89063,0 z m -253.35156,0.33984 0,37.375 -15.98047,0 0,23.74024 15.98047,0 0,86.33594 c 0,21.30874 12.1,31.19726 33.75,31.19726 4.86375,0.19625 9.73172,-0.32195 14.44922,-1.5332 l 0,-24.76172 -9.54492,0 c -6.695,0 -9.80664,-4.26094 -9.80664,-11.33594 l 0,-79.90234 19.35156,0 0,-23.74024 -19.43359,0 0,-37.375 -28.76563,0 z m 186.10547,0 0,37.375 -15.98242,0 0,23.74024 15.98242,0 0,86.33594 c 0,21.30874 12.10375,31.19726 33.75,31.19726 4.8675,0.19125 9.72977,-0.32695 14.44727,-1.5332 l 0,-24.76172 -9.50196,0 c -6.695,0 -9.80469,-4.26094 -9.80469,-11.33594 l 0,-79.90234 19.30665,0 0,-23.74024 -19.34571,0 0,-37.375 -28.85156,0 z m 229.14453,0 0,37.375 -15.98242,0 0,23.74024 15.98242,0 0,86.33594 c 0,21.30874 12.10391,31.19726 33.75391,31.19726 4.86375,0.19125 9.73172,-0.32695 14.44922,-1.5332 l 0,-24.76172 -9.55079,0 c -6.68875,0 -9.80078,-4.26094 -9.80078,-11.33594 l 0,-79.90234 19.34766,0 0,-23.74024 -19.34766,0 0,-37.375 -28.85156,0 z M 41.93359,35.02734 C 20.117344,35.15984 3.066406,50.37031 3.066406,72.44531 c 0,37.88625 54.164064,46.8793 54.164064,70.87305 0.14125,3.37375 -1.18547,6.64695 -3.63672,8.9707 -2.44625,2.32875 -5.78078,3.48633 -9.14453,3.17383 -13.125001,0 -17.261329,-10.35672 -19.048829,-21.94922 L 0,140.33594 c 4.2625,24.205 18.838359,38.65234 44.06836,38.65234 23.48125,0 40.48242,-12.78305 40.48242,-37.37305 0,-41.255 -54.121092,-49.98968 -54.121092,-71.67968 0,-7.2025 5.156952,-11.08399 12.783202,-11.08399 9.2925,0 14.44789,6.22469 16.49414,17.30469 L 84.20898,71.89453 C 79.94648,50.24328 64.60484,35.02734 41.93359,35.02734 Z m 415.25391,0 c -21.69,0 -38.69531,15.2161 -38.69531,37.1211 0,37.885 54.12109,46.87929 54.12109,70.87304 0.14125,3.37375 -1.18742,6.64571 -3.63867,8.97071 -2.44625,2.32875 -5.78148,3.48632 -9.14649,3.17383 -13.125,0 -17.04359,-10.35672 -19.08984,-21.94922 l -25.23047,6.99218 c 4.2625,24.20375 18.79266,38.65235 44.06641,38.65235 23.4375,0 40.48437,-12.78805 40.48437,-37.37305 -0.25375,-41.1275 -54.3789,-49.86273 -54.3789,-71.55273 0,-7.2025 5.11711,-11.08399 12.78711,-11.08399 9.2875,0 14.44898,6.22469 16.49023,17.30469 l 24.50586,-4.26172 C 495.20039,50.24328 479.85875,35.02734 457.1875,35.02734 Z m -234.98438,0.13282 c -26.8075,0 -44.8796,15.21062 -46.4121,43.29687 l 28.76953,0 c 0.5525,-11.84625 3.36523,-19.60547 16.49023,-19.60547 9.54625,0 14.19336,6.22586 14.19336,17.81836 l 0,8.22266 c -41.50875,15.7275 -61.58203,32.47344 -61.58203,62.89844 0,17.77375 9.76133,31.19726 29.36133,31.19726 13.935,0 22.9289,-4.64508 33.7539,-13.42383 0.25375,3.36375 1.31938,6.98867 1.57813,10.82617 l 27.57226,0 c -0.9225,-4.77 -1.49398,-9.59851 -1.70898,-14.44726 l 0,-89.15625 c 0,-25.2675 -15.20938,-37.62695 -42.01563,-37.62695 z m 415.20899,0 c -26.8075,0 -44.83469,15.21062 -46.36719,43.29687 l 28.85352,0 c 0.5125,-11.84625 3.36328,-19.60547 16.48828,-19.60547 9.54625,0 14.19531,6.22586 14.19531,17.81836 l 0,8.22266 c -41.50875,15.7275 -61.62695,32.47344 -61.62695,62.89844 0,17.77375 9.80445,31.19726 29.4082,31.19726 13.8925,0 22.925,-4.64508 33.75,-13.42383 0.255,3.36375 1.28141,6.98867 1.53516,10.82617 l 27.61718,0 c -0.9725,-4.83875 -1.58828,-9.73585 -1.83203,-14.6621 l 0,-88.94141 c 0,-25.2675 -15.21523,-37.62695 -42.02148,-37.62695 z m -272.19141,2.55468 0,138.67188 28.89063,0 0,-138.67188 -28.89063,0 z m -129.89258,68.06055 0,36.60547 c -4.90249,6.94375 -11.34015,12.78515 -19.34765,12.78516 -8.525,0 -13.38281,-3.62516 -13.38281,-12.78516 0,-12.10375 6.43672,-21.64922 32.73046,-36.60547 z m 415.25391,0 0,36.60547 c -4.9025,6.94375 -11.33781,12.78515 -19.35156,12.78516 -8.735,0 -13.37891,-3.62516 -13.37891,-12.78516 0,-12.10375 6.43672,-21.64922 32.73047,-36.60547 z"/><path fill="#1E1E2D" d="m 741.82031,0 c -1.66,0 -3.25523,0.65844 -4.42773,1.83594 -1.17625,1.17625 -1.83594,2.76773 -1.83594,4.42773 l 0,113.48633 0.89258,0 c 0,0 26.93422,-0.50758 38.35547,-6.51758 9.8,-5.7625 18.27742,-13.51726 24.88867,-22.75976 l 6.73242,-9.50196 2.13477,-3.02734 c 0.25375,-0.2975 1.36125,-1.91406 2,-2.85156 0.64,-0.9375 3.40875,-4.8593 6.09375,-8.7793 10.445,-14.42875 23.82,-26.47984 39.25,-35.37109 24.8875,-12.78875 57.875,-11.50782 57.875,-11.50782 l 0.50781,0 0,-12.78515 C 914.39461,4.91969 913.78391,3.2268 912.59766,1.9668 911.41141,0.7068 909.75609,0 908.02734,0 L 741.82031,0 Z m 172.42774,59.28125 c -0.53125,0.13625 -1.07485,0.20594 -1.6211,0.21094 0,0 -26.89,0.5125 -38.4375,6.5625 -9.8,5.74125 -18.27742,13.48109 -24.88867,22.71484 l -6.60547,9.54492 c -0.98125,1.3675 -1.91812,2.72985 -2.17187,3.02735 l -2.00782,2.85546 -6.09374,8.78126 c 0,0 -16.23555,23.43734 -39.24805,35.37109 -23.8675,12.40125 -55.10336,11.5914 -57.66211,11.50391 l 0,12.7871 c -0.0187,1.675 0.63039,3.29118 1.80664,4.48243 1.1775,1.19125 2.78398,1.86523 4.45898,1.86523 l 166.20704,0 c 1.65999,0 3.25023,-0.65969 4.42773,-1.83594 1.17625,-1.1725 1.83594,-2.76773 1.83594,-4.42773 l 0,-113.44336 z"/></svg><span>Growth Leader · Sole 24 Ore / Statista</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+  <div class="ai"><img src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces.png"><span>Best Workplaces Italia · Great Place to Work®</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+  <div class="ai"><img src="https://humans.tech/wp-content/uploads/2025/03/ft.png"><span>Europe's 1000 Fastest Growing · Financial Times</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+  <div class="ai"><img src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces-for-genz.png"><span>Best Workplaces for Gen Z</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+  <div class="ai"><svg class="ai-statista" viewBox="-5.37 -5.37 925.04 189.77" xmlns="http://www.w3.org/2000/svg"><path fill="#1E1E2D" d="m 365.2207,0 0,26.29297 28.89063,0 0,-26.29297 -28.89063,0 z m -253.35156,0.33984 0,37.375 -15.98047,0 0,23.74024 15.98047,0 0,86.33594 c 0,21.30874 12.1,31.19726 33.75,31.19726 4.86375,0.19625 9.73172,-0.32195 14.44922,-1.5332 l 0,-24.76172 -9.54492,0 c -6.695,0 -9.80664,-4.26094 -9.80664,-11.33594 l 0,-79.90234 19.35156,0 0,-23.74024 -19.43359,0 0,-37.375 -28.76563,0 z m 186.10547,0 0,37.375 -15.98242,0 0,23.74024 15.98242,0 0,86.33594 c 0,21.30874 12.10375,31.19726 33.75,31.19726 4.8675,0.19125 9.72977,-0.32695 14.44727,-1.5332 l 0,-24.76172 -9.50196,0 c -6.695,0 -9.80469,-4.26094 -9.80469,-11.33594 l 0,-79.90234 19.30665,0 0,-23.74024 -19.34571,0 0,-37.375 -28.85156,0 z m 229.14453,0 0,37.375 -15.98242,0 0,23.74024 15.98242,0 0,86.33594 c 0,21.30874 12.10391,31.19726 33.75391,31.19726 4.86375,0.19125 9.73172,-0.32695 14.44922,-1.5332 l 0,-24.76172 -9.55079,0 c -6.68875,0 -9.80078,-4.26094 -9.80078,-11.33594 l 0,-79.90234 19.34766,0 0,-23.74024 -19.34766,0 0,-37.375 -28.85156,0 z M 41.93359,35.02734 C 20.117344,35.15984 3.066406,50.37031 3.066406,72.44531 c 0,37.88625 54.164064,46.8793 54.164064,70.87305 0.14125,3.37375 -1.18547,6.64695 -3.63672,8.9707 -2.44625,2.32875 -5.78078,3.48633 -9.14453,3.17383 -13.125001,0 -17.261329,-10.35672 -19.048829,-21.94922 L 0,140.33594 c 4.2625,24.205 18.838359,38.65234 44.06836,38.65234 23.48125,0 40.48242,-12.78305 40.48242,-37.37305 0,-41.255 -54.121092,-49.98968 -54.121092,-71.67968 0,-7.2025 5.156952,-11.08399 12.783202,-11.08399 9.2925,0 14.44789,6.22469 16.49414,17.30469 L 84.20898,71.89453 C 79.94648,50.24328 64.60484,35.02734 41.93359,35.02734 Z m 415.25391,0 c -21.69,0 -38.69531,15.2161 -38.69531,37.1211 0,37.885 54.12109,46.87929 54.12109,70.87304 0.14125,3.37375 -1.18742,6.64571 -3.63867,8.97071 -2.44625,2.32875 -5.78148,3.48632 -9.14649,3.17383 -13.125,0 -17.04359,-10.35672 -19.08984,-21.94922 l -25.23047,6.99218 c 4.2625,24.20375 18.79266,38.65235 44.06641,38.65235 23.4375,0 40.48437,-12.78805 40.48437,-37.37305 -0.25375,-41.1275 -54.3789,-49.86273 -54.3789,-71.55273 0,-7.2025 5.11711,-11.08399 12.78711,-11.08399 9.2875,0 14.44898,6.22469 16.49023,17.30469 l 24.50586,-4.26172 C 495.20039,50.24328 479.85875,35.02734 457.1875,35.02734 Z m -234.98438,0.13282 c -26.8075,0 -44.8796,15.21062 -46.4121,43.29687 l 28.76953,0 c 0.5525,-11.84625 3.36523,-19.60547 16.49023,-19.60547 9.54625,0 14.19336,6.22586 14.19336,17.81836 l 0,8.22266 c -41.50875,15.7275 -61.58203,32.47344 -61.58203,62.89844 0,17.77375 9.76133,31.19726 29.36133,31.19726 13.935,0 22.9289,-4.64508 33.7539,-13.42383 0.25375,3.36375 1.31938,6.98867 1.57813,10.82617 l 27.57226,0 c -0.9225,-4.77 -1.49398,-9.59851 -1.70898,-14.44726 l 0,-89.15625 c 0,-25.2675 -15.20938,-37.62695 -42.01563,-37.62695 z m 415.20899,0 c -26.8075,0 -44.83469,15.21062 -46.36719,43.29687 l 28.85352,0 c 0.5125,-11.84625 3.36328,-19.60547 16.48828,-19.60547 9.54625,0 14.19531,6.22586 14.19531,17.81836 l 0,8.22266 c -41.50875,15.7275 -61.62695,32.47344 -61.62695,62.89844 0,17.77375 9.80445,31.19726 29.4082,31.19726 13.8925,0 22.925,-4.64508 33.75,-13.42383 0.255,3.36375 1.28141,6.98867 1.53516,10.82617 l 27.61718,0 c -0.9725,-4.83875 -1.58828,-9.73585 -1.83203,-14.6621 l 0,-88.94141 c 0,-25.2675 -15.21523,-37.62695 -42.02148,-37.62695 z m -272.19141,2.55468 0,138.67188 28.89063,0 0,-138.67188 -28.89063,0 z m -129.89258,68.06055 0,36.60547 c -4.90249,6.94375 -11.34015,12.78515 -19.34765,12.78516 -8.525,0 -13.38281,-3.62516 -13.38281,-12.78516 0,-12.10375 6.43672,-21.64922 32.73046,-36.60547 z m 415.25391,0 0,36.60547 c -4.9025,6.94375 -11.33781,12.78515 -19.35156,12.78516 -8.735,0 -13.37891,-3.62516 -13.37891,-12.78516 0,-12.10375 6.43672,-21.64922 32.73047,-36.60547 z"/><path fill="#1E1E2D" d="m 741.82031,0 c -1.66,0 -3.25523,0.65844 -4.42773,1.83594 -1.17625,1.17625 -1.83594,2.76773 -1.83594,4.42773 l 0,113.48633 0.89258,0 c 0,0 26.93422,-0.50758 38.35547,-6.51758 9.8,-5.7625 18.27742,-13.51726 24.88867,-22.75976 l 6.73242,-9.50196 2.13477,-3.02734 c 0.25375,-0.2975 1.36125,-1.91406 2,-2.85156 0.64,-0.9375 3.40875,-4.8593 6.09375,-8.7793 10.445,-14.42875 23.82,-26.47984 39.25,-35.37109 24.8875,-12.78875 57.875,-11.50782 57.875,-11.50782 l 0.50781,0 0,-12.78515 C 914.39461,4.91969 913.78391,3.2268 912.59766,1.9668 911.41141,0.7068 909.75609,0 908.02734,0 L 741.82031,0 Z m 172.42774,59.28125 c -0.53125,0.13625 -1.07485,0.20594 -1.6211,0.21094 0,0 -26.89,0.5125 -38.4375,6.5625 -9.8,5.74125 -18.27742,13.48109 -24.88867,22.71484 l -6.60547,9.54492 c -0.98125,1.3675 -1.91812,2.72985 -2.17187,3.02735 l -2.00782,2.85546 -6.09374,8.78126 c 0,0 -16.23555,23.43734 -39.24805,35.37109 -23.8675,12.40125 -55.10336,11.5914 -57.66211,11.50391 l 0,12.7871 c -0.0187,1.675 0.63039,3.29118 1.80664,4.48243 1.1775,1.19125 2.78398,1.86523 4.45898,1.86523 l 166.20704,0 c 1.65999,0 3.25023,-0.65969 4.42773,-1.83594 1.17625,-1.1725 1.83594,-2.76773 1.83594,-4.42773 l 0,-113.44336 z"/></svg><span>Growth Leader · Sole 24 Ore / Statista</span></div><span class="asep"><svg width="11" height="11" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span>
+</div></div>
+
+<!-- ══ 02 · MANIFESTO ══ -->
+<section id="manifesto">
+<div class="man-bg-img" aria-hidden="true"></div>
+<div class="man-bg" aria-hidden="true">
+  <svg class="man-bg-svg" viewBox="0 0 1440 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <!-- feTurbulence STATICO: calcolato 1 volta e cachato dal browser. Anima solo opacity = 0 CPU per frame -->
+      <filter id="brush1" x="-15%" y="-15%" width="130%" height="130%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.055 0.035" numOctaves="4" seed="5"/>
+        <feDisplacementMap in="SourceGraphic" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="brush2" x="-15%" y="-15%" width="130%" height="130%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.045 0.03" numOctaves="3" seed="12"/>
+        <feDisplacementMap in="SourceGraphic" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+    <!-- stroke 1: diagonale spiralante in alto a sinistra → giro largo → basso destra -->
+    <path class="bs bs1" filter="url(#brush1)" d="M 80 -30 C 180 120, 80 280, 320 340 C 560 400, 780 180, 900 380 C 1020 560, 880 680, 1200 650 C 1380 630, 1460 520, 1480 400" stroke="rgba(255,255,255,.015)" stroke-width="8" stroke-dasharray="42 8 18 4 60 12 24 6 38 10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- stroke 2: S-curve diagonale dal basso sx verso alto dx -->
+    <path class="bs bs2" filter="url(#brush2)" d="M -40 680 C 100 580, 60 400, 280 320 C 500 240, 700 460, 920 320 C 1100 200, 980 80, 1200 -20" stroke="rgba(255,255,255,.015)" stroke-width="9" stroke-dasharray="55 6 20 8 35 14 50 5 15 10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- stroke 3: spirale che scende dal centro-alto -->
+    <path class="bs bs3" filter="url(#brush1)" d="M 720 -40 C 820 100, 1100 160, 980 340 C 860 520, 560 480, 620 640 C 660 740, 800 760, 900 720" stroke="rgba(255,255,255,.015)" stroke-width="8" stroke-dasharray="30 5 12 8 48 10 22 4 40 9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- stroke 4: arco ampio obliquo -->
+    <path class="bs bs4" filter="url(#brush2)" d="M 1500 80 C 1300 200, 1000 80, 760 220 C 520 360, 380 580, 80 620 C -60 640, -80 720, -20 760" stroke="rgba(255,255,255,.015)" stroke-width="7" stroke-dasharray="45 7 16 5 52 11 28 4 36 8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- stroke 5: loop interno al centro -->
+    <path class="bs bs5" filter="url(#brush1)" d="M 200 760 C 300 600, 180 400, 400 280 C 620 160, 860 300, 800 480 C 740 660, 500 700, 600 560 C 700 420, 980 380, 1100 240 C 1220 100, 1400 60, 1500 -20" stroke="rgba(255,255,255,.015)" stroke-width="8" stroke-dasharray="38 6 20 9 55 8 18 5 42 11" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</div>
+<div class="w">
+  <div class="man-text">
+    <p class="man-st wr" data-a="up">
+      <span class="word">Costruiamo</span> <span class="word">software</span> <span class="word">e</span> <span class="word">AI</span> <span class="word">che</span> <span class="word">diventano</span> <span class="word">parte</span> <span class="word">della</span> <span class="word">vita</span> <span class="word">di</span> <span class="word">milioni</span> <span class="word">di</span> <span class="word">persone.</span>
+    </p>
+    <p class="man-lead" data-a="up" data-d="1">
+      Da dieci anni, su scala internazionale. Con l'<em>AI dal 2015</em> — non da quando è diventata un trend. Qui un prodotto lo porti <em>dall'idea al go-live</em>, e te ne prendi la responsabilità.
+    </p>
+    <p class="man-lead man-lead-2" data-a="up" data-d="2">Se è il livello a cui vuoi giocare, continua a scorrere.</p>
+  </div>
+  <div class="man-spline" data-a="right" data-d="1">
+    <iframe src="https://my.spline.design/sparkrotazionenewcopy-e3RPUrovaAtHChZLJw7g6iz6/" frameborder="0" width="100%" height="100%" allowfullscreen></iframe>
+  </div>
+</div>
+<div class="man-scroll">
+  <div class="man-scroll-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+</div>
+</section>
+
+<!-- ══ 03 · PROGETTI ══ -->
+<section id="progetti"><div class="w">
+  <div class="prj-top">
+    <div data-a="left"><h2 class="prj-h">Progetti ambiziosi,<br>per persone ambiziose</h2></div>
+    <div data-a="right" data-d="1"><p class="prj-body">Lavorerai su sfide concrete e sistemi che devono essere veloci, solidi, scalabili. Piattaforme che crescono. Flussi che migliorano. Architetture che sostengono migliaia di interazioni.</p></div>
+  </div>
+  <!-- marquee loghi clienti -->
+  <div class="prj-clients-lbl" data-a="fade"><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg> Prodotti che usi ogni giorno, costruiti con loro</div>
+  <div class="prj-clients" data-a="fade">
+    <div class="pcm-track">
+      <img src="https://humans.tech/wp-content/uploads/2024/06/Paypalmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Edisonmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Enelmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Repubblicamobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Traslatedmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Patreonmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/BMwmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Jagomobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/JTImobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/LambWestonmobileclients.png" alt="">
+      <img src="https://humans.tech/wp-content/uploads/2024/06/Paypalmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Edisonmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Enelmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Repubblicamobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Traslatedmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Patreonmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/BMwmobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/Jagomobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/JTImobileclients.png" alt=""><img src="https://humans.tech/wp-content/uploads/2024/06/LambWestonmobileclients.png" alt="">
+    </div>
+  </div>
+
+</div><!-- chiude .w -->
+  <div class="prj-sc" data-a="up" data-d="1">
+  <div class="prj-track">
+<div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/Frame-427319446.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Translation Tech</span></div>
+      <div class="pc-title">TRANSLATED</div>
+      <div class="pc-detail"><div class="gl-n">TRANSLATED</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Raddoppiare la velocità di sviluppo attraverso l'aggiornamento di un sistema avanzato.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/Frame-427319448.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Digital Platform</span></div>
+      <div class="pc-title">The Prism</div>
+      <div class="pc-detail"><div class="gl-n">THE PRISM</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Una piattaforma digitale immersiva, che racchiude opere ed emozioni.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/D525F707-628D-4FDF-9D50-B0A488DE65A8-1.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI · Puppet</span></div>
+      <div class="pc-title">PINOCCHIO</div>
+      <div class="pc-detail"><div class="gl-n">PINOCCHIO</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Il primo puppet AI nel mondo, sviluppato in soli 3 mesi.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/Frame-427319402-1.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI Interface</span></div>
+      <div class="pc-title">AiXplain</div>
+      <div class="pc-detail"><div class="gl-n">AIXPLAIN</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un'interfaccia AI accessibile per sviluppatori e utenti di tutto il mondo.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/09/Img_evidenza_jago-1.jpg" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Art &amp; Digital</span></div>
+      <div class="pc-title">JAGO</div>
+      <div class="pc-detail"><div class="gl-n">JAGO</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Raccontare l'arte nell'era digitale, creando un ponte tra l'artista, le sue opere e il pubblico.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2025/08/anteprime-Findazione-Monte-Prama-Humans-min.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Cultura · AI</span></div>
+      <div class="pc-title">Mont'e Prama</div>
+      <div class="pc-detail"><div class="gl-n">MONT'E PRAMA</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un'interfaccia intelligente che racconta le bellezze del territorio, rendendole accessibili a tutti.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2025/08/2-cms.translated.cloud_wp-content_uploads_2025_04_benetton-1-min.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Fashion · Tech</span></div>
+      <div class="pc-title">Benetton</div>
+      <div class="pc-detail"><div class="gl-n">BENETTON</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Innovazione digitale per uno dei brand fashion più iconici al mondo.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2025/11/psc.2.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Enterprise</span></div>
+      <div class="pc-title">Earth Virtual Expert</div>
+      <div class="pc-detail"><div class="gl-n">EARTH VIRTUAL EXPERT</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Rendere accessibile a chiunque il know-how scientifico sull'osservazione terrestre.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2026/04/INTERMODALE-370x265-1.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI · Logistics</span></div>
+      <div class="pc-title">AURA: AI Excellence Planner</div>
+      <div class="pc-detail"><div class="gl-n">AURA</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un "copilota AI" per trasformare la gestione degli ordini e migliorare la pianificazione dei viaggi.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2026/04/Frame-1410103625.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI · Manufacturing</span></div>
+      <div class="pc-title">Explainable Anomaly Detection</div>
+      <div class="pc-detail"><div class="gl-n">EXPLAINABLE ANOMALY DETECTION</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un "copilota AI" per migliorare il processo produttivo in fabbrica.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2026/05/tac-1.jpg" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Mobile App</span></div>
+      <div class="pc-title">TAC</div>
+      <div class="pc-detail"><div class="gl-n">TAC — MOBILE APP</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">App mobile per connettere persone, eventi e community in modo semplice e immediato.</div></div></div>
+    </div>
+  </div>
+  <div class="prj-track" aria-hidden="true">
+<div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/Frame-427319446.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Translation Tech</span></div>
+      <div class="pc-title">TRANSLATED</div>
+      <div class="pc-detail"><div class="gl-n">TRANSLATED</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Raddoppiare la velocità di sviluppo attraverso l'aggiornamento di un sistema avanzato.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/Frame-427319448.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Digital Platform</span></div>
+      <div class="pc-title">The Prism</div>
+      <div class="pc-detail"><div class="gl-n">THE PRISM</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Una piattaforma digitale immersiva, che racchiude opere ed emozioni.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/D525F707-628D-4FDF-9D50-B0A488DE65A8-1.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI · Puppet</span></div>
+      <div class="pc-title">PINOCCHIO</div>
+      <div class="pc-detail"><div class="gl-n">PINOCCHIO</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Il primo puppet AI nel mondo, sviluppato in soli 3 mesi.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/06/Frame-427319402-1.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI Interface</span></div>
+      <div class="pc-title">AiXplain</div>
+      <div class="pc-detail"><div class="gl-n">AIXPLAIN</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un'interfaccia AI accessibile per sviluppatori e utenti di tutto il mondo.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2024/09/Img_evidenza_jago-1.jpg" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Art &amp; Digital</span></div>
+      <div class="pc-title">JAGO</div>
+      <div class="pc-detail"><div class="gl-n">JAGO</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Raccontare l'arte nell'era digitale, creando un ponte tra l'artista, le sue opere e il pubblico.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2025/08/anteprime-Findazione-Monte-Prama-Humans-min.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Cultura · AI</span></div>
+      <div class="pc-title">Mont'e Prama</div>
+      <div class="pc-detail"><div class="gl-n">MONT'E PRAMA</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un'interfaccia intelligente che racconta le bellezze del territorio, rendendole accessibili a tutti.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2025/08/2-cms.translated.cloud_wp-content_uploads_2025_04_benetton-1-min.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Fashion · Tech</span></div>
+      <div class="pc-title">Benetton</div>
+      <div class="pc-detail"><div class="gl-n">BENETTON</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Innovazione digitale per uno dei brand fashion più iconici al mondo.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2025/11/psc.2.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Enterprise</span></div>
+      <div class="pc-title">Earth Virtual Expert</div>
+      <div class="pc-detail"><div class="gl-n">EARTH VIRTUAL EXPERT</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Rendere accessibile a chiunque il know-how scientifico sull'osservazione terrestre.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2026/04/INTERMODALE-370x265-1.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI · Logistics</span></div>
+      <div class="pc-title">AURA: AI Excellence Planner</div>
+      <div class="pc-detail"><div class="gl-n">AURA</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un "copilota AI" per trasformare la gestione degli ordini e migliorare la pianificazione dei viaggi.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2026/04/Frame-1410103625.png" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">AI · Manufacturing</span></div>
+      <div class="pc-title">Explainable Anomaly Detection</div>
+      <div class="pc-detail"><div class="gl-n">EXPLAINABLE ANOMALY DETECTION</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">Un "copilota AI" per migliorare il processo produttivo in fabbrica.</div></div></div>
+    </div>
+    <div class="pc" data-glass>
+      <div class="pc-prev"><img src="https://humans.tech/wp-content/uploads/2026/05/tac-1.jpg" loading="lazy"></div>
+      <div class="pc-face"><span class="pc-chip">Mobile App</span></div>
+      <div class="pc-title">TAC</div>
+      <div class="pc-detail"><div class="gl-n">TAC — MOBILE APP</div><div class="pf"><div class="pfl">Progetto</div><div class="pfv">App mobile per connettere persone, eventi e community in modo semplice e immediato.</div></div></div>
+    </div>
+  </div>
+</div>
+  <div class="w">
+  <div class="scroll-hint">passa il mouse sulle card per i dettagli tecnici · scorri →</div>
+  <div style="text-align:center;margin-top:48px" data-a="up">
+    <a class="btn bv" data-c href="#posizioni">Guarda le posizioni aperte →</a>
+  </div>
+</div></section>
+
+<!-- ══ 04 · ENTRA IN CAMPO ══ -->
+<section id="campo"><div class="w"><div class="campo-g">
+  <div data-a="left">
+    <h2 class="campo-h">Entra in campo per giocare la partita e vincerla</h2>
+    <p class="campo-b">In Humans.tech, vedi l'impatto di quello che fai e sei responsabile del risultato.<br><br>Con una <em>riga di codice</em> puoi rendere un prodotto più performante. Con una <strong>scelta tecnica</strong> puoi semplificare un processo, con una <strong>decisione</strong> puoi cambiare le sorti di prodotti usati da milioni di utenti ogni giorno.</p>
+  </div>
+  <div class="campo-boxes">
+    <div class="cbox" data-a="right" data-d="1">Lavorerai con team, tecnologie e clienti internazionali sulla cresta dell'onda.</div>
+    <div class="cbox" data-a="right" data-d="2">Progetterai, costruirai (e se serve ripenserai meglio) soluzioni ad alta ingegneria.</div>
+    <div class="cbox" data-a="right" data-d="3">Svilupperai codice di qualità e scalabile, per generare impatto per aziende e utenti.</div>
+  </div>
+</div></div></section>
+
+<!-- ══ 06 · CRESCERE ══ -->
+<!-- ══ STACK & LEARNING PATH (placeholder copy) ══ -->
+<section class="nsec dark" id="stack">
+  <div class="w" data-a="up">
+    <div class="nsec-k"><svg width="12" height="12" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg> STACK &amp; LEARNING PATH</div>
+    <h2 class="nsec-h">Su cosa lavorerai. E cosa porti a casa.</h2>
+    <p class="ph-note">[Copy definitivo da fornire — placeholder]</p>
+    <div class="nsec-grid">
+      <div class="nsec-card"><h4>LLM &amp; GenAI</h4><p>Hugging Face, fine-tuning, RAG, modelli in produzione su prodotti reali.</p></div>
+      <div class="nsec-card"><h4>Cloud &amp; infra</h4><p>AWS / GCP, container, CI/CD, osservabilità, scalabilità.</p></div>
+      <div class="nsec-card"><h4>Architettura di prodotto</h4><p>Sistemi performanti e scalabili, ownership end-to-end dalla scelta tecnica al go-live.</p></div>
+      <div class="nsec-card"><h4>Crescita continua</h4><p>Mentorship, formazione, eventi nazionali e internazionali. Impari mentre costruisci.</p></div>
+    </div>
+  </div>
+</section>
+<section id="crescere">
+  <div class="cres-title" data-a="up">
+    <div class="ct1">Crescere in azienda</div>
+    <div class="ct2"><em>e con l'azienda</em></div>
+  </div>
+  <div class="gc-row">
+    <div class="gc" data-tilt>
+      <div class="gc-ph" data-px="0.06"><img src="img/cr-pasquale.png" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a3e,#0d0d2b)'"></div>
+      <svg class="gc-ast" width="22" height="22" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
+      <div class="gc-info">
+        <div class="gc-entry">È entrato a 28 anni come full-stack developer dopo quattro anni in consulenza.</div>
+        <div class="gc-result">In due anni e mezzo ha preso ownership tecnica di un prodotto enterprise con 600k sessioni giornaliere e oggi guida un team di quattro.</div>
+        <div class="gc-name">Pasquale · Copywriter → Success Manager</div>
+      </div>
+    </div>
+    <div class="gc" data-tilt>
+      <div class="gc-ph" data-px="0.06"><img src="img/p-mc.png" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#262358,#0d0d2b)'"></div>
+      <svg class="gc-ast" width="22" height="22" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
+      <div class="gc-info">
+        <div class="gc-entry">Entra in Humans.tech a 20 anni.</div>
+        <div class="gc-result">Ha seguito cicli di prodotto completi, costruendo sistemi entrati nella vita quotidiana di migliaia di utenti su progetti per clienti europei e americani.</div>
+        <div class="gc-name">Cristian · Back-end Engineer → Team Lead</div>
+      </div>
+    </div>
+    <div class="gc" data-tilt>
+      <div class="gc-ph" data-px="0.06"><img src="img/cr-stefano.png" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#1a1a3e,#2a2060)'"></div>
+      <svg class="gc-ast" width="22" height="22" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
+      <div class="gc-info">
+        <div class="gc-entry">⚠ Storia da raccogliere con HR.</div>
+        <div class="gc-result">⚠ Risultato concreto in bold: scala tecnica, ownership, cambio funzione.</div>
+        <div class="gc-name">Stefano · Account Executive → Success Manager</div>
+      </div>
+    </div>
+    <div class="gc" data-tilt>
+      <div class="gc-ph" data-px="0.06"><img src="img/cr-manuel.png" loading="lazy" onerror="this.style.background='linear-gradient(135deg,#262358,#0d0d2b)'"></div>
+      <svg class="gc-ast" width="22" height="22" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
+      <div class="gc-info">
+        <div class="gc-entry">⚠ Storia da raccogliere con HR.</div>
+        <div class="gc-result">⚠ Risultato concreto in bold.</div>
+        <div class="gc-name">Manuel · Frontend Engineer → Team Leader</div>
+      </div>
+    </div>
+  </div>
+  <div class="cres-team">
+    <div data-a="left">
+      <div class="dotcluster" id="dotc">
+        <div class="dotcell"></div>
+        <div class="dotcell morph"><span class="mcircle"></span><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></div>
+        <div class="dotcell"></div>
+        <div class="dotcell"></div><div class="dotcell"></div>
+        <div class="dotcell morph" style="--mdelay:-2.25s"><span class="mcircle"></span><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></div>
+        <div class="dotcell"></div><div class="dotcell"></div><div class="dotcell"></div>
+      </div>
+    </div>
+    <div data-a="right">
+      <h3 class="ct-h">Team snelli, ritmo elevato</h3>
+      <p class="ct-b">Ogni progetto ha poche persone, un contesto definito e obiettivi chiari. Chi sviluppa partecipa alle scelte architetturali e di prodotto. Chi guida resta vicino all'esecuzione e al cliente.<br><br>La crescita rapida si vede nelle responsabilità che conquisti, nelle persone del team che aiuti e nei problemi che vuoi risolvere. La seniority non si misura con gli anni in azienda.</p>
+      <a class="btn bw" data-c href="#posizioni">Entra in Humans.tech →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 07 · SEDE — full-screen scroll media (dal PDF) ══ -->
+<section id="sede">
+  <div class="w">
+    <div class="sede-head" data-a="up">
+      <h2>Il primo hub tecnologico a Frosinone</h2>
+    </div>
+    <div class="sede-media" data-a="scale">
+      <div class="sede-media-inner" id="sedeMedia">
+        <!-- Quando hai il file .mp4: salva come img/sede-video.mp4 e il video parte automaticamente -->
+        <video class="sede-video-el" id="sedeVideoEl" muted playsinline loop preload="none" poster="img/sede-main.png">
+          <source src="img/sede-video.mp4" type="video/mp4">
+        </video>
+        <!-- Fallback foto (desktop finché non c'è il video, sempre su mobile) -->
+        <img class="sede-img-fallback" src="img/sede-main.png" alt="Sede Humans.tech — Frosinone" loading="lazy">
+      </div>
+    </div>
+  </div>
+  <div class="w sede-body-wrap">
+    <div class="sede-g">
+      <div data-a="left">
+        <p class="sede-b">La sede principale è a Frosinone: uno spazio immerso nel verde, pensato per incontrarsi, lavorare bene e costruire prodotti che funzionino lì fuori.</p>
+        <p class="sede-b">Tre piani modulari che si adattano a team e esigenze diverse. Sale immersive per demo di prodotto, sprint di sviluppo, momenti di co-design, talk di condivisione.</p>
+      </div>
+      <div data-a="right" data-d="1">
+        <p class="sede-b">È una sede in cui si lavora intensamente. È anche una sede in cui ci si fa il caffè con calma e si discute un'idea prima di tornare al codice, in cui si passa la pausa pranzo davanti a simulatori e si conclude la giornata con una bella sessione in palestra.</p>
+        <p class="sede-b"><strong>Se stai valutando un trasferimento, ti diamo una mano concreta.</strong> Riconosciamo un gettone di <strong>relocation fino a 3.000&nbsp;€</strong> per chi si trasferisce: erogato in modo discrezionale, in base a seniority e merito. Non è un bonus automatico — è il nostro modo di dirti che, se scegli di metterti in gioco con noi, non ti lasciamo solo nei primi passi.</p>
+      </div>
+    </div>
+  </div>
+  <!-- carosello foto sede — full-width, arriva ai margini -->
+  <div class="sede-gallery">
+  <div class="sg-track">
+    <div class="sg-item"><img src="img/room1.png" loading="lazy"><span class="sg-cap">Sale modulari</span></div>
+    <div class="sg-item"><img src="img/room2.png" loading="lazy"><span class="sg-cap">Ambienti demo AI</span></div>
+    <div class="sg-item"><img src="img/room3.png" loading="lazy"><span class="sg-cap">Sale Share&Grow</span></div>
+    <div class="sg-item"><img src="img/room4.png" loading="lazy"><span class="sg-cap">Co-creation</span></div>
+    <div class="sg-item sg-ph-item"><span class="sg-cap">+ foto in arrivo</span></div>
+    <div class="sg-item sg-ph-item"><span class="sg-cap">+ foto in arrivo</span></div>
+    <div class="sg-item sg-ph-item"><span class="sg-cap">+ foto in arrivo</span></div>
+    <!-- Duplicato per loop infinito -->
+    <div class="sg-item"><img src="img/room1.png" loading="lazy"><span class="sg-cap">Sale modulari</span></div>
+    <div class="sg-item"><img src="img/room2.png" loading="lazy"><span class="sg-cap">Ambienti demo AI</span></div>
+    <div class="sg-item"><img src="img/room3.png" loading="lazy"><span class="sg-cap">Sale Share&Grow</span></div>
+    <div class="sg-item"><img src="img/room4.png" loading="lazy"><span class="sg-cap">Co-creation</span></div>
+    <div class="sg-item sg-ph-item"><span class="sg-cap">+ foto in arrivo</span></div>
+    <div class="sg-item sg-ph-item"><span class="sg-cap">+ foto in arrivo</span></div>
+    <div class="sg-item sg-ph-item"><span class="sg-cap">+ foto in arrivo</span></div>
+  </div>
+  </div>
+</section>
+
+<!-- ══ 08 · BEST WORKPLACE ══ -->
+<section id="awards"><div class="w">
+  <div class="aw-card" data-a="scale">
+    <img class="aw-bg" src="https://humans.tech/wp-content/uploads/2026/03/the-best-1.png" onerror="this.src='https://humans.tech/wp-content/uploads/2025/05/team-humans-1024x924.png'">
+    <img class="aw-badge bl" src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces-for-genz.png" alt="Best Workplaces for GenZ" onerror="this.style.display='none'">
+    <img class="aw-badge br" src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces.png" alt="Best Workplaces 10-49" onerror="this.style.display='none'">
+    <div class="aw-text">
+      <h2 class="aw-h">Best Workplace Italia.<br>Per davvero!</h2>
+      <p class="aw-b">Quest'anno siamo stati riconosciuti tra le migliori aziende in cui lavorare con il premio <strong>BestWorkplaces</strong> di Great Place To Work® Italia, che si aggiunge al premio GPTW per la <strong>Gen Z</strong>. Due traguardi che raccontano la stessa direzione, quella della crescita, costruita ogni giorno da una squadra con alta ambizione e desiderio di innovare.</p>
+      <a class="aw-btn" data-c href="#posizioni"><span class="aw-btn-ico"><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span><span class="aw-btn-lb">Unisciti a noi</span></a>
+    </div>
+  </div>
+  <p class="aw-p" data-a="up">Abbiamo raggiunto questo traguardo un tassello alla volta, con e grazie ai nostri Humans. A volte tutto ciò che serve è fermarsi un attimo e guardare la strada percorsa.</p>
+  <div class="aw-3">
+    <div class="aw-s" data-a="up" data-d="1"><div class="ico"><img src="img/ic-aw1.svg" alt=""></div><div class="aw-st">Leader della crescita</div><div class="aw-ss">per <em>Il Sole 24 Ore</em> e <em>Statista</em></div></div>
+    <div class="aw-s" data-a="up" data-d="2"><div class="ico"><img src="img/ic-aw2.svg" alt=""></div><div class="aw-st">Campioni della Crescita</div><div class="aw-ss">per <em>l'ITQF</em> e <em>La Repubblica</em></div></div>
+    <div class="aw-s" data-a="up" data-d="3"><div class="ico"><img src="img/ic-aw3.svg" alt=""></div><div class="aw-st">Tra le 1000 aziende in crescita in Europa</div><div class="aw-ss">per il <em>Financial Times</em></div></div>
+  </div>
+</div></section>
+
+<!-- ══ 09 · PROCESSO + BENEFIT ══ -->
+<!-- ══ RASSEGNA STAMPA + storico Best Workplace (placeholder loghi/link) ══ -->
+<section class="nsec light" id="press">
+  <div class="w" data-a="up">
+    <div class="nsec-k"><svg width="12" height="12" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg> RASSEGNA STAMPA</div>
+    <h2 class="nsec-h">Parlano di noi.</h2>
+    <p class="ph-note">[Loghi e link delle uscite media da fornire — placeholder]</p>
+    <div class="ph-logos">
+      <div class="ph-logo">RAI</div><div class="ph-logo">Il Sole 24 Ore</div><div class="ph-logo">La Repubblica</div><div class="ph-logo">Financial Times</div><div class="ph-logo">+ altre uscite</div>
+    </div>
+    <h3 style="margin-top:48px;font-size:22px;font-weight:600">Best Workplace Italia — il percorso</h3>
+    <div class="ph-timeline">
+      <span class="ph-year">2025 · Best Workplaces Italia</span>
+      <span class="ph-year">2026 · Best Workplaces</span>
+      <span class="ph-year">2026 · Best Workplaces Gen Z</span>
+    </div>
+  </div>
+</section>
+<section id="processo"><div class="w">
+  <h2 class="proc-h" data-a="up">Dalla candidatura all'offerta in 10 giorni. Un processo snello, diretto, senza tempi morti.</h2>
+  <div class="proc-3">
+    <div class="proc-c" data-a="up" data-d="1" data-tilt>
+      <div class="proc-tim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5"/><path d="M9.5 2.5h5"/><path d="M12 5.5v-3"/><path d="M18.6 7 20 5.6"/></svg><span class="proc-tm">30 min</span></div>
+      <h3 class="proc-ch">Parli direttamente con il tuo futuro team</h3>
+      <p class="proc-cd">I tuoi <em>futuri colleghi</em> ci tengono a scambiare con te una chiacchierata introduttiva e informale. Chi meglio di loro per dirti com'è davvero lavorare qui?</p>
+    </div>
+    <div class="proc-c" data-a="up" data-d="2" data-tilt>
+      <div class="proc-tim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5"/><path d="M9.5 2.5h5"/><path d="M12 5.5v-3"/><path d="M18.6 7 20 5.6"/></svg><span class="proc-tm">30 min</span></div>
+      <h3 class="proc-ch">Conosci i nostri founder</h3>
+      <p class="proc-cd">I nostri <em>founder</em> garantiscono massima trasparenza su cultura, modalità di lavoro e benefits. Puoi chiederci tutto, dal fatturato ai progetti in corso.</p>
+    </div>
+    <div class="proc-c" data-a="up" data-d="3" data-tilt>
+      <div class="proc-tim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5"/><path d="M9.5 2.5h5"/><path d="M12 5.5v-3"/><path d="M18.6 7 20 5.6"/></svg><span class="proc-tm">90 min</span></div>
+      <h3 class="proc-ch">Entri in gioco con una prova concreta</h3>
+      <p class="proc-cd">Attraverso <em>pair programming</em> o <em>pair design</em>, affronterai una sfida concreta: come pensi, come affronti un problema, come collabori.</p>
+    </div>
+  </div>
+  <!-- ingrediente segreto: 2 colonne (testo + foto) come Figma -->
+  <div class="ingr-g">
+    <div data-a="left">
+      <h3 class="ingr-h">L'ingrediente segreto?</h3>
+      <p class="ingr-b">Capire se scatta la giusta sintonia, quella <strong>scintilla</strong> che ci spinge a passare allo step successivo. L'obiettivo è portarsi a casa, ad ogni incontro, una consapevolezza maggiore, una prospettiva, una risposta concreta.</p>
+      <p class="ingr-b">Se cerchi comfort zone o senti che non è il percorso giusto per te, puoi passare oltre in qualsiasi momento. Se vuoi metterti in gioco, sai già cosa fare!</p>
+      <a class="aw-btn" data-c href="#posizioni" style="margin-top:12px"><span class="aw-btn-ico"><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span><span class="aw-btn-lb">Scopri le posizioni aperte</span></a>
+    </div>
+    <div class="ingr-photos">
+      <div class="ingr-photo p1"><img src="https://humans.tech/wp-content/uploads/2025/05/francesco-al-pc.png" loading="lazy" onerror="this.parentNode.style.background='linear-gradient(135deg,#5547ff,#2319a0)'"></div>
+      <div class="ingr-photo p2"><img src="https://humans.tech/wp-content/uploads/2025/05/post-it.png" loading="lazy" onerror="this.parentNode.style.background='linear-gradient(135deg,#8b7fec,#2319a0)'"></div>
+    </div>
+  </div>
+
+  <!-- benefit aziendali: full width -->
+  <div class="ben-block">
+    <h3 class="ben-h-txt" data-a="up">Benefit aziendali</h3>
+    <p class="ben-sub" data-a="up" data-d="1">La magia la farai tu, ma la bacchetta magica te la forniamo noi: <strong>MacBook Pro</strong> di ultima generazione. Potrai lavorare <strong>da remoto o in modalità ibrida</strong> (con buoni pasto full-ticket), e avrai accesso a <strong>bonus performance</strong>, team-building ed eventi di formazione nazionali e internazionali.</p>
+    <div class="ben-grid">
+      <div class="ben-c" data-a="up" data-d="1" data-tilt>
+        <div class="ben-ico"><img src="img/ic-heart.svg" alt="" width="26" height="26"></div>
+        <div class="ben-ct">Supporto alla salute<br>fisica e mentale</div>
+        <div class="ben-bd">Abbiamo a cuore la salute fisica e mentale dei nostri collaboratori. Coperture sanitarie integrative e la partnership con Unobravo ne sono esempi.</div>
+        <div class="ben-logos">
+          <img src="https://humans.tech/wp-content/uploads/2025/05/unobravo.png" alt="Unobravo" onerror="this.style.display='none'">
+          <img src="https://humans.tech/wp-content/uploads/2025/05/assistenza-sanitaria-integrativa.png" alt="Fondo Est" onerror="this.style.display='none'">
+          <img src="https://humans.tech/wp-content/uploads/2025/05/sanimpresa.png" alt="Sanimpresa" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="ben-c" data-a="up" data-d="2" data-tilt>
+        <div class="ben-ico"><img src="img/ic-piggy.svg" alt="" width="26" height="26"></div>
+        <div class="ben-ct">Benessere<br>finanziario</div>
+        <div class="ben-bd">Promuoviamo l'educazione finanziaria, a lavoro e fuori dal lavoro, affinché i nostri Humans possano gestire al meglio le proprie risorse e garantirsi un futuro migliore.</div>
+        <div class="ben-logos">
+          <img src="https://humans.tech/wp-content/uploads/2025/05/Starting-Finance.png" alt="Starting Finance" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- team photo parallax -->
+<div id="teamphoto"><img src="img/team-all.png" loading="lazy"></div>
+
+<!-- ══ 11 · POSIZIONI ══ -->
+<!-- ══ CON CHI LAVORERAI (placeholder testo) ══ -->
+<section class="nsec light" id="conchi">
+  <div class="w" data-a="up">
+    <div class="nsec-k"><svg width="12" height="12" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg> CON CHI LAVORERAI</div>
+    <h2 class="nsec-h">Le persone al tuo fianco.</h2>
+    <p class="ph-note">[Testo da fornire — placeholder]</p>
+    <div class="nsec-grid">
+      <div class="nsec-card"><h4>Il tuo team</h4><p>Pochi, senior, vicini al prodotto. Decidi insieme a loro, non sotto di loro.</p></div>
+      <div class="nsec-card"><h4>I founder</h4><p>Accessibili e trasparenti: li incontri già durante il processo di selezione.</p></div>
+      <div class="nsec-card"><h4>Clienti internazionali</h4><p>Lavori su prodotti usati da milioni di persone, per aziende europee e americane.</p></div>
+    </div>
+  </div>
+</section>
+<!-- ══ CHI NON FUNZIONA QUI (placeholder testo) ══ -->
+<section class="nsec dark" id="nonfunziona">
+  <div class="w" data-a="up">
+    <div class="nsec-k"><svg width="12" height="12" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg> CHI NON FUNZIONA QUI</div>
+    <h2 class="nsec-h">Questo posto non è per tutti.</h2>
+    <p class="ph-note">[Testo da fornire — placeholder]</p>
+    <div class="nsec-grid">
+      <div class="nsec-card"><h4>Se cerchi la comfort zone</h4><p>Qui il ritmo è alto e l'ownership è reale: va cercata, non subìta.</p></div>
+      <div class="nsec-card"><h4>Se aspetti istruzioni</h4><p>Le decisioni le prendi tu. Chi aspetta che qualcuno gliele dia, fatica.</p></div>
+      <div class="nsec-card"><h4>Se la seniority è solo anzianità</h4><p>Conta cosa risolvi e come fai crescere gli altri, non da quanto sei qui.</p></div>
+    </div>
+  </div>
+</section>
+<div class="tocca on-light"><a class="btn bv" data-c href="#posizioni">Ora tocca a te →</a></div>
+<section id="posizioni"><div class="w">
+  <h2 class="pos-h" data-a="up">Ora tocca a te!</h2>
+  <div class="pos-filt" data-a="up" data-d="1">
+    <button class="jobf on" data-c>Tutte le aree <span class="jf-ar">↓</span></button>
+    <button class="jobf" data-c>Tutti i livelli <span class="jf-ar">↓</span></button>
+    <button class="jobf" data-c>Tech <span class="jf-ar">↓</span></button>
+    <button class="jobf" data-c>Design <span class="jf-ar">↓</span></button>
+    <button class="jobf" data-c>Sales <span class="jf-ar">↓</span></button>
+  </div>
+  <div data-a="up" data-d="2">
+    <div class="pos-sec">Sviluppo</div>
+    <div class="pos-row" data-c><span class="pos-ti">Senior | Sviluppatore Front-end — React.JS</span><div class="pos-dv"></div><span class="pos-lo">Frosinone</span><div class="pos-dv"></div><span class="pos-ty">Full-time</span><div class="pos-dv"></div><span class="pos-ty">Ibrido</span><a class="pos-apply" href="#">Candidati <span class="ar">→</span></a></div>
+    <div class="pos-row" data-c><span class="pos-ti">Senior | Sviluppatore Back-end — Node.js</span><div class="pos-dv"></div><span class="pos-lo">Frosinone</span><div class="pos-dv"></div><span class="pos-ty">Full-time</span><div class="pos-dv"></div><span class="pos-ty">Ibrido</span><a class="pos-apply" href="#">Candidati <span class="ar">→</span></a></div>
+    <div class="pos-row" data-c><span class="pos-ti">Senior | Mobile Developer — Flutter</span><div class="pos-dv"></div><span class="pos-lo">Frosinone</span><div class="pos-dv"></div><span class="pos-ty">Full-time</span><div class="pos-dv"></div><span class="pos-ty">Ibrido</span><a class="pos-apply" href="#">Candidati <span class="ar">→</span></a></div>
+  </div>
+  <!-- Candidatura spontanea — copy proposta Dopamina -->
+  <div class="pos-cta" data-a="up" data-d="2">
+    <p class="pos-cta-t"><em>Non hai trovato la posizione giusta?</em> Fatti notare.</p>
+    <div class="pos-cta-box">
+      <p class="pos-cta-b">Le persone migliori con cui abbiamo lavorato non sono arrivate da un annuncio. Mandaci il CV — ma aggiungi <strong>due righe su come pensi quando ti trovi davanti a un problema che non sai ancora risolvere.</strong> Quelle due righe ci dicono più del CV.</p>
+      <a class="pos-cta-btn" data-c href="mailto:welcome@humans.tech"><span class="ib"><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span><span class="aw-btn-lb">Scrivici</span></a>
+    </div>
+    <p style="font-family:var(--fm);font-size:12px;color:var(--m);margin-top:18px;line-height:1.6">Rispondiamo a ogni candidatura entro <strong style="color:var(--nv)">[X giorni lavorativi — da confermare con HR]</strong>. Se non è il momento giusto, te lo diciamo comunque.</p>
+  </div>
+</div></section>
+
+<footer><div class="w">
+  <div class="ft-grid">
+    <!-- colonna sinistra -->
+    <div class="ft-left">
+      <div class="ft-logo-w">humans<span class="tech">.tech</span><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></div>
+      <div class="ft-tag">your added value.</div>
+      <div class="ft-badges">
+        <img src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces-for-genz.png" alt="Best Workplaces for GenZ" loading="lazy">
+        <img src="https://humans.tech/wp-content/uploads/2025/03/best-workplaces.png" alt="Best Workplaces Italia" loading="lazy">
+        <span class="ft-fast">2026 Europe's Fastest Growing Companies</span>
+        <img src="https://humans.tech/wp-content/uploads/2025/03/ft.png" alt="Financial Times" loading="lazy">
+      </div>
+      <p class="ft-desc">Siamo fra le 1000 aziende in crescita in Europa per <a href="#" data-c>Financial Times &amp; Statista</a>, Leader della crescita per Il Sole 24 Ore e Statista, Campioni della Crescita secondo ITQF e La Repubblica e tra le migliori aziende in cui lavorare per <a href="#" data-c>GPTW Italia</a>.</p>
+      <div class="ft-social">Seguici su
+        <a href="#" data-c aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 9.5H5.67V18h2.67V9.5zM7 6.1a1.55 1.55 0 1 0 0 3.1 1.55 1.55 0 0 0 0-3.1zM18.33 18v-4.67c0-2.49-1.33-3.65-3.1-3.65-1.43 0-2.07.79-2.43 1.34V9.5h-2.67V18h2.67v-4.5c0-1.2.83-1.46 1.13-1.46.3 0 1.06.26 1.06 1.46V18h1.34z"/></svg></a>
+        <a href="#" data-c aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      </div>
+    </div>
+    <div class="ft-divider"></div>
+    <!-- colonna centrale -->
+    <div class="ft-center">
+      <div class="ft-cta">
+        <a href="#" data-c>Contattaci <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17 17 7M9 7h8v8"/></svg></a><br>
+        <a href="#posizioni" data-c>Lavora con noi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      </div>
+      <div class="ft-contact">
+        <a class="ft-mail" href="mailto:welcome@humans.tech" data-c>welcome@humans.tech</a>
+        <div class="ft-locs"><a href="#" data-c>FROSINONE</a><span>|</span><a href="#" data-c>ROMA</a><span>|</span><a href="#" data-c>MILANO</a><span>|</span><a href="#" data-c>SAN FRANCISCO</a></div>
+      </div>
+    </div>
+    <!-- colonna destra -->
+    <div class="ft-right">
+      <div class="ft-menu">
+        <a href="#" data-c>Perché esistiamo</a>
+        <a href="#" data-c>Cosa facciamo</a>
+        <a href="#" data-c>Come lavoriamo</a>
+        <a href="#" data-c>Chi siamo</a>
+        <a href="#" data-c>Lavori realizzati</a>
+        <a href="#" data-c>Manifesto</a>
+        <a href="#" data-c>Blog</a>
+        <a href="#" data-c>Press</a>
+      </div>
+      <div class="ft-lang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><a href="#" data-c>EN</a><a href="#" class="on" data-c>IT</a></div>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-copy">©2026 Humans s.r.l. | Via Casamari, 91 – 03100 Frosinone, Italy | VAT IT 02874880608</div>
+    <div class="ft-legal">
+      <a href="#" data-c>Whistleblowing</a><a href="#" data-c>Codice Etico</a><a href="#" data-c>Privacy</a><a href="#" data-c>Cookie</a><a href="#" data-c>Preference</a><a href="#" data-c>Notice at Collection</a>
+    </div>
+  </div>
+  <div class="ft-mock">Mockup Dopamina · Non pubblicare senza approvazione</div>
+</div></footer>
+
+<script>
+/* ── CUSTOM CURSOR ── */
+const cur = document.getElementById('cur');
+let cx=innerWidth/2, cy=innerHeight/2, tx=cx, ty=cy;
+const benBlock=document.querySelector('.ben-block');
+addEventListener('mousemove', e=>{
+  tx=e.clientX;ty=e.clientY;
+  /* cursore bianco su sfondi blu, a tutta larghezza, ma non sulle card chiare/immagini */
+  let light=false;
+  const t=e.target;
+  if(t&&t.closest&&!t.closest('.ben-c,.proc-c,.pc,.gc,.cbox')){
+    if(t.closest('.pos-cta-box')) light=true;                 /* box candidatura blu */
+    else if(t.closest('#awards') && !t.closest('.aw-card')) light=true; /* sezione Best Workplace: blu attorno alla card scura */
+    else if(t.closest('#processo') && benBlock){              /* zona benefit blu, full-width */
+      if(e.clientY >= benBlock.getBoundingClientRect().top - 80) light=true;
+    }
+  }
+  cur.classList.toggle('light', light);
+});
+(function loop(){ cx+=(tx-cx)*.2; cy+=(ty-cy)*.2; cur.style.left=cx+'px'; cur.style.top=cy+'px'; requestAnimationFrame(loop); })();
+document.addEventListener('mouseover', e=>{
+  if(e.target.closest('[data-c],a,button,.gc,.pc,.proc-c,.ben-c,.td,.cbox,.m3b')) cur.classList.add('big');
+});
+document.addEventListener('mouseout', e=>{ if(e.target.closest('[data-c],a,button,.gc,.pc,.proc-c,.ben-c,.td,.cbox,.m3b')) cur.classList.remove('big'); });
+
+/* ── REVEAL ── */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('go')})},{threshold:.12});
+document.querySelectorAll('[data-a]').forEach(el=>io.observe(el));
+
+/* ── WORD REVEAL ── */
+const wio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('go');[...e.target.querySelectorAll('.word')].forEach((w,i)=>{w.style.transitionDelay=(i*.06)+'s'})}})},{threshold:.3});
+document.querySelectorAll('.wr').forEach(el=>wio.observe(el));
+
+/* ── DOTCLUSTER ── */
+const dc=document.getElementById('dotc');
+new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){[...dc.querySelectorAll('.dotcell')].forEach((d,i)=>{d.style.transitionDelay=(i*.07)+'s'});dc.classList.add('go')}})},{threshold:.4}).observe(dc);
+
+/* ── COUNTERS ── */
+const cio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&!e.target._d){e.target._d=1;const t=+e.target.dataset.cnt;let c=0;const st=t/55;const ti=setInterval(()=>{c=Math.min(c+st,t);e.target.textContent=Math.round(c);if(c>=t)clearInterval(ti)},16)}})},{threshold:.5});
+document.querySelectorAll('[data-cnt]').forEach(el=>cio.observe(el));
+
+/* ── FILTER ── */
+document.querySelectorAll('.jobf').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.jobf').forEach(x=>x.classList.remove('on'));this.classList.add('on')}));
+
+/* ── PARTICLES + FLOATING ── */
+const hpc=document.getElementById('hpc');
+for(let i=0;i<14;i++){const p=document.createElement('div');p.className='hp';p.style.cssText=`left:${Math.random()*100}%;animation-duration:${10+Math.random()*14}s;animation-delay:${-Math.random()*18}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;opacity:${.12+Math.random()*.3}`;hpc.appendChild(p)}
+
+/* ── TILT ── */
+document.querySelectorAll('[data-tilt]').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(800px) rotateY(${x*7}deg) rotateX(${-y*7}deg) translateY(-6px)`});
+  c.addEventListener('mouseleave',()=>{c.style.transform=''});
+});
+
+/* ── CARD FOTO HERO TEMPORIZZATE ── */
+document.querySelectorAll('.hero-photo.late').forEach((c,i)=>{
+  setTimeout(()=>c.classList.add('show'), 1600 + i*900);
+});
+
+/* ── GLASS CHE SEGUE IL CURSORE (progetti) ── */
+const pglass=document.getElementById('pglass');
+let glassOn=false, glassCard=null, glassScrolling=false, glassScrollEndT=null, gmx=innerWidth/2, gmy=innerHeight/2, gQueued=false;
+function placeGlass(){
+  let x=gmx+24, y=gmy+24;
+  const w=360, h=pglass.offsetHeight||320;
+  if(x+w>innerWidth) x=gmx-w-24;
+  if(y+h>innerHeight) y=Math.max(12,innerHeight-h-12);
+  pglass.style.left=x+'px'; pglass.style.top=y+'px';
+}
+function showGlass(){
+  if(!glassCard||glassScrolling||glassOn) return;
+  pglass.innerHTML=glassCard.querySelector('.pc-detail').innerHTML;
+  placeGlass();                 /* posiziona PRIMA di mostrare → niente flash in alto a sinistra */
+  pglass.classList.add('on'); glassOn=true;
+}
+function hideGlassVisual(){ glassOn=false; pglass.classList.remove('on'); }
+document.querySelectorAll('.pc[data-glass]').forEach(pc=>{
+  pc.addEventListener('mouseenter',()=>{glassCard=pc; showGlass();});  /* hover → appare subito (se non sto scrollando) */
+  pc.addEventListener('mouseleave',()=>{glassCard=null; hideGlassVisual();});
+});
+addEventListener('mousemove',e=>{
+  gmx=e.clientX; gmy=e.clientY;
+  if(!glassCard) return;
+  if(glassOn){                  /* già visibile → segue il cursore */
+    if(gQueued)return;gQueued=true;
+    requestAnimationFrame(()=>{gQueued=false;placeGlass();});
+  }else if(!glassScrolling){    /* non visibile e non sto scrollando → mostra */
+    showGlass();
+  }
+});
+/* durante lo scroll nascondi e non far apparire finché lo scroll non si ferma */
+addEventListener('scroll',()=>{
+  glassScrolling=true; clearTimeout(glassScrollEndT); glassScrollEndT=setTimeout(()=>{glassScrolling=false;},180);
+  if(glassOn) hideGlassVisual();
+},{passive:true});
+
+/* ── MASTER SCROLL LOOP ── */
+const pb=document.getElementById('pb');
+const sedeMedia=document.getElementById('sedeMedia');
+const sedeMediaWrap=document.querySelector('.sede-media');
+let sedeExpanded=false, sedeOrigLeft=null, sedeOrigRight=null;
+const teamImg=document.querySelector('#teamphoto img');
+/* video sede: parte muto quando entra nel viewport, si ferma quando esce */
+const sedeVid=document.getElementById('sedeVideoEl');
+if(sedeVid){
+  const vidIO=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting){sedeVid.play().then(()=>sedeVid.classList.add('playing')).catch(()=>{});}
+    else{sedeVid.pause();}
+  });},{threshold:0.2});
+  vidIO.observe(sedeVid);
+}
+let ticking=false;
+const pxEls=[...document.querySelectorAll('[data-px]')];
+/* nav + barra tecnica: scompaiono scrollando giù, riappaiono salendo (come humans.tech) */
+let lastY=scrollY, topHidden=false;
+function updateTopBars(y){
+  if(y>lastY&&y>120){ if(!topHidden){document.body.classList.add('top-hidden');topHidden=true} }
+  else if(y<lastY){ if(topHidden){document.body.classList.remove('top-hidden');topHidden=false} }
+  lastY=y;
+}
+function onScroll(){
+  if(!ticking){requestAnimationFrame(()=>{
+    updateTopBars(scrollY);
+    pb.style.width=(scrollY/(document.body.scrollHeight-innerHeight)*100)+'%';
+    /* parallax images */
+    pxEls.forEach(el=>{
+      const r=el.getBoundingClientRect();
+      if(r.bottom>0&&r.top<innerHeight){const sp=parseFloat(el.dataset.px);const off=(r.top-innerHeight/2)*sp*-1;const img=el.querySelector('img');if(img)img.style.transform=`scale(1.12) translateY(${off}px)`}
+    });
+    /* sede media: espansione a tutto schermo scrollando */
+    if(sedeMediaWrap && !sedeExpanded){
+      const wr=sedeMediaWrap.getBoundingClientRect();
+      // cattura rect originale UNA SOLA VOLTA (prima che iniziamo a modificare i margini)
+      if(sedeOrigLeft===null && wr.left>0){
+        sedeOrigLeft=wr.left;
+        sedeOrigRight=innerWidth-wr.right;
+      }
+      if(sedeOrigLeft!==null){
+        const startTrigger=innerHeight*0.75;
+        const endTrigger=innerHeight*0.15;
+        const p=Math.max(0,Math.min(1,(startTrigger-wr.top)/(startTrigger-endTrigger)));
+        if(p>0){
+          const ml=sedeOrigLeft*p;
+          const mr=sedeOrigRight*p;
+          sedeMediaWrap.style.marginLeft=(-ml)+'px';
+          sedeMediaWrap.style.marginRight=(-mr)+'px';
+          sedeMediaWrap.style.width='calc(100% + '+ml+'px + '+mr+'px)';
+          sedeMediaWrap.style.borderRadius=(32*(1-p))+'px';
+          if(p>=1) sedeExpanded=true;
+        }
+      }
+    }
+    /* team photo parallax */
+    if(teamImg){const r=teamImg.parentElement.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight){const off=(r.top)*.08;teamImg.style.transform=`translateY(${off}px)`}}
+    ticking=false;
+  });ticking=true}
+}
+addEventListener('scroll',onScroll,{passive:true});
+onScroll();
+
+/* ── CAROSELLO PROGETTI: JS puro, posizione mai resettata ── */
+(()=>{
+  const sc=document.querySelector('.prj-sc');
+  const tracks=[...document.querySelectorAll('.prj-track')];
+  if(!sc||!tracks.length) return;
+  tracks.forEach(t=>t.querySelectorAll('img').forEach(i=>i.draggable=false));
+  sc.style.userSelect='none'; sc.style.cursor='grab';
+
+  const SPEED=0.25; // px/frame — molto lento
+  let pos=0, hw=0, dragging=false, startX=0, startPos=0, rafId=null, visible=false;
+
+  function calcHW(){ hw=tracks[0].scrollWidth/2; }
+  calcHW(); window.addEventListener('resize',calcHW,{passive:true});
+
+  function apply(){
+    if(!hw) return;
+    if(pos>=hw) pos-=hw;
+    if(pos<0) pos+=hw;
+    tracks.forEach(t=>t.style.transform='translateX('+(-pos)+'px)');
+  }
+
+  function loop(){
+    if(!dragging) pos+=SPEED;
+    apply();
+    if(visible) rafId=requestAnimationFrame(loop);
+  }
+
+  new IntersectionObserver(es=>{
+    visible=es[0].isIntersecting;
+    if(visible&&!rafId) rafId=requestAnimationFrame(loop);
+    else if(!visible){ cancelAnimationFrame(rafId); rafId=null; }
+  },{threshold:0.1}).observe(sc);
+
+  // DRAG
+  sc.addEventListener('pointerdown',e=>{
+    if(e.button!==0) return;
+    dragging=true; startX=e.clientX; startPos=pos;
+    sc.setPointerCapture(e.pointerId); sc.style.cursor='grabbing';
+  });
+  sc.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    pos=startPos-(e.clientX-startX);
+    apply();
+  });
+  ['pointerup','pointercancel'].forEach(ev=>sc.addEventListener(ev,()=>{
+    dragging=false; sc.style.cursor='grab';
+  }));
+
+  // WHEEL orizzontale — non intercetta scroll verticale
+  sc.addEventListener('wheel',e=>{
+    if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    pos+=e.deltaX;
+    apply();
+  },{passive:false});
+})();
+/* ── CAROSELLO SEDE: drag sopra CSS animation ── */
+(()=>{
+  const gallery=document.querySelector('.sede-gallery');
+  const track=document.querySelector('.sg-track');
+  if(!track||!gallery) return;
+  track.querySelectorAll('img').forEach(i=>i.draggable=false);
+  track.style.userSelect='none';
+  gallery.style.cursor='grab';
+
+  let dragging=false, startX=0, startTx=0;
+
+  function getCurrentTx(){
+    return new DOMMatrix(getComputedStyle(track).transform).m41;
+  }
+
+  gallery.addEventListener('pointerdown',e=>{
+    if(e.button!==0) return;
+    dragging=true;
+    startX=e.clientX;
+    startTx=getCurrentTx();
+    track.style.animationPlayState='paused';
+    track.style.transform='translateX('+startTx+'px)';
+    track.style.animation='none';
+    gallery.setPointerCapture(e.pointerId);
+    gallery.style.cursor='grabbing';
+  });
+
+  gallery.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    const dx=e.clientX-startX;
+    track.style.transform='translateX('+(startTx+dx)+'px)';
+  });
+
+  ['pointerup','pointercancel'].forEach(ev=>gallery.addEventListener(ev,()=>{
+    if(!dragging) return;
+    dragging=false;
+    gallery.style.cursor='grab';
+    // riprende CSS animation dalla posizione attuale
+    const curTx=new DOMMatrix(getComputedStyle(track).transform).m41;
+    const hw=track.scrollWidth/2;
+    const pct=(-curTx/hw)*100;
+    track.style.transform='';
+    track.style.animation='';
+    track.style.animationDelay=(-pct/100*36)+'s';
+  }));
+
+  // wheel orizzontale trackpad
+  gallery.addEventListener('wheel',e=>{
+    if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    const curTx=getCurrentTx();
+    track.style.animation='none';
+    track.style.transform='translateX('+(curTx-e.deltaX)+'px)';
+    clearTimeout(gallery._wt);
+    gallery._wt=setTimeout(()=>{
+      const tx=new DOMMatrix(getComputedStyle(track).transform).m41;
+      const hw=track.scrollWidth/2;
+      const pct=(-tx/hw)*100;
+      track.style.transform='';
+      track.style.animation='';
+      track.style.animationDelay=(-pct/100*36)+'s';
+    },150);
+  },{passive:false});
+})();
+</script>
+</body>
+</html>

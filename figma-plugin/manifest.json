@@ -1,0 +1,7 @@
+{
+  "name": "PrismaNews Design System",
+  "id": "prismanews-ds-builder",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"]
+}
