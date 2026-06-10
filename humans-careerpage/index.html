@@ -100,14 +100,17 @@ body.top-hidden nav{transform:translateY(-180px)}
 .ann b{color:#ff0079}.ann em{margin-left:auto;opacity:.22;font-style:normal}
 
 /* ════════ NAV ════════ */
-nav{position:fixed;top:46px;left:0;right:0;z-index:700;padding:0 40px;transition:transform .4s var(--s)}
-.ni{max-width:1368px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid rgba(5,6,32,.06);border-radius:14px;padding:12px 24px;box-shadow:0 6px 24px rgba(5,6,32,.10)}
-.nlo img{height:32px;display:block}.nlo-fb{font-weight:500;font-size:17px;letter-spacing:-.02em;color:var(--dk)}
-.nm{display:flex;gap:30px;font-family:var(--fm);font-size:14px;font-weight:400;letter-spacing:0;color:#1E1E2D}.nm a{transition:.2s}.nm a:hover{color:var(--v)}
-.ni .btn{font-family:var(--fm);font-size:14px;font-weight:400;padding:14px 20px}
-.ni .bk{background:var(--g);color:var(--v);border:none}.ni .bk:hover{background:#e3e3e3}
-.ni .bv{background:var(--v);color:#fff}.ni .bv:hover{background:#5547ff}
-.nc{display:flex;gap:8px}
+nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition:transform .4s var(--s)}
+.ni{max-width:1368px;margin:0 auto;height:70px;display:flex;align-items:center;background:#efefef;border:none;border-radius:18px;padding:0 8px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+.nlo img{height:35px;display:block}.nlo-fb{font-weight:500;font-size:17px;letter-spacing:-.02em;color:var(--dk)}
+.nm{display:flex;margin-left:64px;font-family:var(--fm);font-size:14px;font-weight:400;letter-spacing:0;color:#35415B}.nm a{transition:color .2s;color:#35415B;padding:0 12px;white-space:nowrap}.nm a:hover{color:#646CFD}
+.ni .btn{font-family:var(--fm);font-size:14px;font-weight:400;padding:14px;border-radius:11px;gap:0;transition:background .3s,color .3s}
+.ni .bk{background:#efefef;color:var(--v);border:none}.ni .bk:hover{background:var(--v);color:#efefef}
+.ni .bv{background:var(--v);color:#fff}.ni .bv:hover{background:transparent;color:var(--v)}
+.ni .btn-ar{display:inline-flex;align-items:center}
+.ni .bk .btn-ar{margin-right:7px}.ni .bv .btn-ar{margin-right:32px}
+.ni .btn-ar svg{height:14px;width:auto;display:block}
+.nc{display:flex;gap:22px;align-items:center;margin-left:auto;flex-shrink:0}
 @media(max-width:880px){.nm{display:none}}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-weight:500;font-size:15px;padding:15px 24px;border-radius:11px;transition:.25s;cursor:none;border:none;text-decoration:none;letter-spacing:0;white-space:nowrap}
 @media(hover:none){.btn{cursor:pointer}}
@@ -1022,8 +1025,8 @@ footer{background:#08081c;color:#fff;padding:80px 0 26px;font-family:var(--f)}
     <div class="nlo"><img src="img/humans-logo.svg" alt="Humans.tech"></div>
     <div class="nm"><a href="https://humans.tech/perche-esistiamo/">Perché esistiamo</a><a href="https://humans.tech/cosa-facciamo/">Cosa facciamo</a><a href="https://humans.tech/come-lavoriamo/">Come lavoriamo</a><a href="https://humans.tech/lavori-realizzati/">Lavori realizzati</a><a href="https://humans.tech/chi-siamo/">Chi siamo</a><a href="https://humans.tech/blog/">Blog</a></div>
     <div class="nc">
-      <a class="btn bk" data-c href="#posizioni"><span class="btn-ar">→</span>Entra nel team</a>
-      <a class="btn bv" data-c href="https://humans.tech/contatti/"><span class="btn-ar">→</span>Contattaci</a>
+      <a class="btn bk" data-c href="#posizioni"><span class="btn-ar"><svg viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M295.515 115.716l-19.626 19.626c-4.753 4.753-4.675 12.484.173 17.14L356.78 230H12c-6.627 0-12 5.373-12 12v28c0 6.627 5.373 12 12 12h344.78l-80.717 77.518c-4.849 4.656-4.927 12.387-.173 17.14l19.626 19.626c4.686 4.686 12.284 4.686 16.971 0l131.799-131.799c4.686-4.686 4.686-12.284 0-16.971L312.485 115.716c-4.686-4.686-12.284-4.686-16.97 0z"/></svg></span>Entra nel team</a>
+      <a class="btn bv" data-c href="https://humans.tech/contatti/"><span class="btn-ar"><svg viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M295.515 115.716l-19.626 19.626c-4.753 4.753-4.675 12.484.173 17.14L356.78 230H12c-6.627 0-12 5.373-12 12v28c0 6.627 5.373 12 12 12h344.78l-80.717 77.518c-4.849 4.656-4.927 12.387-.173 17.14l19.626 19.626c4.686 4.686 12.284 4.686 16.971 0l131.799-131.799c4.686-4.686 4.686-12.284 0-16.971L312.485 115.716c-4.686-4.686-12.284-4.686-16.97 0z"/></svg></span>Contattaci</a>
     </div>
     <button class="nav-burger" id="navBurger" aria-label="Apri menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
