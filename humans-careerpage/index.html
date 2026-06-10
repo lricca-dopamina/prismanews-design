@@ -594,13 +594,16 @@ a.aw-c:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(5,6,32,.2)}
 /* ════════ FOOTER ════════ */
 footer{background:#050620;color:#fff;padding:112px 0 40px;font-family:var(--f)}
 .ft-logo-img{width:310px;max-width:80%;height:auto;display:block}
-.ft-grid{display:grid;grid-template-columns:minmax(280px,1fr) 1px minmax(340px,1.2fr) auto;gap:0 56px;align-items:stretch;min-height:500px}
-.ft-left,.ft-center,.ft-right{display:flex;flex-direction:column;justify-content:space-between;min-height:500px}
-.ft-divider{width:1px;align-self:stretch;background:rgba(255,255,255,.1)}
+footer>.w{padding:0}
+.ft-grid{display:grid;grid-template-columns:1fr 1.63fr 0.42fr;column-gap:0;align-items:stretch;min-height:584px}
+.ft-left,.ft-center,.ft-right{display:flex;flex-direction:column;justify-content:space-between;min-height:584px}
+.ft-left{border-right:1px solid #6E6E94}
+.ft-center{padding-left:24px}
+.ft-divider{display:none}
 .ft-logo-w{display:flex;align-items:flex-start;gap:3px;font-weight:600;font-size:50px;letter-spacing:-.02em;color:#fff;line-height:1}
 .ft-logo-w .tech{font-weight:400}
 .ft-logo-w svg{width:30px;height:30px;color:var(--v);margin-top:-5px}
-.ft-tag{font-size:28px;font-weight:500;color:#fff;margin:4px 0 34px;letter-spacing:-.01em}
+.ft-tag{font-size:28px;font-weight:500;color:#fff;margin:2px 0 34px;letter-spacing:-.01em}
 .ft-badges{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:30px}
 .ft-badges img{height:44px;width:auto}
 .ft-badges img:nth-of-type(3){height:36px}
@@ -630,7 +633,8 @@ footer{background:#050620;color:#fff;padding:112px 0 40px;font-family:var(--f)}
 .ft-legal{display:flex;gap:24px;flex-wrap:wrap;font-size:16px}
 .ft-legal a{color:#fff;text-decoration:none}.ft-legal a:hover{color:var(--dv)}
 .ft-mock{font-family:var(--fm);font-size:9px;color:rgba(255,255,255,.2);margin-top:12px}
-@media(max-width:980px){.ft-grid{grid-template-columns:1fr;gap:40px;min-height:0}.ft-left,.ft-center,.ft-right{min-height:0;justify-content:flex-start;gap:28px}.ft-divider{display:none}.ft-contact{margin-top:0}}
+@media(max-width:1240px){footer>.w{padding:0 32px}}
+@media(max-width:980px){footer>.w{padding:0 24px}.ft-grid{grid-template-columns:1fr;gap:40px;min-height:0}.ft-left,.ft-center,.ft-right{min-height:0;justify-content:flex-start;gap:28px}.ft-left{border-right:none}.ft-center{padding-left:0}.ft-contact{margin-top:0}}
 /* video sede */
 .sede-video-el,.sede-img-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .sede-video-el{z-index:1;opacity:0;transition:opacity .5s}
@@ -2065,6 +2069,7 @@ footer{background:#050620;color:#fff;padding:112px 0 40px;font-family:var(--f)}
   <div class="ft-grid">
     <!-- colonna sinistra -->
     <div class="ft-left">
+      <div class="ft-ltop">
       <img class="ft-logo-img" src="img/logo-footer.webp" alt="humans.tech">
       <div class="ft-tag">your added value.</div>
       <div class="ft-badges">
@@ -2075,12 +2080,12 @@ footer{background:#050620;color:#fff;padding:112px 0 40px;font-family:var(--f)}
         <img class="ft-statista" src="https://humans.tech/wp-content/uploads/2025/03/Statista_logo-logo.png" alt="Statista" loading="lazy">
       </div>
       <p class="ft-desc">Siamo fra le 500 aziende in crescita in Europa per <a href="https://www.linkedin.com/feed/update/urn:li:activity:7434565362769084416/" target="_blank" rel="noopener" data-c>Financial Times &amp; Statista</a>, Leader della crescita per Il Sole 24 Ore e Statista, Campioni della Crescita secondo ITQF e La Repubblica e tra le migliori aziende in cui lavorare per <a href="https://www.linkedin.com/feed/update/urn:li:activity:7440736066623619072/" target="_blank" rel="noopener" data-c>GPTW Italia</a>.</p>
+      </div>
       <div class="ft-social">Seguici su
         <a href="https://it.linkedin.com/company/wearehumanstech" target="_blank" rel="noopener" data-c aria-label="LinkedIn"><svg viewBox="0 0 20 21" fill="currentColor"><path d="M18.5 .2H1.5C1.3 .2 1.1 .2 .9 .3C.7 .3 .6 .4 .4 .6C.3 .7 .2 .9 .1 1.1C0 1.2 0 1.4 0 1.6V18.7C0 18.9 0 19.1 .1 19.3C.2 19.4 .3 19.6 .4 19.7C.6 19.9 .7 20 .9 20C1.1 20.1 1.3 20.2 1.5 20.2H18.5C18.7 20.2 18.9 20.1 19.1 20.1C19.2 20 19.4 19.9 19.6 19.7C19.7 19.6 19.8 19.4 19.9 19.3C20 19.1 20 18.9 20 18.7V1.6C20 1.4 20 1.2 19.9 1C19.8 .9 19.7 .7 19.6 .6C19.4 .4 19.3 .3 19.1 .3C18.9 .2 18.7 .1 18.5 .2ZM5.9 17.2H3V7.7H5.9V17.2ZM4.4 6.4C4.1 6.4 3.8 6.3 3.5 6.1C3.2 5.9 3 5.6 2.9 5.3C2.7 5 2.7 4.6 2.8 4.3C2.8 4 3 3.7 3.2 3.4C3.5 3.2 3.8 3 4.1 3C4.4 2.9 4.8 2.9 5.1 3.1C5.4 3.2 5.7 3.4 5.9 3.7C6.1 4 6.2 4.3 6.2 4.6C6.2 5.1 6 5.5 5.7 5.9C5.3 6.2 4.9 6.4 4.4 6.4ZM17 17.2H14.1V12.6C14.1 11.5 14.1 10.1 12.5 10.1C11 10.1 10.7 11.3 10.7 12.5V17.2H7.8V7.7H10.6V9H10.7C10.9 8.5 11.4 8.1 11.9 7.8C12.3 7.5 12.9 7.4 13.5 7.4C16.5 7.4 17 9.4 17 12V17.2Z"/></svg></a>
         <a href="https://www.instagram.com/humanstech" target="_blank" rel="noopener" data-c aria-label="Instagram"><svg viewBox="0 0 20 21" fill="currentColor"><path d="M4.3 .2C3.1 .2 2.1 .6 1.3 1.4C.5 2.2 0 3.3 0 4.4V15.9C0 17 .5 18.1 1.3 18.9C2.1 19.7 3.1 20.2 4.3 20.2H15.7C16.9 20.2 17.9 19.7 18.7 18.9C19.5 18.1 20 17 20 15.9V4.4C20 3.3 19.5 2.2 18.7 1.4C17.9 .6 16.9 .2 15.7 .2H4.3ZM16.9 4.4C16.9 4.8 16.8 5.1 16.6 5.3C16.4 5.5 16 5.7 15.7 5.7C15.4 5.7 15.1 5.5 14.8 5.3C14.6 5.1 14.5 4.8 14.5 4.4C14.5 4.1 14.6 3.8 14.8 3.6C15.1 3.3 15.4 3.2 15.7 3.2C16 3.2 16.4 3.3 16.6 3.6C16.8 3.8 16.9 4.1 16.9 4.4ZM10 6.7C9.1 6.7 8.2 7.1 7.6 7.7C6.9 8.4 6.6 9.2 6.6 10.2C6.6 11.1 6.9 11.9 7.6 12.6C8.2 13.2 9.1 13.6 10 13.6C10.9 13.6 11.8 13.2 12.4 12.6C13.1 11.9 13.4 11.1 13.4 10.2C13.4 9.2 13.1 8.4 12.4 7.7C11.8 7.1 10.9 6.7 10 6.7ZM4.9 10.2C4.9 8.8 5.5 7.5 6.4 6.6C7.4 5.6 8.7 5.1 10 5.1C11.3 5.1 12.6 5.6 13.6 6.6C14.5 7.5 15.1 8.8 15.1 10.2C15.1 11.5 14.5 12.8 13.6 13.7C12.6 14.7 11.3 15.2 10 15.2C8.7 15.2 7.4 14.7 6.4 13.7C5.5 12.8 4.9 11.5 4.9 10.2Z"/></svg></a>
       </div>
     </div>
-    <div class="ft-divider"></div>
     <!-- colonna centrale -->
     <div class="ft-center">
       <div class="ft-cta">
