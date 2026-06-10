@@ -99,7 +99,20 @@ ffmpeg -y -i input.mp4 -vf "scale=1920:-2" -c:v libx264 -crf 23 -preset fast \
 
 ---
 
-## 15. Netlify deploy — solo index.html, senza cartella img/
+## 15. Box di selezione sui caroselli draggabili — terza occorrenza
+**Regola fissa:** ogni volta che un elemento è draggabile o fa parte di un carosello, aggiungere SEMPRE in anticipo: `user-select:none; -webkit-user-select:none; -webkit-user-drag:none` sull'elemento E sul suo track/contenitore. Non aspettare che l'utente lo segnali.
+
+---
+
+## 16. Carosello duplicato: due righe invece di una (seconda volta)
+**Problema:** Quando duplico le card per il loop infinito (`.gc-track` × 2), i due track si impilano verticalmente invece di stare affiancati, creando due righe di card visibili.  
+**Causa:** Il contenitore `.gc-row` non aveva `display:flex; flex-direction:row` esplicito — i figli `div` di default sono `display:block` e vanno a capo. Stesso errore già commesso con `.prj-sc`.  
+**Fix:** Aggiungere sempre `display:flex; flex-direction:row` al contenitore + `flex-shrink:0` ai track.  
+**Lezione:** Ogni volta che duplico elementi in un contenitore per un loop infinito, devo verificare subito che il contenitore abbia `display:flex; flex-direction:row` e `overflow:hidden`. È sempre la prima cosa da controllare prima di fare il duplicate.
+
+---
+
+## 16. Netlify deploy — solo index.html, senza cartella img/
 **Problema:** Trascinando solo `index.html` su Netlify, la cartella `img/` non veniva caricata → tutte le foto 404.  
 **Fix:** Trascinare sempre l'**intera cartella** `humans-careerpage/` (non il file singolo).  
 **Lezione:** Netlify accetta sia cartelle che file singoli. Con file singolo, le risorse relative (img/, js/, css/) non vengono incluse.
