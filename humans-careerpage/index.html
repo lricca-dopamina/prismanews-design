@@ -849,9 +849,18 @@ footer{background:#08081c;color:#fff;padding:80px 0 26px;font-family:var(--f)}
 /* carosello "spotlight": card centrale grande + vicini che sbucano + dots */
 .nsec-carousel{position:relative;margin-top:44px;overflow-x:clip;overflow-y:visible;padding:30px 0;cursor:grab;user-select:none;-webkit-user-select:none}
 /* sfumatura ai bordi per nascondere le slide laterali tagliate */
-.nsec-carousel:not(.as-grid)::before,.nsec-carousel:not(.as-grid)::after{content:'';position:absolute;top:0;bottom:0;width:13%;z-index:6;pointer-events:none}
-.nsec-carousel:not(.as-grid)::before{left:0;background:linear-gradient(90deg,var(--w),rgba(255,255,255,0))}
-.nsec-carousel:not(.as-grid)::after{right:0;background:linear-gradient(270deg,var(--w),rgba(255,255,255,0))}
+.nsec-carousel:not(.as-grid):not(.nsec-marquee)::before,.nsec-carousel:not(.as-grid):not(.nsec-marquee)::after{content:'';position:absolute;top:0;bottom:0;width:13%;z-index:6;pointer-events:none}
+.nsec-carousel:not(.as-grid):not(.nsec-marquee)::before{left:0;background:linear-gradient(90deg,var(--w),rgba(255,255,255,0))}
+.nsec-carousel:not(.as-grid):not(.nsec-marquee)::after{right:0;background:linear-gradient(270deg,var(--w),rgba(255,255,255,0))}
+/* marquee "Non candidarti se": card tutte piene, scorrimento automatico, niente frecce/dots/sfumature */
+.nsec-marquee{cursor:grab;overflow-x:clip;overflow-y:visible;padding:24px 0 54px;margin-top:36px}
+.nsec-marquee.dragging{cursor:grabbing}
+.nsec-marquee .nsec-ctrack{transition:none;will-change:transform;padding-left:24px}
+.nsec-marquee .ncard{opacity:1;transform:none;width:clamp(300px,30vw,420px);height:360px}
+.nsec-marquee .ncard:hover img{transform:none}
+.nsec-marquee .ncard-ov{padding:32px}
+.nsec-marquee .ncard-ov h4{font-size:22px;margin-bottom:9px}
+.nsec-marquee .ncard-ov p{font-size:14px;max-width:none}
 .nsec.dark .nsec-carousel:not(.as-grid)::before{background:linear-gradient(90deg,var(--nv),rgba(30,30,45,0))}
 .nsec.dark .nsec-carousel:not(.as-grid)::after{background:linear-gradient(270deg,var(--nv),rgba(30,30,45,0))}
 .nsec-carousel.dragging{cursor:grabbing}
@@ -1011,23 +1020,23 @@ footer{background:#08081c;color:#fff;padding:80px 0 26px;font-family:var(--f)}
 <nav>
   <div class="ni">
     <div class="nlo"><img src="img/humans-logo.svg" alt="Humans.tech"></div>
-    <div class="nm"><a href="#">Perché esistiamo</a><a href="#">Cosa facciamo</a><a href="#">Come lavoriamo</a><a href="#">Lavori realizzati</a><a href="#">Chi siamo</a><a href="#">Blog</a></div>
+    <div class="nm"><a href="https://humans.tech/perche-esistiamo/">Perché esistiamo</a><a href="https://humans.tech/cosa-facciamo/">Cosa facciamo</a><a href="https://humans.tech/come-lavoriamo/">Come lavoriamo</a><a href="https://humans.tech/lavori-realizzati/">Lavori realizzati</a><a href="https://humans.tech/chi-siamo/">Chi siamo</a><a href="https://humans.tech/blog/">Blog</a></div>
     <div class="nc">
-      <button class="btn bk" data-c onclick="document.getElementById('posizioni').scrollIntoView({behavior:'smooth'})"><span class="btn-ar">→</span>Entra nel team</button>
-      <button class="btn bv" data-c><span class="btn-ar">→</span>Contattaci</button>
+      <a class="btn bk" data-c href="#posizioni"><span class="btn-ar">→</span>Entra nel team</a>
+      <a class="btn bv" data-c href="https://humans.tech/contatti/"><span class="btn-ar">→</span>Contattaci</a>
     </div>
     <button class="nav-burger" id="navBurger" aria-label="Apri menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
   <div class="nav-drawer" id="navDrawer" aria-hidden="true">
-    <a href="#manifesto">Perché esistiamo</a>
-    <a href="#progetti">Cosa facciamo</a>
-    <a href="#campo">Come lavoriamo</a>
-    <a href="#progetti">Lavori realizzati</a>
-    <a href="#crescere">Chi siamo</a>
-    <a href="#press">Blog</a>
+    <a href="https://humans.tech/perche-esistiamo/">Perché esistiamo</a>
+    <a href="https://humans.tech/cosa-facciamo/">Cosa facciamo</a>
+    <a href="https://humans.tech/come-lavoriamo/">Come lavoriamo</a>
+    <a href="https://humans.tech/lavori-realizzati/">Lavori realizzati</a>
+    <a href="https://humans.tech/chi-siamo/">Chi siamo</a>
+    <a href="https://humans.tech/blog/">Blog</a>
     <div class="nav-drawer-cta">
       <a class="btn bk" href="#posizioni">Entra nel team</a>
-      <a class="btn bv" href="#posizioni">Contattaci</a>
+      <a class="btn bv" href="https://humans.tech/contatti/">Contattaci</a>
     </div>
   </div>
 </nav>
@@ -1809,6 +1818,7 @@ footer{background:#08081c;color:#fff;padding:80px 0 26px;font-family:var(--f)}
       <div class="sede-media-inner" id="sedeMedia">
         <!-- Video sede in WebM (sede-video.webm) -->
         <video class="sede-video-el" id="sedeVideoEl" muted playsinline loop preload="metadata" poster="img/sede-main.webp">
+          <source src="img/sede-video.mp4" type="video/mp4">
           <source src="img/sede-video.webm" type="video/webm">
         </video>
         <!-- Fallback foto (desktop finché non c'è il video, sempre su mobile) -->
@@ -2009,13 +2019,13 @@ footer{background:#08081c;color:#fff;padding:80px 0 26px;font-family:var(--f)}
       <p>Qui dentro funziona così: noi ti diamo le opportunità. Tu le prendi, le capisci, le contestualizzi. Procedi e prendi decisioni, senza creare frizione.</p>
     </div>
     <p class="nsec-lead">Non candidarti se:</p>
-    <div class="nsec-carousel"><div class="nsec-ctrack" data-loop>
+  </div>
+  <div class="nsec-carousel nsec-marquee"><div class="nsec-ctrack">
       <div class="ncard"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=560&h=400&fit=crop" alt=""><div class="ncard-ov"><h4>Ti servono specifiche iper-dettagliate</h4><p>Se hai bisogno di istruzioni minuziose per partire e di mesi per "trovare il ritmo", qui faticherai. Il contesto te lo diamo, la direzione la prendi tu.</p></div></div>
       <div class="ncard tint"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=560&h=400&fit=crop" alt=""><div class="ncard-ov"><h4>Ti aspetti micro-management</h4><p>Qui non troverai chi ti controlla ogni passo, né un ambiente pensato per proteggere chi non performa. Funziona al contrario: autonomia reale e responsabilità.</p></div></div>
       <div class="ncard"><img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=560&h=400&fit=crop" alt=""><div class="ncard-ov"><h4>Vedi solo il tuo pezzetto</h4><p>Se ragioni a "questa è la mia task, il resto non è mio problema", blocchi tutti. Qui si guarda al prodotto intero e al risultato del team.</p></div></div>
       <div class="ncard tint"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=560&h=400&fit=crop" alt=""><div class="ncard-ov"><h4>Aspetti validazione su ogni scelta</h4><p>L'ownership si prende, non si delega. Procedi, decidi con il contesto e i dati che hai, e te ne assumi la responsabilità.</p></div></div>
     </div></div>
-  </div>
 </section>
 <section id="posizioni"><div class="w">
   <h2 class="pos-h" data-a="up">Ora tocca a te!</h2>
@@ -2572,6 +2582,7 @@ onScroll();
 // ── Caroselli "spotlight": card centrale grande + vicini che sbucano + dots + autoplay ──
 document.querySelectorAll('.nsec-carousel').forEach(car => {
   if(car.classList.contains('as-grid')) return;   // griglia statica: niente carosello
+  if(car.classList.contains('nsec-marquee')) return;   // marquee auto-scroll: gestito a parte
   const track = car.querySelector('.nsec-ctrack');
   const cards = [...track.querySelectorAll('.ncard, .pcard')];
   if(!track || cards.length < 2) return;
@@ -2640,6 +2651,28 @@ document.querySelectorAll('.nsec-carousel').forEach(car => {
       go(idx + (e.deltaX > 0 ? 1 : -1)); restart();
     }
   }, {passive:false});
+});
+
+// ── Marquee "Non candidarti se": stesso schema di stampa/sede/progetti
+//    (auto-scroll + drag + wheel + loop seamless, a tutta larghezza) ──
+document.querySelectorAll('.nsec-marquee').forEach(sc => {
+  const track = sc.querySelector('.nsec-ctrack');
+  if(!track) return;
+  // duplica le card una volta → 2 copie identiche, wrap a metà = loop continuo
+  [...track.children].forEach(c => { const cl = c.cloneNode(true); cl.setAttribute('aria-hidden','true'); track.appendChild(cl); });
+  track.querySelectorAll('img').forEach(i => i.draggable = false);
+  const SPEED = 0.5;
+  let pos = 0, hw = 0, dragging = false, startX = 0, startPos = 0, rafId = null, visible = false;
+  function calcHW(){ hw = track.scrollWidth / 2; }
+  if(document.readyState === 'complete') calcHW(); else window.addEventListener('load', calcHW);
+  calcHW(); window.addEventListener('resize', calcHW, {passive:true});
+  function apply(){ if(!hw) return; pos = ((pos % hw) + hw) % hw; track.style.transform = 'translateX(' + (-pos) + 'px)'; }
+  function loop(){ if(!dragging) pos += SPEED; apply(); if(visible) rafId = requestAnimationFrame(loop); }
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; if(visible && !rafId) rafId = requestAnimationFrame(loop); else if(!visible){ cancelAnimationFrame(rafId); rafId = null; } }, {threshold:0}).observe(sc);
+  sc.addEventListener('pointerdown', e => { if(e.button !== 0) return; dragging = true; startX = e.clientX; startPos = pos; sc.classList.add('dragging'); sc.setPointerCapture(e.pointerId); });
+  sc.addEventListener('pointermove', e => { if(!dragging) return; pos = startPos - (e.clientX - startX); apply(); });
+  ['pointerup','pointercancel'].forEach(ev => sc.addEventListener(ev, () => { dragging = false; sc.classList.remove('dragging'); }));
+  sc.addEventListener('wheel', e => { if(Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; e.preventDefault(); pos += e.deltaX; apply(); }, {passive:false});
 });
 
 // ── LLM · token convergono → asterisco → genera ──
