@@ -890,11 +890,12 @@ footer>.w{padding:0}
 .nsec-marquee .ncard-ov h4{font-size:22px;margin-bottom:9px}
 .nsec-marquee .ncard-ov p{font-size:14px;max-width:none}
 /* "Non è per tutti": intro a sinistra + animazione ingranaggi a destra */
-.nf-top{display:grid;grid-template-columns:1fr minmax(0,720px);gap:36px;align-items:center;margin-bottom:40px}
+#nonfunziona{overflow:hidden}
+.nf-top{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:24px;align-items:center;margin-bottom:40px}
 .nf-intro-col .nsec-intro{margin-bottom:0}
-.nf-anim{justify-self:end;width:100%;max-width:720px}
+.nf-anim{justify-self:end;width:100%;max-width:760px;margin-right:-48px}
 .nf-anim canvas{display:block;width:100%;height:auto}
-@media(max-width:980px){.nf-top{grid-template-columns:1fr;gap:28px}.nf-anim{justify-self:center;max-width:620px}}
+@media(max-width:980px){.nf-top{grid-template-columns:1fr;gap:28px}.nf-anim{justify-self:center;max-width:620px;margin-right:0}}
 /* "Non candidarti se": 4 box di solo testo in fila orizzontale (sostituisce il carosello) */
 .nf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:16px}
 .nf-box{background:var(--g);border:1px solid rgba(30,30,45,.08);border-radius:18px;padding:26px 24px;transition:border-color .35s var(--s),transform .35s var(--s),box-shadow .35s var(--s)}
@@ -3283,7 +3284,6 @@ document.querySelectorAll('canvas[data-growth]').forEach(makeGrowth);
     const orangeColor=mixHex(ORANGE,ORANGE_SYNC,colorP);
     drawSpark(blueC.x+judder,blueC.y,GEAR_R,blueAngle,1,BLUE);
     drawSpark(orangeC.x-judder,orangeC.y,GEAR_R,orangeAngle,1,orangeColor);
-    if(syncP>0.01){ ctx.globalAlpha=syncP*0.45*glowPulse; ctx.fillStyle=BLUE; ctx.shadowColor=BLUE; ctx.shadowBlur=12; ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0; }
     ctx.globalAlpha=1;
     rafId=requestAnimationFrame(frame);
   }
