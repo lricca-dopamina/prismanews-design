@@ -879,7 +879,7 @@ footer>.w{padding:0}
 .nsec-ctrack{display:flex;flex-direction:row;gap:28px;transition:transform .85s cubic-bezier(.4,0,.2,1);will-change:transform;user-select:none;-webkit-user-select:none}
 /* ── variante griglia statica 4-up (card piccole, disegni invariati) ── */
 .nsec-carousel.as-grid{margin-top:44px;overflow:visible;padding:10px 0;cursor:default}
-.nsec-carousel.as-grid .nsec-ctrack{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;transform:none!important;transition:none}
+.nsec-carousel.as-grid .nsec-ctrack{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:940px;margin:0 auto;transform:none!important;transition:none}
 .nsec-carousel.as-grid .pcard{width:auto;min-height:0;opacity:0;transform:translateY(28px);transition:opacity .7s var(--s),transform .7s var(--s),border-color .45s var(--s)}
 .nsec-carousel.as-grid .pcard.in{opacity:1;transform:none}
 .nsec-carousel.as-grid .pcard.in:hover{transform:translateY(-5px)}
