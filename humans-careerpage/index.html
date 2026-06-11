@@ -197,7 +197,7 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .man-fallback svg{width:46%;max-width:190px;filter:drop-shadow(0 14px 44px rgba(101,41,255,.55));animation:spin 16s linear infinite}
 .man-spline.no3d canvas{display:none}
 .man-spline.no3d .man-fallback{display:flex}
-@media(max-width:900px){#manifesto .w{grid-template-columns:1fr}.man-spline{height:320px}.bs{filter:none!important}}
+@media(max-width:900px){#manifesto .w{grid-template-columns:1fr}.man-spline{height:320px}}
 /* blob dinamici sfondo manifesto */
 #manifesto::before,#manifesto::after{content:'';position:absolute;border-radius:50%;filter:blur(50px);opacity:.25;pointer-events:none;z-index:0;will-change:transform}
 #manifesto::before{width:700px;height:700px;left:-15%;top:-30%;background:radial-gradient(circle,#7c3aed,#4437F3);animation:blobA 14s ease-in-out infinite alternate}
@@ -3555,11 +3555,12 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const canvas = document.getElementById('splineCanvas');
-// Su mobile/touch o GPU deboli il vetro rifrattivo (transmission) di three.js crasha/lagga:
-// salto WebGL e mostro il fallback leggero (asterisco brand che ruota in CSS).
-const _isLowEnd3D = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
-if (canvas && _isLowEnd3D) { const _w = canvas.closest('.man-spline'); if (_w) _w.classList.add('no3d'); }
-if (canvas && !_isLowEnd3D) {
+// 3D attivo anche su mobile: su mobile si usa un materiale ottimizzato senza
+// transmission (vedi isMobile più sotto), che gira liscio sulle GPU mobili.
+// Il fallback CSS scatta SOLO se WebGL non è disponibile o se la GPU perde il contesto.
+const _glOK = (()=>{ try{ const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2')||c.getContext('webgl'))); }catch(_){ return false; } })();
+if (canvas && !_glOK) { const _w = canvas.closest('.man-spline'); if (_w) _w.classList.add('no3d'); }
+if (canvas && _glOK) {
   // path asset risolti rispetto alla cartella del file (come il rewriter delle immagini)
   const DIR = location.href.replace(/[#?].*$/,'').replace(/\/[^\/]*\.html?$/i,'/').replace(/([^\/])$/,'$1/');
   const FILE_MODELLO = DIR + 'img/spark_rotazione_new.gltf';
@@ -3608,14 +3609,25 @@ if (canvas && !_isLowEnd3D) {
   tex.colorSpace=THREE.SRGBColorSpace; tex.flipY=false;
   tex.anisotropy=Math.min(4, renderer.capabilities.getMaxAnisotropy());
 
-  const glassMat=new THREE.MeshPhysicalMaterial({
-    color:new THREE.Color(COLORE_VETRO), metalness:0.0, roughness:ROUGHNESS,
-    transmission:TRASMISSIONE, ior:IOR, thickness:SPESSORE,
-    attenuationColor:new THREE.Color(ATTENUAZIONE), attenuationDistance:ATT_DISTANZA,
-    sheen:1.0, sheenColor:new THREE.Color(FRESNEL_COLORE), sheenRoughness:0.35,
-    clearcoat:SPECULARE_FORZA, clearcoatRoughness:SPECULARE_NIT, specularIntensity:RIFLESSO_BASE,
-    envMapIntensity:0.9
-  });
+  const glassMat = isMobile
+    // mobile: vetro "finto" senza transmission (nessun render-pass extra) → gira liscio sulle GPU mobili
+    ? new THREE.MeshPhysicalMaterial({
+        color:new THREE.Color(COLORE_VETRO), metalness:0.0, roughness:0.16,
+        transparent:true, opacity:0.92, ior:1.5, reflectivity:0.55,
+        iridescence:0.5, iridescenceIOR:1.3,
+        sheen:1.0, sheenColor:new THREE.Color(FRESNEL_COLORE), sheenRoughness:0.3,
+        clearcoat:0.6, clearcoatRoughness:0.1,
+        attenuationColor:new THREE.Color(ATTENUAZIONE), envMapIntensity:1.15
+      })
+    // desktop: vetro rifrattivo pieno
+    : new THREE.MeshPhysicalMaterial({
+        color:new THREE.Color(COLORE_VETRO), metalness:0.0, roughness:ROUGHNESS,
+        transmission:TRASMISSIONE, ior:IOR, thickness:SPESSORE,
+        attenuationColor:new THREE.Color(ATTENUAZIONE), attenuationDistance:ATT_DISTANZA,
+        sheen:1.0, sheenColor:new THREE.Color(FRESNEL_COLORE), sheenRoughness:0.35,
+        clearcoat:SPECULARE_FORZA, clearcoatRoughness:SPECULARE_NIT, specularIntensity:RIFLESSO_BASE,
+        envMapIntensity:0.9
+      });
   const innerMat=new THREE.MeshBasicMaterial({ map:tex, side:THREE.DoubleSide, toneMapped:false, alphaTest:0.05 });
 
   const model=new THREE.Group(); scene.add(model); let ready=false;
