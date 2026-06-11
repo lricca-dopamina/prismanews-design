@@ -900,11 +900,11 @@ footer>.w{padding:0}
 @media(max-width:980px){.nf-top{display:block}.nf-intro-col{max-width:none}.nf-anim{width:100%;max-width:620px;margin:24px auto 0}}
 /* "Non candidarti se": 4 box di solo testo in fila orizzontale (sostituisce il carosello) */
 .nf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:16px}
-.nf-box{background:var(--g);border:1px solid rgba(30,30,45,.08);border-radius:18px;padding:26px 24px;transition:border-color .35s var(--s),transform .35s var(--s),box-shadow .35s var(--s)}
-.nf-box:hover{background:#fff;border-color:rgba(68,55,243,.3);transform:translateY(-5px);box-shadow:0 18px 40px rgba(68,55,243,.12)}
-.nf-box h4{font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.2;color:var(--nv);margin:0 0 10px}
-.nf-box:hover h4{color:var(--v)}
-.nf-box p{font-size:14.5px;line-height:1.52;color:#5a5570;margin:0}
+#nonfunziona .nsec-lead{color:#eb6b23}
+.nf-box{background:linear-gradient(to top,var(--w) 0%,var(--dv) 100%);border:0;border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;transition:.4s var(--s);cursor:none}
+.nf-box:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(68,55,243,.16)}
+.nf-box h4{font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.2;color:#eb6b23;margin:0 0 10px}
+.nf-box p{font-size:14.5px;line-height:1.52;color:#424267;margin:0}
 @media(max-width:980px){.nf-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.nf-grid{grid-template-columns:1fr}}
 .nsec.dark .nsec-carousel:not(.as-grid)::before{background:linear-gradient(90deg,var(--nv),rgba(30,30,45,0))}
@@ -2078,10 +2078,10 @@ footer>.w{padding:0}
     </div>
     <p class="nsec-lead" data-a="up">Non candidarti se:</p>
     <div class="nf-grid" data-a="up" data-d="1">
-      <div class="nf-box"><h4>Ti servono specifiche iper-dettagliate</h4><p>Se hai bisogno di istruzioni minuziose per partire e di mesi per "trovare il ritmo", qui faticherai. Il contesto te lo diamo, la direzione la prendi tu.</p></div>
-      <div class="nf-box"><h4>Ti aspetti micro-management</h4><p>Qui non troverai chi ti controlla ogni passo, né un ambiente pensato per proteggere chi non performa. Funziona al contrario: autonomia reale e responsabilità.</p></div>
-      <div class="nf-box"><h4>Vedi solo il tuo pezzetto</h4><p>Se ragioni a "questa è la mia task, il resto non è mio problema", blocchi tutti. Qui si guarda al prodotto intero e al risultato del team.</p></div>
-      <div class="nf-box"><h4>Aspetti validazione su ogni scelta</h4><p>L'ownership si prende, non si delega. Procedi, decidi con il contesto e i dati che hai, e te ne assumi la responsabilità.</p></div>
+      <div class="nf-box" data-tilt><h4>Ti servono specifiche iper-dettagliate</h4><p>Se hai bisogno di istruzioni minuziose per partire e di mesi per "trovare il ritmo", qui faticherai. Il contesto te lo diamo, la direzione la prendi tu.</p></div>
+      <div class="nf-box" data-tilt><h4>Ti aspetti micro-management</h4><p>Qui non troverai chi ti controlla ogni passo, né un ambiente pensato per proteggere chi non performa. Funziona al contrario: autonomia reale e responsabilità.</p></div>
+      <div class="nf-box" data-tilt><h4>Vedi solo il tuo pezzetto</h4><p>Se ragioni a "questa è la mia task, il resto non è mio problema", blocchi tutti. Qui si guarda al prodotto intero e al risultato del team.</p></div>
+      <div class="nf-box" data-tilt><h4>Aspetti validazione su ogni scelta</h4><p>L'ownership si prende, non si delega. Procedi, decidi con il contesto e i dati che hai, e te ne assumi la responsabilità.</p></div>
     </div>
   </div>
 </section>
@@ -2181,7 +2181,7 @@ addEventListener('mousemove', e=>{
   /* cursore bianco su sfondi blu, a tutta larghezza, ma non sulle card chiare/immagini */
   let light=false;
   const t=e.target;
-  if(t&&t.closest&&!t.closest('.ben-c,.proc-c,.pc,.gc,.cbox')){
+  if(t&&t.closest&&!t.closest('.ben-c,.proc-c,.pc,.gc,.cbox,.nf-box')){
     if(t.closest('.pos-cta-box')) light=true;                 /* box candidatura blu */
     else if(t.closest('#progetti') && !t.closest('.pc')) light=true; /* sezione progetti: sfondo blu */
     else if(t.closest('#awards') && !t.closest('.aw-card') && !t.closest('.aw-c') && !t.closest('.aw-deck')) light=true; /* Best Workplace: blu attorno alle card scure; cursore blu (non bianco) sopra le card badge bianche e il deck foto */
@@ -2204,11 +2204,11 @@ document.addEventListener('mouseover', e=>{
     curLbl.innerHTML='Meet<br>'+firstName;
     curLbl.style.display='block';
   }
-  else if(e.target.closest('[data-c],a,button,.pc,.proc-c,.ben-c,.td,.cbox,.m3b')){ cur.classList.add('big'); cur.classList.remove('label'); curLbl.style.display='none'; }
+  else if(e.target.closest('[data-c],a,button,.pc,.proc-c,.ben-c,.td,.cbox,.m3b,.nf-box')){ cur.classList.add('big'); cur.classList.remove('label'); curLbl.style.display='none'; }
 });
 document.addEventListener('mouseout', e=>{
   if(e.target.closest('.gc')){ cur.classList.remove('label'); curLbl.style.display='none'; }
-  if(e.target.closest('[data-c],a,button,.pc,.proc-c,.ben-c,.td,.cbox,.m3b')) cur.classList.remove('big');
+  if(e.target.closest('[data-c],a,button,.pc,.proc-c,.ben-c,.td,.cbox,.m3b,.nf-box')) cur.classList.remove('big');
 });
 
 /* ── REVEAL ── */
