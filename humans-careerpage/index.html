@@ -2822,7 +2822,7 @@ function rafVisible(cv, frame){
   function frame(now){
     const t=now/1000;
     ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
-    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,300); bg.addColorStop(0,'#0F0F24'); bg.addColorStop(1,'#07070F'); ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    /* sfondo trasparente: il bagliore si fonde col fondo della card (niente rettangolo/taglio netto) */
     // bagliore blu brand dietro il nucleo (con leggero respiro)
     const gpulse=0.32+0.06*Math.sin(t*Math.PI*2*0.5);
     const gl=ctx.createRadialGradient(CX,CY,0,CX,CY,175);
@@ -2909,8 +2909,7 @@ function rafVisible(cv, frame){
   function frame(now){
     const t=(now/1000)%14;
     base(); ctx.clearRect(0,0,W,H);
-    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,300); bg.addColorStop(0,'#0F0F24'); bg.addColorStop(1,'#07070F');
-    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    /* sfondo trasparente: il bagliore si fonde col fondo della card (niente rettangolo/taglio netto) */
     const iso = t<6?0 : t<8?ss((t-6)/2) : t<12?1 : 1-ss((t-12)/2);
     const frontal=1-iso;
     if(frontal>0.01){ for(let i=1;i<=4;i++){ ctx.beginPath(); ctx.arc(CX,CY,i*52,0,Math.PI*2); ctx.strokeStyle='rgba(220,217,255,'+(0.05*frontal)+')'; ctx.lineWidth=1; ctx.stroke(); } }
@@ -3019,8 +3018,7 @@ function makeCloud(cv){
   function frame(now){
     const t=(now/1000)%13;
     base(); ctx.clearRect(0,0,W,H);
-    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,300); bg.addColorStop(0,'#0F0F24'); bg.addColorStop(1,'#07070F');
-    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    /* sfondo trasparente: il bagliore si fonde col fondo della card (niente rettangolo/taglio netto) */
     // bagliore blu centrale (respiro)
     const gl=ctx.createRadialGradient(CX,CY,0,CX,CY,150);
     gl.addColorStop(0,'rgba(68,55,243,'+(0.28+0.05*Math.sin(t*0.5))+')'); gl.addColorStop(1,'rgba(68,55,243,0)');
@@ -3121,8 +3119,7 @@ function makeGrowth(cv){
   function frame(now){
     const t=(now/1000)%13;
     base(); ctx.clearRect(0,0,W,H);
-    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,300); bg.addColorStop(0,'#0F0F24'); bg.addColorStop(1,'#07070F');
-    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    /* sfondo trasparente: il bagliore si fonde col fondo della card (niente rettangolo/taglio netto) */
     const gl=ctx.createRadialGradient(CX,CY,0,CX,CY,150);
     gl.addColorStop(0,'rgba(68,55,243,'+(0.26+0.05*Math.sin(t*0.5))+')'); gl.addColorStop(1,'rgba(68,55,243,0)');
     ctx.fillStyle=gl; ctx.fillRect(0,0,W,H);
