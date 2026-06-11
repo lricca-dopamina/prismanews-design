@@ -1066,12 +1066,13 @@ footer>.w{padding:0}
   .hp-wrap .hp-r{transform:rotate(5deg)}
   .hp-wrap .hp-r2{transform:rotate(-7deg)}
   /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
-  .campo-inner{grid-template-columns:1fr;gap:14px;padding:0 16px;align-items:center}
+  .campo-inner{grid-template-columns:1fr;gap:24px;padding:0 16px;align-items:center}
   .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
   .campo-b{font-size:13.5px;line-height:1.5;max-width:none}
-  .campo-right{height:auto;display:flex;flex-direction:column;gap:14px}
-  .campo-deck{height:120px}
-  .campo-canvas{height:286px;flex:none}
+  .campo-right{height:auto;display:flex;flex-direction:column;gap:16px}
+  /* il deck è ritagliato: le card che salgono/escono NON sbordano sul testo sopra */
+  .campo-deck{height:168px;overflow:hidden}
+  .campo-canvas{height:270px;flex:none}
   .campo-deck .dc{padding:18px 20px}
   #cv2 .cv-code{right:40%}
   /* CRESCERE: titolo che entra senza tagli */
