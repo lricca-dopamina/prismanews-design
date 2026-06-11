@@ -548,8 +548,8 @@ a.aw-c:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(5,6,32,.2)}
 .cand-btn .ib svg{width:22px;height:22px;color:var(--o)}
 
 /* team photo parallax */
-#teamphoto{height:600px;overflow:hidden;position:relative}
-#teamphoto img{width:100%;height:130%;object-fit:cover;object-position:center 95%;will-change:transform}
+#teamphoto{overflow:hidden;position:relative}
+#teamphoto img{width:100%;height:auto;display:block}
 #teamphoto::after{content:'';position:absolute;inset:0;background:linear-gradient(var(--v) 0%,var(--v) 12%,rgba(68,55,243,0) 30%,rgba(5,6,32,0) 80%,var(--w) 100%)}
 
 /* ════════ 11 · POSIZIONI ════════ */
@@ -2291,12 +2291,17 @@ function onScroll(){
         }
       }
     }
-    /* team photo parallax */
-    if(teamImg){const r=teamImg.parentElement.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight){const off=(r.top)*.08;teamImg.style.transform=`translateY(${off}px)`}}
+    /* team photo: mostrata intera (niente parallax/crop) */
     ticking=false;
   });ticking=true}
 }
 addEventListener('scroll',onScroll,{passive:true});
+/* resize: ricalcola l'espansione full-bleed del video sede (i valori erano catturati una volta) */
+addEventListener('resize',()=>{
+  sedeOrigLeft=null; sedeOrigRight=null; sedeExpanded=false;
+  if(sedeMediaWrap){ sedeMediaWrap.style.marginLeft=''; sedeMediaWrap.style.marginRight=''; sedeMediaWrap.style.width=''; sedeMediaWrap.style.borderRadius=''; }
+  onScroll();
+},{passive:true});
 onScroll();
 
 /* ── CAROSELLO PROGETTI: JS puro, posizione mai resettata ── */
