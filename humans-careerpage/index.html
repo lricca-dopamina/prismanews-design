@@ -3380,6 +3380,12 @@ if (canvas) {
   canvas.addEventListener('pointerup', endDrag);
   canvas.addEventListener('pointercancel', endDrag);
 
+  // ── oscillazione a pendolo (mai di taglio): Y principale + micro X/Z, lenta e morbida ──
+  const OSC_AMP_Y=0.70, OSC_OMG_Y=0.70,   // ampiezza ~40°, periodo ~9s
+        OSC_AMP_X=0.12, OSC_OMG_X=0.57,   // micro tilt ~7°, periodo ~11s
+        OSC_AMP_Z=0.07, OSC_OMG_Z=0.48,   // micro roll ~4°, periodo ~13s
+        OSC_EASE=3.2;                      // morbidezza inseguimento + rientro post-drag
+  let _tOsc=0;
   const clock=new THREE.Clock(); let running=false, _ftick=0;
   function kick(){ if(onScreen && visible && !running){ running=true; clock.start(); loop(); } }
   function loop(){
@@ -3390,11 +3396,19 @@ if (canvas) {
       if(dragging){
         // fermo l'auto-rotazione mentre trascini
       } else if(Math.abs(velX)>0.0002 || Math.abs(velY)>0.0002){
-        // inerzia dopo il rilascio, poi ritorno graduale al moto automatico
+        // inerzia dopo il rilascio, poi ritorno graduale al dondolio
         model.rotation.y += velY; model.rotation.x += velX;
         velX*=0.94; velY*=0.94;
       } else {
-        model.rotation.y += dt*VEL_Y*spinMul; model.rotation.x += dt*VEL_X*spinMul; model.rotation.z += dt*VEL_Z*spinMul;
+        // dondolio limitato: insegue un target sinusoidale, mai un giro completo
+        _tOsc += dt;
+        const yT=OSC_AMP_Y*Math.sin(_tOsc*OSC_OMG_Y);
+        const xT=OSC_AMP_X*Math.sin(_tOsc*OSC_OMG_X+0.6);
+        const zT=OSC_AMP_Z*Math.sin(_tOsc*OSC_OMG_Z+1.3);
+        const k=1-Math.exp(-dt*OSC_EASE);
+        model.rotation.y += (yT-model.rotation.y)*k;
+        model.rotation.x += (xT-model.rotation.x)*k;
+        model.rotation.z += (zT-model.rotation.z)*k;
       }
     }
     if((_ftick=(_ftick+1)&1)===0) renderer.render(scene,camera);
