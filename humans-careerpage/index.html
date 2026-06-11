@@ -198,7 +198,14 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .man-fallback svg{width:46%;max-width:190px;filter:drop-shadow(0 14px 44px rgba(101,41,255,.55));animation:spin 16s linear infinite}
 .man-spline.no3d canvas{display:none}
 .man-spline.no3d .man-fallback{display:flex}
-@media(max-width:900px){#manifesto .w{grid-template-columns:1fr}.man-spline{height:320px}}
+@media(max-width:900px){
+  #manifesto .w{grid-template-columns:1fr}
+  .man-spline{height:500px}
+  .man-spline canvas{touch-action:pan-y}   /* il dito scrolla la pagina: niente drag che blocca lo scroll */
+  /* linee di sfondo STATICHE su mobile: via i filtri SVG pesanti e l'animazione (causa lag/flashing) */
+  .bs{filter:none!important;animation:none!important;opacity:1}
+  .man-bg-svg{will-change:auto}
+}
 /* blob dinamici sfondo manifesto */
 #manifesto::before,#manifesto::after{content:'';position:absolute;border-radius:50%;filter:blur(50px);opacity:.25;pointer-events:none;z-index:0;will-change:transform}
 #manifesto::before{width:700px;height:700px;left:-15%;top:-30%;background:radial-gradient(circle,#7c3aed,#4437F3);animation:blobA 14s ease-in-out infinite alternate}
@@ -3614,10 +3621,10 @@ if (canvas && _glOK) {
 
   const isMobile = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
   const lowCore  = (navigator.hardwareConcurrency || 8) <= 4;
-  const dprCap   = isMobile ? (lowCore ? 1.75 : 2.0) : 1.4;
+  const dprCap   = isMobile ? (lowCore ? 1.25 : 1.5) : 1.4;   // mobile: pixel ratio contenuto = fluido, niente scatti
   const motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:!isMobile, alpha:true, powerPreference:'high-performance' });
   // se la GPU perde il contesto (crash su device borderline) mostra il fallback invece di restare nero
   canvas.addEventListener('webglcontextlost', e=>{ e.preventDefault(); const _w=canvas.closest('.man-spline'); if(_w) _w.classList.add('no3d'); }, false);
   renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
@@ -3627,7 +3634,7 @@ if (canvas && _glOK) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, DIMENSIONE * 1.65);
+  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.12 : 1.65));   // mobile: camera più vicina = asterisco più grande
 
   function envTexture(){
     const c=document.createElement('canvas'); c.width=512; c.height=256;
@@ -3689,19 +3696,21 @@ if (canvas && _glOK) {
 
   // ── interazione mouse/touch: trascina per ruotarlo, al rilascio riprende il moto ──
   let dragging=false, lastX=0, lastY=0, velX=0, velY=0, spinMul=1, camMult=1.65;
-  canvas.addEventListener('pointerdown', e=>{
-    dragging=true; lastX=e.clientX; lastY=e.clientY; velX=velY=0;
-    try{canvas.setPointerCapture(e.pointerId);}catch(_){} kick();
-  });
-  canvas.addEventListener('pointermove', e=>{
-    if(!dragging) return;
-    const dx=e.clientX-lastX, dy=e.clientY-lastY; lastX=e.clientX; lastY=e.clientY;
-    model.rotation.y += dx*0.008; model.rotation.x += dy*0.008;
-    velY=dx*0.008; velX=dy*0.008;   // memorizza la spinta per l'inerzia
-  });
-  const endDrag=e=>{ if(!dragging) return; dragging=false; try{canvas.releasePointerCapture(e.pointerId);}catch(_){} };
-  canvas.addEventListener('pointerup', endDrag);
-  canvas.addEventListener('pointercancel', endDrag);
+  if(!isMobile){   // su mobile NIENTE drag: il dito serve a scrollare la pagina (l'asterisco ruota da solo)
+    canvas.addEventListener('pointerdown', e=>{
+      dragging=true; lastX=e.clientX; lastY=e.clientY; velX=velY=0;
+      try{canvas.setPointerCapture(e.pointerId);}catch(_){} kick();
+    });
+    canvas.addEventListener('pointermove', e=>{
+      if(!dragging) return;
+      const dx=e.clientX-lastX, dy=e.clientY-lastY; lastX=e.clientX; lastY=e.clientY;
+      model.rotation.y += dx*0.008; model.rotation.x += dy*0.008;
+      velY=dx*0.008; velX=dy*0.008;   // memorizza la spinta per l'inerzia
+    });
+    const endDrag=e=>{ if(!dragging) return; dragging=false; try{canvas.releasePointerCapture(e.pointerId);}catch(_){} };
+    canvas.addEventListener('pointerup', endDrag);
+    canvas.addEventListener('pointercancel', endDrag);
+  }
 
   const clock=new THREE.Clock(); let running=false, _ftick=0;
   function kick(){ if(onScreen && visible && !running){ running=true; clock.start(); loop(); } }
@@ -3720,7 +3729,7 @@ if (canvas && _glOK) {
         model.rotation.y += dt*VEL_Y*spinMul; model.rotation.x += dt*VEL_X*spinMul; model.rotation.z += dt*VEL_Z*spinMul;
       }
     }
-    if((_ftick=(_ftick+1)&1)===0) renderer.render(scene,camera);
+    if(isMobile || (_ftick=(_ftick+1)&1)===0) renderer.render(scene,camera);   // mobile: ogni frame (rotazione fluida); desktop: 1 sì 1 no
   }
   kick();
 
