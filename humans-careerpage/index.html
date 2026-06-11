@@ -891,11 +891,13 @@ footer>.w{padding:0}
 .nsec-marquee .ncard-ov p{font-size:14px;max-width:none}
 /* "Non è per tutti": intro a sinistra + animazione ingranaggi a destra */
 #nonfunziona{overflow:hidden}
-.nf-top{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:24px;align-items:center;margin-bottom:40px}
-.nf-intro-col .nsec-intro{margin-bottom:0}
-.nf-anim{justify-self:end;width:100%;max-width:760px;margin-right:-48px}
+/* testo LARGO (poche righe) + animazione a destra sovrapposta (sotto il testo) */
+.nf-top{display:grid;grid-template-columns:1fr;align-items:center;margin-bottom:40px}
+.nf-intro-col{grid-area:1/1;max-width:720px;position:relative;z-index:2}
+.nf-intro-col .nsec-intro{margin-bottom:0;max-width:none}
+.nf-anim{grid-area:1/1;justify-self:end;align-self:center;width:660px;max-width:660px;margin-right:-48px;z-index:1;pointer-events:none}
 .nf-anim canvas{display:block;width:100%;height:auto}
-@media(max-width:980px){.nf-top{grid-template-columns:1fr;gap:28px}.nf-anim{justify-self:center;max-width:620px;margin-right:0}}
+@media(max-width:980px){.nf-top{display:block}.nf-intro-col{max-width:none}.nf-anim{width:100%;max-width:620px;margin:24px auto 0}}
 /* "Non candidarti se": 4 box di solo testo in fila orizzontale (sostituisce il carosello) */
 .nf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:16px}
 .nf-box{background:var(--g);border:1px solid rgba(30,30,45,.08);border-radius:18px;padding:26px 24px;transition:border-color .35s var(--s),transform .35s var(--s),box-shadow .35s var(--s)}
