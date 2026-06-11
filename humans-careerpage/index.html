@@ -367,7 +367,8 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .met-d em{color:var(--w);font-style:normal;font-weight:500}
 
 /* ════════ 06 · CRESCERE ════════ */
-#crescere{background:var(--nv);padding:120px 0 0;overflow:visible}
+#crescere{background:var(--nv);padding:78px 0 0;overflow:visible}
+#stack2{padding-bottom:56px}
 .cres-title{padding:0 56px;margin-bottom:48px;position:relative}
 .ct1,.ct2{font-size:clamp(56px,10vw,162px);font-weight:500;line-height:.88;letter-spacing:-.035em;white-space:nowrap}
 .ct2{margin-top:-.06em}
@@ -894,17 +895,18 @@ footer>.w{padding:0}
 /* ── variante griglia statica 4-up (card piccole, disegni invariati) ── */
 .nsec-carousel.as-grid{margin-top:44px;overflow:visible;padding:10px 0;cursor:default}
 .nsec-carousel.as-grid .nsec-ctrack{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;transform:none!important;transition:none}
-.nsec-carousel.as-grid .pcard{width:auto;min-height:0;opacity:0;transform:translateY(28px);transition:opacity .7s var(--s),transform .7s var(--s),border-color .45s var(--s)}
+.nsec-carousel.as-grid .pcard{width:auto;min-height:452px;opacity:0;transform:translateY(28px);transition:opacity .7s var(--s),transform .7s var(--s),border-color .45s var(--s)}
 .nsec-carousel.as-grid .pcard.in{opacity:1;transform:none}
 .nsec-carousel.as-grid .pcard.in:hover{transform:translateY(-5px)}
 .nsec-carousel.as-grid .pcard:nth-child(2){transition-delay:.09s}
 .nsec-carousel.as-grid .pcard:nth-child(3){transition-delay:.18s}
 .nsec-carousel.as-grid .pcard:nth-child(4){transition-delay:.27s}
-.nsec-carousel.as-grid .pcard-hd{padding:28px 24px 0}
-.nsec-carousel.as-grid .pcard-hd h4{font-size:24px}
-.nsec-carousel.as-grid .pcard-hd p{font-size:13px;margin-top:6px}
+.nsec-carousel.as-grid .pcard-hd{padding:42px 26px 16px}
+.nsec-carousel.as-grid .pcard-hd h4{font-size:30px}
+.nsec-carousel.as-grid .pcard-hd p{font-size:15px;margin-top:9px}
 /* grafiche canvas: riempiono il riquadro e crescono (il bagliore sborda invece di tagliarsi) */
 .nsec-carousel.as-grid .pcard-gfx{padding:0;overflow:hidden}
+.nsec-carousel.as-grid .pcard-gfx svg{max-height:285px}   /* grafiche invariate anche con card più alte */
 .nsec-carousel.as-grid .pcard-gfx canvas{transform-origin:center center;display:block}
 .nsec-carousel.as-grid #llmMix{transform:scale(1.2)}
 .nsec-carousel.as-grid .pcard-gfx canvas[data-cloud]{transform:scale(1.5)}
