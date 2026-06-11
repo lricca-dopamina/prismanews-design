@@ -1154,28 +1154,28 @@ footer>.w{padding:0}
         <feTurbulence type="fractalNoise" baseFrequency="0.05 0.03" numOctaves="4" seed="5" result="warp"/>
         <feDisplacementMap in="SourceGraphic" in2="warp" scale="7" xChannelSelector="R" yChannelSelector="G" result="rough"/>
         <!-- bucherellatura: grana ad alta frequenza usata come maschera alpha (statica, calcolata una sola volta) -->
-        <feTurbulence type="fractalNoise" baseFrequency="0.9 0.9" numOctaves="2" seed="11" result="grain"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.55 0.55" numOctaves="2" seed="11" result="grain"/>
         <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  11 0 0 0 -3.9" result="holes"/>
         <feComposite in="rough" in2="holes" operator="in"/>
       </filter>
       <filter id="bf2" x="-8%" y="-8%" width="116%" height="116%">
         <feTurbulence type="fractalNoise" baseFrequency="0.045 0.028" numOctaves="3" seed="14" result="warp"/>
         <feDisplacementMap in="SourceGraphic" in2="warp" scale="9" xChannelSelector="R" yChannelSelector="G" result="rough"/>
-        <feTurbulence type="fractalNoise" baseFrequency="0.8 0.8" numOctaves="2" seed="23" result="grain"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.5 0.5" numOctaves="2" seed="23" result="grain"/>
         <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  11 0 0 0 -3.9" result="holes"/>
         <feComposite in="rough" in2="holes" operator="in"/>
       </filter>
     </defs>
 
-    <path class="bs bs1" filter="url(#bf1)" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="5" stroke-linecap="round"
+    <path class="bs bs1" filter="url(#bf1)" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="7" stroke-linecap="round"
       d="M 80 -30 C 180 120,80 280,320 340 C 560 400,780 180,900 380 C 1020 560,880 680,1200 650 C 1380 630,1460 520,1480 400"/>
-    <path class="bs bs2" filter="url(#bf2)" fill="none" stroke="rgba(255,255,255,.035)" stroke-width="6" stroke-linecap="round"
+    <path class="bs bs2" filter="url(#bf2)" fill="none" stroke="rgba(255,255,255,.035)" stroke-width="8" stroke-linecap="round"
       d="M -40 680 C 100 580,60 400,280 320 C 500 240,700 460,920 320 C 1100 200,980 80,1200 -20"/>
-    <path class="bs bs3" filter="url(#bf1)" fill="none" stroke="rgba(255,255,255,.038)" stroke-width="5" stroke-linecap="round"
+    <path class="bs bs3" filter="url(#bf1)" fill="none" stroke="rgba(255,255,255,.038)" stroke-width="7" stroke-linecap="round"
       d="M 720 -40 C 820 100,1100 160,980 340 C 860 520,560 480,620 640 C 660 740,800 760,900 720"/>
-    <path class="bs bs4" filter="url(#bf2)" fill="none" stroke="rgba(255,255,255,.032)" stroke-width="6" stroke-linecap="round"
+    <path class="bs bs4" filter="url(#bf2)" fill="none" stroke="rgba(255,255,255,.032)" stroke-width="8" stroke-linecap="round"
       d="M 1500 80 C 1300 200,1000 80,760 220 C 520 360,380 580,80 620 C -60 640,-80 720,-20 760"/>
-    <path class="bs bs5" filter="url(#bf1)" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="5" stroke-linecap="round"
+    <path class="bs bs5" filter="url(#bf1)" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="7" stroke-linecap="round"
       d="M 200 760 C 300 600,180 400,400 280 C 620 160,860 300,800 480 C 740 660,500 700,600 560 C 700 420,980 380,1100 240 C 1220 100,1400 60,1500 -20"/>
   </svg>
 </div>
