@@ -335,6 +335,14 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .cv-met-bar span{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--v),var(--dv));transition:width 1.2s cubic-bezier(.3,0,.15,1) .15s}
 .cv.play .cv-met-bar span{width:var(--bw,70%)}
 .cv-met-lbl{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.52)}
+/* cv3 (fase numeri): foto in riga sopra, numeri in orizzontale sotto */
+#cv3{display:flex;flex-direction:column;justify-content:center;gap:28px;padding:0 2px}
+#cv3 .cv3-photos{display:flex;gap:22px;height:54%;flex:none}
+#cv3 .cv-ph{position:relative;inset:auto;top:auto;left:auto;right:auto;bottom:auto;width:auto;height:100%;flex:1}
+#cv3 .cv-nums{position:relative;inset:auto;top:auto;left:auto;right:auto;bottom:auto;transform:none;flex-direction:row;gap:24px;align-items:flex-start}
+#cv3 .cv-met{flex:1;min-width:0}
+#cv3 .cv-met b{font-size:clamp(30px,4vw,54px)}
+#cv3 .cv-met-bar{margin:11px 0 8px}
 
 /* ════════ 05 · COME LAVORIAMO - PINNED SCROLL-DRIVEN ════════ */
 #metodo{background:var(--nv);position:relative;height:420vh}
@@ -1381,8 +1389,14 @@ footer>.w{padding:0}
                 <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=440&h=520&fit=crop" alt=""><span class="pcap">Pair programming</span></div>
             </div>
 
-            <!-- fase 3: numeri grandi liberi -->
+            <!-- fase 3: foto in riga sopra + numeri in orizzontale sotto -->
             <div class="cv" id="cv3">
+              <div class="cv3-photos">
+                <div class="cv-ph" style="--rot:-3deg;animation-duration:9s">
+                  <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=480&h=360&fit=crop" alt=""><span class="pcap">Il team</span></div>
+                <div class="cv-ph" style="--rot:3deg;animation-duration:8s">
+                  <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=480&h=360&fit=crop" alt=""><span class="pcap">Impatto reale</span></div>
+              </div>
               <div class="cv-nums">
                 <div class="cv-met">
                   <b><span class="cnt" data-to="700">0</span><i>+</i></b>
@@ -1400,10 +1414,6 @@ footer>.w{padding:0}
                   <div class="cv-met-lbl">Clienti internazionali</div>
                 </div>
               </div>
-              <div class="cv-ph" style="top:4%;right:2%;width:38%;height:48%;--rot:5deg;animation-duration:9s">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=480&h=600&fit=crop" alt=""><span class="pcap">Il team</span></div>
-              <div class="cv-ph" style="bottom:2%;right:9%;width:32%;height:40%;--rot:-6deg;animation-duration:8s">
-                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=440&h=520&fit=crop" alt=""><span class="pcap">Impatto reale</span></div>
             </div>
 
           </div>
