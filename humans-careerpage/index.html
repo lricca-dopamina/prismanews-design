@@ -3287,8 +3287,9 @@ if (canvas) {
   const DIR = location.href.replace(/[#?].*$/,'').replace(/\/[^\/]*\.html?$/i,'/').replace(/([^\/])$/,'$1/');
   const FILE_MODELLO = DIR + 'img/spark_rotazione_new.gltf';
   const FILE_TEXTURE = DIR + 'img/Asterisco_Blur.png';
-  const COLORE_VETRO=0x7a2ef0, TRASMISSIONE=0.92, ATTENUAZIONE=0x8f4af2, ATT_DISTANZA=9,
-        ROUGHNESS=0.18, IOR=2.40, SPESSORE=2.6, IRIDESCENZA=0.08,
+  const COLORE_VETRO=0x6529ff, TRASMISSIONE=0.8, ATTENUAZIONE=0x251199, ATT_DISTANZA=3.0,
+        ROUGHNESS=0.2, IOR=3.0, SPESSORE=3.0, FRESNEL_COLORE=0x491eb2,
+        SPECULARE_FORZA=0.5, SPECULARE_NIT=0.01, RIFLESSO_BASE=0.15,
         VEL_Y=0.45, VEL_X=0.16, VEL_Z=0.10, DIMENSIONE=3.2;
 
   const logEl=document.getElementById('splineLog');
@@ -3303,7 +3304,7 @@ if (canvas) {
   renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.12;
+  renderer.toneMappingExposure = 1.1;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
@@ -3312,8 +3313,8 @@ if (canvas) {
   function envTexture(){
     const c=document.createElement('canvas'); c.width=512; c.height=256;
     const x=c.getContext('2d'); const g=x.createLinearGradient(0,0,0,256);
-    g.addColorStop(0.00,'#4a2d8e'); g.addColorStop(0.46,'#a87cf0'); g.addColorStop(0.49,'#ffffff');
-    g.addColorStop(0.51,'#ffffff'); g.addColorStop(0.54,'#c9a6ff'); g.addColorStop(1.00,'#2e1a5a');
+    g.addColorStop(0.00,'#3a2d6e'); g.addColorStop(0.45,'#9a86e4'); g.addColorStop(0.485,'#f2ecff');
+    g.addColorStop(0.515,'#f2ecff'); g.addColorStop(0.55,'#b9a6f0'); g.addColorStop(1.00,'#241a48');
     x.fillStyle=g; x.fillRect(0,0,512,256);
     const t=new THREE.CanvasTexture(c); t.mapping=THREE.EquirectangularReflectionMapping; t.colorSpace=THREE.SRGBColorSpace; return t;
   }
@@ -3332,8 +3333,9 @@ if (canvas) {
     color:new THREE.Color(COLORE_VETRO), metalness:0.0, roughness:ROUGHNESS,
     transmission:TRASMISSIONE, ior:IOR, thickness:SPESSORE,
     attenuationColor:new THREE.Color(ATTENUAZIONE), attenuationDistance:ATT_DISTANZA,
-    iridescence:IRIDESCENZA, iridescenceIOR:1.3, iridescenceThicknessRange:[100,400],
-    clearcoat:0.25, clearcoatRoughness:0.25, specularIntensity:0.18, envMapIntensity:0.65
+    sheen:1.0, sheenColor:new THREE.Color(FRESNEL_COLORE), sheenRoughness:0.35,
+    clearcoat:SPECULARE_FORZA, clearcoatRoughness:SPECULARE_NIT, specularIntensity:RIFLESSO_BASE,
+    envMapIntensity:0.9
   });
   const innerMat=new THREE.MeshBasicMaterial({ map:tex, side:THREE.DoubleSide, toneMapped:false, alphaTest:0.05 });
 
