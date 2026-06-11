@@ -110,6 +110,7 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .ni .btn-ar{display:inline-flex;align-items:center}
 .ni .bk .btn-ar{margin-right:7px}.ni .bv .btn-ar{margin-right:32px}
 .ni .btn-ar svg{width:13px;height:13px;display:block}
+.bv-ico{display:none}   /* icona asterisco mostrata solo su mobile (CTA stile aw-btn) */
 .nc{display:flex;gap:22px;align-items:center;margin-left:auto;flex-shrink:0}
 @media(max-width:880px){.nm{display:none}}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-weight:500;font-size:15px;padding:15px 24px;border-radius:11px;transition:.25s;cursor:none;border:none;text-decoration:none;letter-spacing:0;white-space:nowrap}
@@ -1113,9 +1114,13 @@ footer>.w{padding:0}
   .prj-h{font-size:clamp(34px,9vw,46px)}
   .aw-h{font-size:clamp(30px,8vw,40px)}
   .pos-ti{font-size:17px}
-  /* CTA stile humans: pill, più grandi */
-  .h-ctas .btn,.aw-btn{border-radius:100px;padding:16px 26px;font-size:16px}
-  .h-ctas .btn{width:100%;justify-content:center}
+  /* CTA "Guarda le posizioni" come il bottone .aw-btn (cerchio chiaro + asterisco viola) */
+  .btn.bv{display:inline-flex;align-items:center;gap:14px;padding:0 26px 0 0;background:rgba(255,255,255,.12);color:#fff;border-radius:100px;overflow:hidden;font-family:var(--fm);font-weight:500;font-size:16px;width:100%}
+  .btn.bv:hover{transform:none;box-shadow:none}
+  .btn.bv .bv-ico{display:flex;align-items:center;justify-content:center;width:54px;height:54px;flex:none;background:var(--g);border-radius:100px}
+  .btn.bv .bv-ico svg{width:22px;height:22px;color:var(--v)}
+  .btn.bv .bv-lb{flex:1;text-align:center;padding-right:12px}
+  .aw-btn{font-size:16px}
   /* griglia cerchi "Team snelli" centrata */
   .dotcluster{margin-inline:auto}
   /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
@@ -1126,7 +1131,7 @@ footer>.w{padding:0}
 @media(max-width:440px){
   .pc{width:80vw}
   .gc{width:84vw}
-  .h-ctas .btn,.aw-btn{width:100%;justify-content:center}
+  .aw-btn{width:100%}
 }
 </style>
 </head>
@@ -1182,7 +1187,7 @@ footer>.w{padding:0}
     </h1>
     <p class="h-sub" data-a="up" data-d="2">Preparati a costruire <strong>prodotti</strong> che muovono <strong>KPI</strong> di business, generando <strong>impatto</strong> dalla prima riga di codice al go-live.</p>
     <div class="h-ctas" data-a="up" data-d="3">
-      <a class="btn bv" data-c href="#posizioni">Guarda le posizioni aperte →</a>
+      <a class="btn bv" data-c href="#posizioni"><span class="bv-ico" aria-hidden="true"><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span><span class="bv-lb">Guarda le posizioni aperte →</span></a>
     </div>
     <div class="h-st">
       <div class="h-s" data-a="up" data-d="1"><div class="h-sn"><span data-cnt="700">0</span>+</div><div class="h-sl">Prodotti lanciati</div></div>
@@ -1419,7 +1424,7 @@ footer>.w{padding:0}
   <div class="w">
   <div class="scroll-hint"><span class="hint-d">passa il mouse sulle card per i dettagli tecnici · scorri →</span><span class="hint-m">tocca una card per aprirla · scorri con un dito →</span></div>
   <div style="text-align:center;margin-top:48px" data-a="up">
-    <a class="btn bv" data-c href="#posizioni">Guarda le posizioni aperte →</a>
+    <a class="btn bv" data-c href="#posizioni"><span class="bv-ico" aria-hidden="true"><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span><span class="bv-lb">Guarda le posizioni aperte →</span></a>
   </div>
 </div></section>
 
