@@ -2074,7 +2074,7 @@ footer>.w{padding:0}
           <p>Qui dentro funziona così: noi ti diamo le opportunità. Tu le prendi, le capisci, le contestualizzi. Procedi e prendi decisioni, senza creare frizione.</p>
         </div>
       </div>
-      <div class="nf-anim" data-a="up" data-d="1" aria-hidden="true"><canvas id="gearsCanvas" width="560" height="440"></canvas></div>
+      <div class="nf-anim" data-a="up" data-d="1" aria-hidden="true"><canvas id="gearsCanvas" width="560" height="600"></canvas></div>
     </div>
     <p class="nsec-lead" data-a="up">Non candidarti se:</p>
     <div class="nf-grid" data-a="up" data-d="1">
@@ -3206,7 +3206,7 @@ document.querySelectorAll('canvas[data-growth]').forEach(makeGrowth);
 (function(){
   const cv=document.getElementById('gearsCanvas'); if(!cv||!cv.getContext) return;
   const ctx=cv.getContext('2d');
-  const W=560,H=440,cx=W/2,cy=H/2+8;
+  const W=560,H=600,cx=W/2,cy=H/2+8;   // frame più alto: il bagliore (~300px dal centro) non viene più tagliato sotto
   const dpr=Math.min(window.devicePixelRatio||1,2);
   cv.width=W*dpr; cv.height=H*dpr; ctx.scale(dpr,dpr);
   const BLUE='#4437F3', ORANGE='#eb6b23', ORANGE_SYNC='#b5abf2';   // l'arancione vira a questo blu-lavanda (non al blu pieno)
@@ -3254,7 +3254,7 @@ document.querySelectorAll('canvas[data-growth]').forEach(makeGrowth);
     let omega;
     if(t<6.5){ omega=struggleVelocity(t); }
     else { const peak=lerp(0.7,2.4,ss(norm(t,8,11))); const back=lerp(peak,0.55,ss(norm(t,13,16))); omega=lerp(struggleVelocity(t),back,ss(norm(t,6.5,9))); }
-    blueAngle=(blueAngle+omega*dt)%(Math.PI*2);
+    blueAngle+=omega*dt;   // angolo continuo (niente mod 2pi: il wrap faceva "saltare" le particelle, che usano una frazione dell'angolo)
     const orangeAngle=-blueAngle+PHASE_OFFSET;
     const sep=lerp(SEP_APART,SEP_MESHED,meshP);
     const blueC={x:cx-sep/2,y:cy}, orangeC={x:cx+sep/2,y:cy};
