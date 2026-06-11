@@ -3291,7 +3291,7 @@ if (canvas) {
 
   const isMobile = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
   const lowCore  = (navigator.hardwareConcurrency || 8) <= 4;
-  const dprCap   = isMobile ? (lowCore ? 1.0 : 1.4) : 2.0;
+  const dprCap   = isMobile ? (lowCore ? 1.0 : 1.25) : 1.4;
   const motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:!isMobile, alpha:true, powerPreference:'high-performance' });
@@ -3366,7 +3366,7 @@ if (canvas) {
   canvas.addEventListener('pointerup', endDrag);
   canvas.addEventListener('pointercancel', endDrag);
 
-  const clock=new THREE.Clock(); let running=false;
+  const clock=new THREE.Clock(); let running=false, _ftick=0;
   function kick(){ if(onScreen && visible && !running){ running=true; clock.start(); loop(); } }
   function loop(){
     if(!onScreen || !visible){ running=false; return; }
@@ -3383,7 +3383,7 @@ if (canvas) {
         model.rotation.y += dt*VEL_Y*spinMul; model.rotation.x += dt*VEL_X*spinMul; model.rotation.z += dt*VEL_Z*spinMul;
       }
     }
-    renderer.render(scene,camera);
+    if((_ftick=(_ftick+1)&1)===0) renderer.render(scene,camera);
   }
   kick();
 
