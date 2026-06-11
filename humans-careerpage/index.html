@@ -669,7 +669,7 @@ footer>.w{padding:0}
 .sede-video-el{z-index:1;opacity:0;transition:opacity .5s}
 .sede-video-el.playing{opacity:1}
 .sede-img-fallback{z-index:0}
-@media(max-width:760px){.sede-video-el{display:none}}
+/* il video sede parte anche su mobile (muted+playsinline, play() via IntersectionObserver) */
 .sg-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:#fff;font-family:var(--fm);font-size:14px;background:linear-gradient(135deg,#3a2f8a,#15163a)}
 .sg-ph small{opacity:.5;font-size:11px}
 /* CTA ripetuta "Ora tocca a te" */
@@ -1021,7 +1021,14 @@ footer>.w{padding:0}
 .col-ph{position:relative;flex:none;border-radius:16px;overflow:hidden;background:#ececf2;box-shadow:0 20px 50px rgba(5,6,32,.18);transform:rotate(var(--r,0deg));transition:transform .5s var(--s),box-shadow .5s var(--s)}
 .col-ph img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;pointer-events:none}
 .col-ph:hover{transform:rotate(0deg) scale(1.04);box-shadow:0 26px 60px rgba(5,6,32,.26);z-index:5}
-@media(max-width:760px){.col-row{padding:36px 0 56px}.col-track{height:470px;gap:22px}.col-ph{transform:rotate(var(--r,0deg)) scale(.82);transform-origin:top center}}
+@media(max-width:760px){
+  /* collage → griglia 2col stile Sana (foto intere, niente carosello) */
+  .col-row{padding:24px 0 8px;overflow:visible;cursor:auto}
+  .col-track{display:grid!important;grid-template-columns:1fr 1fr;gap:11px;width:auto;height:auto!important;transform:none!important;padding:0 16px}
+  .col-col{display:contents}
+  .col-col:nth-child(n+5){display:none}
+  .col-ph{width:auto!important;height:auto!important;aspect-ratio:1;transform:none!important;border-radius:18px;box-shadow:0 10px 30px rgba(5,6,32,.14)}
+}
 
 /* caroselli drag JS: lo scroll verticale della pagina resta nativo, l'orizzontale al JS */
 .prj-sc,.gc-row,.press-mq,.sede-gallery,.col-row,.nsec-marquee{touch-action:pan-y}
@@ -1049,6 +1056,15 @@ footer>.w{padding:0}
   .h-st{display:grid;grid-template-columns:1fr 1fr}
   .h-s{padding:20px 8px;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}
   .h-s:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}
+  /* HERO: foto come cluster centrato SOTTO il testo */
+  #hero{justify-content:flex-start}
+  .h-in{order:0;padding-top:112px}
+  .hp-wrap{order:1;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;width:100%;padding:10px 18px 0}
+  .hp-wrap .hero-photo{display:block!important;position:static;width:44%;max-width:200px;height:auto;aspect-ratio:3/4;opacity:1!important;animation:none;box-shadow:0 16px 40px rgba(5,6,32,.42)}
+  .hp-wrap .hp-l{transform:rotate(-5deg)}
+  .hp-wrap .hp-r{transform:rotate(5deg)}
+  .hp-wrap .hp-l2{transform:rotate(6deg)}
+  .hp-wrap .hp-r2{transform:rotate(-7deg)}
   /* CAMPO → statico impilato (niente scroll-pin) */
   .campo-pin{height:auto}
   .campo-sticky{position:static;height:auto;display:block;overflow:visible;padding:64px 0}
@@ -1062,18 +1078,17 @@ footer>.w{padding:0}
   .ct1,.ct2{white-space:normal;line-height:.96;font-size:clamp(32px,9.5vw,54px)}
   /* CAROSELLI orizzontali: card più strette */
   .prj-track{padding-left:14px;gap:14px}
-  .pc{width:80vw;max-width:330px;height:440px}
-  .gc{width:86vw;max-width:340px;height:auto;aspect-ratio:34/44;margin-top:0!important}
+  .pc{width:74vw;max-width:300px;height:400px}
+  .gc{width:82vw;max-width:320px;height:auto;aspect-ratio:33/44;margin-top:0!important}
   .gc-info{padding:18px}
-  .gc-desc{font-size:12.5px;line-height:1.5}
-  .gc-name{font-size:14px;margin-top:8px;padding-top:8px}
+  .gc-desc{font-size:14px;line-height:1.5}
+  .gc-name{font-size:16px;margin-top:9px;padding-top:9px}
   .sg-item{width:84vw;max-width:380px;height:230px}
   #pglass{display:none}
-  /* STACK2: griglia → swipe orizzontale con snap */
+  /* STACK2: card impilate verticalmente (una sotto l'altra), niente carosello tagliato */
   .nsec-carousel.as-grid{padding:8px 0;overflow:visible}
-  .nsec-carousel.as-grid .nsec-ctrack{display:flex!important;grid-template-columns:none;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 20px;scrollbar-width:none}
-  .nsec-carousel.as-grid .nsec-ctrack::-webkit-scrollbar{display:none}
-  .nsec-carousel.as-grid .pcard{flex:0 0 86%;scroll-snap-align:center;opacity:1!important;transform:none!important;min-height:0}
+  .nsec-carousel.as-grid .nsec-ctrack{display:flex!important;flex-direction:column;grid-template-columns:none;gap:16px;padding:0 18px}
+  .nsec-carousel.as-grid .pcard{width:auto;min-height:400px;opacity:1!important;transform:none!important}
   .nsec-titlerow{flex-direction:column;align-items:flex-start;gap:16px}
   .nsec-titlerow .nsec-h{white-space:normal;font-size:clamp(28px,8vw,42px)}
   .nsec-titlerow .aw-btn{align-self:flex-start}
@@ -1089,13 +1104,29 @@ footer>.w{padding:0}
   .scroll-hint{text-align:center;padding:0 20px}
   .scroll-hint .hint-d{display:none}
   .scroll-hint .hint-m{display:inline}
+  /* TYPE SCALE mobile: testi più grandi (come i reference) */
+  .h-sub{font-size:18px;line-height:1.42;margin-bottom:30px}
+  .man-lead{font-size:19px;line-height:1.5}
+  .prj-body{font-size:16.5px;line-height:1.55}
+  .nsec-intro{font-size:16.5px;line-height:1.6}
+  .nsec-h{font-size:clamp(31px,8.4vw,40px);line-height:1.08}
+  .ct-h{font-size:clamp(30px,8vw,40px)}
+  .prj-h{font-size:clamp(34px,9vw,46px)}
+  .aw-h{font-size:clamp(30px,8vw,40px)}
+  .pos-ti{font-size:17px}
+  /* CTA stile humans: pill, più grandi */
+  .h-ctas .btn,.aw-btn{border-radius:100px;padding:16px 26px;font-size:16px}
+  .h-ctas .btn{width:100%;justify-content:center}
+  /* griglia cerchi "Team snelli" centrata */
+  .dotcluster{margin-inline:auto}
+  /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
+  .nf-anim{max-width:none;width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
   /* footer compatto */
   footer{padding:56px 0 26px}
 }
 @media(max-width:440px){
-  .pc{width:84vw}
-  .gc{width:86vw}
-  .nsec-carousel.as-grid .pcard{flex:0 0 90%}
+  .pc{width:80vw}
+  .gc{width:84vw}
   .h-ctas .btn,.aw-btn{width:100%;justify-content:center}
 }
 </style>
@@ -1137,11 +1168,13 @@ footer>.w{padding:0}
   <svg class="float-ast" style="top:16%;left:9%;width:74px;height:74px;animation-duration:9s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
   <svg class="float-ast" style="top:62%;right:11%;width:120px;height:120px;animation-duration:13s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
   <svg class="float-ast" style="top:30%;right:24%;width:44px;height:44px;animation-duration:7s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
-  <!-- card foto laterali (come Figma) -->
+  <!-- card foto laterali (come Figma) · su mobile diventano un cluster centrato sotto il testo -->
+  <div class="hp-wrap">
   <div class="hero-photo hp-l" style="--rot:-5deg;animation-duration:8s"><img src="img/hero-a.webp" loading="lazy"></div>
   <div class="hero-photo hp-r" style="--rot:5deg;animation-duration:9.5s"><img src="img/p-mc1.webp" loading="lazy"></div>
   <div class="hero-photo hp-l2 late" style="--rot:6deg;animation-duration:7.5s"><img src="img/hero-c.webp" loading="lazy"></div>
   <div class="hero-photo hp-r2 late" style="--rot:-7deg;animation-duration:8.5s"><img src="img/hero-b.webp" loading="lazy"></div>
+  </div>
   <div class="h-in">
     <div class="h-ey" data-a="fade"><div class="hd"></div>30 posizioni aperte</div>
     <h1 class="h-h1 wr" data-a="up" data-d="1">
@@ -3441,6 +3474,7 @@ document.querySelectorAll('canvas[data-growth]').forEach(makeGrowth);
   const sc=document.querySelector('.col-row');
   const track=document.querySelector('.col-track');
   if(!sc||!track) return;
+  if(matchMedia('(max-width:760px)').matches) return;   // mobile: griglia statica via CSS, niente carosello
   track.querySelectorAll('img').forEach(i=>i.draggable=false);
   const SPEED=0.28;
   let pos=0,hw=0,dragging=false,startX=0,startPos=0,rafId=null,visible=false,vel=0,lastX=0,dragDX=0;
