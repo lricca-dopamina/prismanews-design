@@ -901,12 +901,13 @@ footer>.w{padding:0}
 .nsec-carousel.as-grid .pcard:nth-child(2){transition-delay:.09s}
 .nsec-carousel.as-grid .pcard:nth-child(3){transition-delay:.18s}
 .nsec-carousel.as-grid .pcard:nth-child(4){transition-delay:.27s}
-.nsec-carousel.as-grid .pcard-hd{padding:42px 26px 16px}
+.nsec-carousel.as-grid .pcard-hd{padding:42px 26px 16px;flex:1;display:flex;flex-direction:column;justify-content:center}
 .nsec-carousel.as-grid .pcard-hd h4{font-size:30px}
 .nsec-carousel.as-grid .pcard-hd p{font-size:15px;margin-top:9px}
-/* grafiche canvas: riempiono il riquadro e crescono (il bagliore sborda invece di tagliarsi) */
-.nsec-carousel.as-grid .pcard-gfx{padding:0;overflow:hidden}
-.nsec-carousel.as-grid .pcard-gfx svg{max-height:285px}   /* grafiche invariate anche con card più alte */
+/* area grafica BLOCCATA a 285px: l'altezza extra della card va nell'header, non qui,
+   così le canvas continuano a sbordare il riquadro e il bagliore non si taglia */
+.nsec-carousel.as-grid .pcard-gfx{padding:0;overflow:hidden;flex:none;height:285px}
+.nsec-carousel.as-grid .pcard-gfx svg{max-height:285px}   /* grafiche invariate */
 .nsec-carousel.as-grid .pcard-gfx canvas{transform-origin:center center;display:block}
 .nsec-carousel.as-grid #llmMix{transform:scale(1.2)}
 .nsec-carousel.as-grid .pcard-gfx canvas[data-cloud]{transform:scale(1.5)}
