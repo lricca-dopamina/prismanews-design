@@ -1065,21 +1065,15 @@ footer>.w{padding:0}
   .hp-wrap .hp-l,.hp-wrap .hp-l2{display:none!important}   /* solo le foto che su desktop stanno a destra */
   .hp-wrap .hp-r{transform:rotate(5deg)}
   .hp-wrap .hp-r2{transform:rotate(-7deg)}
-  /* CAMPO → sticky-stack: stage (card testo + grafica animata) che si sovrappongono scrollando, A TUTTA LARGHEZZA */
-  .campo-pin{height:auto}
-  .campo-sticky{position:static;height:auto;display:block;overflow:visible;padding:48px 0}
-  .campo-inner{grid-template-columns:1fr;gap:22px;padding:0 14px;align-items:start}
-  .campo-left{order:-1}
-  .campo-right{height:auto;display:block}
-  .campo-stage{position:sticky;background:#0b0c26;border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:24px 20px 20px;margin-bottom:20px;overflow:hidden;box-shadow:0 -10px 40px rgba(5,6,32,.6),0 24px 50px rgba(5,6,32,.5)}
-  .campo-stage:nth-child(1){top:58px}
-  .campo-stage:nth-child(2){top:74px}
-  .campo-stage:nth-child(3){top:90px}
-  .campo-stage .dc{position:static!important;transform:none!important;opacity:1!important;background:none!important;border:0!important;backdrop-filter:none!important;box-shadow:none!important;padding:0!important;margin:0 0 16px}
-  .campo-stage .dc-txt{font-size:18px}
-  .campo-stage .cv{display:block!important;position:relative!important;inset:auto!important;height:320px;opacity:1!important;transform:none!important}
-  .campo-stage .cv-ph{opacity:1!important}
-  .campo-stage #cv2 .cv-code{right:34%;font-size:11px;opacity:.85}   /* terminale più largo e visibile su mobile */
+  /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
+  .campo-inner{grid-template-columns:1fr;gap:14px;padding:0 16px;align-items:center}
+  .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
+  .campo-b{font-size:13.5px;line-height:1.5;max-width:none}
+  .campo-right{height:auto;display:flex;flex-direction:column;gap:14px}
+  .campo-deck{height:120px}
+  .campo-canvas{height:286px;flex:none}
+  .campo-deck .dc{padding:18px 20px}
+  #cv2 .cv-code{right:40%}
   /* CRESCERE: titolo che entra senza tagli */
   .cres-title{padding:0 20px;margin-bottom:26px}
   .ct1,.ct2{white-space:normal;line-height:.96;font-size:clamp(32px,9.5vw,54px)}
@@ -2652,24 +2646,14 @@ onScroll();
   sc.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();pos+=e.deltaX;apply();},{passive:false});
 })();
 
-// ── Campo MOBILE: accoppia ogni card testo (dc) con la sua grafica (cv) in uno "stage" sticky che si sovrappone scrollando ──
-(function(){
-  if(!matchMedia('(max-width:760px)').matches) return;
-  const deck=document.getElementById('campoDeck'), canv=document.getElementById('campoCanvas'), right=document.getElementById('campoRight');
-  if(!deck||!canv||!right) return;
-  const dcs=[...deck.children], cvs=[...canv.children];
-  dcs.forEach((dc,i)=>{ const st=document.createElement('div'); st.className='campo-stage'; st.appendChild(dc); if(cvs[i]) st.appendChild(cvs[i]); right.appendChild(st); });
-  deck.remove(); canv.remove();
-})();
 // ── Campo · deck testi + canvas dinamico ──
 (function(){
   const pin    = document.querySelector('.campo-pin');
   const decks  = [document.getElementById('dc1'), document.getElementById('dc2'), document.getElementById('dc3')];
   const canvas = [document.getElementById('cv1'), document.getElementById('cv2'), document.getElementById('cv3')];
   if(!pin || decks.some(c=>!c) || canvas.some(s=>!s)) return;
-  const IS_MOBILE = window.matchMedia('(max-width:760px)').matches;
 
-  const N = decks.length;            // 3 fasi
+  const N = decks.length;            // 3 fasi (gira anche su mobile)
   const played = [false, false, false];
 
   // ── Feed terminale: lancio comando → log veloci → asterisco Humans → loop ──
@@ -2755,19 +2739,6 @@ onScroll();
       let c = 0; const step = to / 48;
       const t = setInterval(() => { c = Math.min(c + step, to); el.textContent = Math.round(c) + suf; if(c >= to) clearInterval(t); }, 18);
     });
-  }
-  // MOBILE: niente scroll-pin → ogni grafica (codice, loghi, numeri, foto) parte quando entra nel viewport
-  if(IS_MOBILE){
-    canvas.forEach((cv,i)=>{
-      new IntersectionObserver(es=>{
-        if(es[0].isIntersecting && !played[i]){
-          played[i]=true; cv.style.opacity='1'; cv.classList.add('play');
-          if(i===1 && window.__startTyper) window.__startTyper();
-          if(i===2) countUp();
-        }
-      },{threshold:0.15}).observe(cv);
-    });
-    return;
   }
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
