@@ -197,7 +197,7 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .man-fallback svg{width:46%;max-width:190px;filter:drop-shadow(0 14px 44px rgba(101,41,255,.55));animation:spin 16s linear infinite}
 .man-spline.no3d canvas{display:none}
 .man-spline.no3d .man-fallback{display:flex}
-@media(max-width:900px){#manifesto .w{grid-template-columns:1fr}.man-spline{height:440px}}
+@media(max-width:900px){#manifesto .w{grid-template-columns:1fr}.man-spline{height:320px}}
 /* blob dinamici sfondo manifesto */
 #manifesto::before,#manifesto::after{content:'';position:absolute;border-radius:50%;filter:blur(50px);opacity:.25;pointer-events:none;z-index:0;will-change:transform}
 #manifesto::before{width:700px;height:700px;left:-15%;top:-30%;background:radial-gradient(circle,#7c3aed,#4437F3);animation:blobA 14s ease-in-out infinite alternate}
@@ -669,7 +669,7 @@ footer>.w{padding:0}
 .sede-video-el{z-index:1;opacity:0;transition:opacity .5s}
 .sede-video-el.playing{opacity:1}
 .sede-img-fallback{z-index:0}
-/* il video sede ora parte anche su mobile (muted+playsinline, play() via IntersectionObserver) */
+@media(max-width:760px){.sede-video-el{display:none}}
 .sg-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:#fff;font-family:var(--fm);font-size:14px;background:linear-gradient(135deg,#3a2f8a,#15163a)}
 .sg-ph small{opacity:.5;font-size:11px}
 /* CTA ripetuta "Ora tocca a te" */
@@ -1021,24 +1021,11 @@ footer>.w{padding:0}
 .col-ph{position:relative;flex:none;border-radius:16px;overflow:hidden;background:#ececf2;box-shadow:0 20px 50px rgba(5,6,32,.18);transform:rotate(var(--r,0deg));transition:transform .5s var(--s),box-shadow .5s var(--s)}
 .col-ph img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;pointer-events:none}
 .col-ph:hover{transform:rotate(0deg) scale(1.04);box-shadow:0 26px 60px rgba(5,6,32,.26);z-index:5}
-@media(max-width:760px){
-  /* collage → griglia 2col stile Sana (foto intere, niente tagli, niente carosello) */
-  .col-row{padding:24px 0 8px;overflow:visible;cursor:auto}
-  .col-track{display:grid!important;grid-template-columns:1fr 1fr;gap:11px;width:auto;height:auto!important;transform:none!important;padding:0 16px}
-  .col-col{display:contents}
-  .col-col:nth-child(n+5){display:none}   /* mostra solo i primi 4 gruppi = 8 foto */
-  .col-ph{width:auto!important;height:auto!important;aspect-ratio:1;transform:none!important;border-radius:18px;box-shadow:0 10px 30px rgba(5,6,32,.14)}
-}
+@media(max-width:760px){.col-row{padding:36px 0 56px}.col-track{height:470px;gap:22px}.col-ph{transform:rotate(var(--r,0deg)) scale(.82);transform-origin:top center}}
 
 /* caroselli drag JS: lo scroll verticale della pagina resta nativo, l'orizzontale al JS */
 .prj-sc,.gc-row,.press-mq,.sede-gallery,.col-row,.nsec-marquee{touch-action:pan-y}
 /* ════════════════ MOBILE / RESPONSIVE ════════════════ */
-/* reveal in scroll · SOLO mobile (fuori dal media query .mrev non esiste → desktop intatto) */
-@media(max-width:760px){
-  .mrev{opacity:0;transform:translateY(34px);transition:opacity .7s var(--s),transform .7s var(--s);will-change:opacity,transform}
-  .mrev.go{opacity:1;transform:none}
-  .mrev.d1{transition-delay:.07s}.mrev.d2{transition-delay:.14s}.mrev.d3{transition-delay:.21s}.mrev.d4{transition-delay:.28s}
-}
 .nav-burger{display:none}
 .nav-drawer{display:none}
 @media(max-width:880px){
@@ -1062,42 +1049,31 @@ footer>.w{padding:0}
   .h-st{display:grid;grid-template-columns:1fr 1fr}
   .h-s{padding:20px 8px;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}
   .h-s:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}
-  /* HERO: foto come cluster centrato SOTTO il testo */
-  #hero{justify-content:flex-start}
-  .h-in{order:0;padding-top:112px}
-  .hp-wrap{order:1;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;width:100%;padding:10px 18px 0}
-  .hp-wrap .hero-photo{display:block!important;position:static;width:44%;max-width:200px;height:auto;aspect-ratio:3/4;opacity:1!important;animation:none;box-shadow:0 16px 40px rgba(5,6,32,.42)}
-  .hp-wrap .hp-l{transform:rotate(-5deg)}
-  .hp-wrap .hp-r{transform:rotate(5deg)}
-  .hp-wrap .hp-l2{transform:rotate(6deg)}
-  .hp-wrap .hp-r2{transform:rotate(-7deg)}
-  /* CAMPO → sticky-stack: ogni stage (testo + grafica) si sovrappone scrollando */
+  /* CAMPO → statico impilato (niente scroll-pin) */
   .campo-pin{height:auto}
-  .campo-sticky{position:static;height:auto;display:block;overflow:visible;padding:48px 0}
-  .campo-inner{grid-template-columns:1fr;gap:22px;padding:0 18px;align-items:start}
-  .campo-left{order:-1}
-  .campo-right{height:auto;display:block}
-  .campo-stage{position:sticky;top:70px;background:#0b0c26;border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:22px 20px 18px;margin-bottom:18px;overflow:hidden;box-shadow:0 24px 50px rgba(5,6,32,.5)}
-  .campo-stage .dc{position:static!important;transform:none!important;opacity:1!important;margin:0 0 14px}
-  .campo-stage .cv{display:block!important;position:relative!important;inset:auto!important;height:250px;opacity:1!important;transform:none!important}
-  .campo-stage .cv-ph{opacity:1!important}   /* su mobile non c'è lo scroll-pin che aggiunge .play */
-  .campo-stage .cv-code{display:none}   /* niente terminale JS su mobile */
+  .campo-sticky{position:static;height:auto;display:block;overflow:visible;padding:64px 0}
+  .campo-inner{grid-template-columns:1fr;gap:26px;padding:0 20px;align-items:start}
+  .campo-right{height:auto;gap:14px}
+  .campo-deck{position:static;height:auto;display:flex;flex-direction:column;gap:14px}
+  .campo-deck .dc{position:static;transform:none!important;opacity:1!important}
+  .campo-canvas{display:none}
   /* CRESCERE: titolo che entra senza tagli */
   .cres-title{padding:0 20px;margin-bottom:26px}
   .ct1,.ct2{white-space:normal;line-height:.96;font-size:clamp(32px,9.5vw,54px)}
   /* CAROSELLI orizzontali: card più strette */
   .prj-track{padding-left:14px;gap:14px}
-  .pc{width:74vw;max-width:300px;height:400px}
-  .gc{width:82vw;max-width:320px;height:auto;aspect-ratio:33/44;margin-top:0!important}
+  .pc{width:80vw;max-width:330px;height:440px}
+  .gc{width:86vw;max-width:340px;height:auto;aspect-ratio:34/44;margin-top:0!important}
   .gc-info{padding:18px}
-  .gc-desc{font-size:14px;line-height:1.5}
-  .gc-name{font-size:16px;margin-top:9px;padding-top:9px}
+  .gc-desc{font-size:12.5px;line-height:1.5}
+  .gc-name{font-size:14px;margin-top:8px;padding-top:8px}
   .sg-item{width:84vw;max-width:380px;height:230px}
   #pglass{display:none}
-  /* STACK2: sticky-stack verticale — le card si impilano e si sovrappongono nello scroll */
-  .nsec-carousel.as-grid{padding:0;overflow:visible}
-  .nsec-carousel.as-grid .nsec-ctrack{display:flex!important;flex-direction:column;grid-template-columns:none;gap:0;overflow:visible;padding:0 18px}
-  .nsec-carousel.as-grid .pcard{position:sticky;top:74px;width:auto;min-height:420px;margin-bottom:20px;box-shadow:0 24px 50px rgba(5,6,32,.55)}
+  /* STACK2: griglia → swipe orizzontale con snap */
+  .nsec-carousel.as-grid{padding:8px 0;overflow:visible}
+  .nsec-carousel.as-grid .nsec-ctrack{display:flex!important;grid-template-columns:none;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 20px;scrollbar-width:none}
+  .nsec-carousel.as-grid .nsec-ctrack::-webkit-scrollbar{display:none}
+  .nsec-carousel.as-grid .pcard{flex:0 0 86%;scroll-snap-align:center;opacity:1!important;transform:none!important;min-height:0}
   .nsec-titlerow{flex-direction:column;align-items:flex-start;gap:16px}
   .nsec-titlerow .nsec-h{white-space:normal;font-size:clamp(28px,8vw,42px)}
   .nsec-titlerow .aw-btn{align-self:flex-start}
@@ -1113,31 +1089,13 @@ footer>.w{padding:0}
   .scroll-hint{text-align:center;padding:0 20px}
   .scroll-hint .hint-d{display:none}
   .scroll-hint .hint-m{display:inline}
-  /* TYPE SCALE mobile: testi più grandi (come i reference) */
-  .h-sub{font-size:18px;line-height:1.42;margin-bottom:32px}
-  .man-lead{font-size:19px;line-height:1.5}
-  .man-lead-2{font-size:17px}
-  .prj-body{font-size:16.5px;line-height:1.55}
-  .nsec-intro{font-size:16.5px;line-height:1.6}
-  .nsec-h{font-size:clamp(31px,8.4vw,40px);line-height:1.08}
-  .ct-h{font-size:clamp(30px,8vw,40px)}
-  .prj-h{font-size:clamp(34px,9vw,46px)}
-  .aw-h{font-size:clamp(30px,8vw,40px)}
-  .nsec-k,.h-ey{font-size:12px}
-  .pos-ti{font-size:17px}
-  /* CTA stile humans: pill, più grandi */
-  .h-ctas .btn,.aw-btn{border-radius:100px;padding:16px 26px;font-size:16px}
-  .h-ctas .btn{width:100%;justify-content:center}
-  /* griglia cerchi "Team snelli" centrata */
-  .dotcluster{margin-inline:auto}
-  /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
-  .nf-anim{max-width:none;width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
   /* footer compatto */
   footer{padding:56px 0 26px}
 }
 @media(max-width:440px){
-  .pc{width:80vw}
-  .gc{width:84vw}
+  .pc{width:84vw}
+  .gc{width:86vw}
+  .nsec-carousel.as-grid .pcard{flex:0 0 90%}
   .h-ctas .btn,.aw-btn{width:100%;justify-content:center}
 }
 </style>
@@ -1179,13 +1137,11 @@ footer>.w{padding:0}
   <svg class="float-ast" style="top:16%;left:9%;width:74px;height:74px;animation-duration:9s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
   <svg class="float-ast" style="top:62%;right:11%;width:120px;height:120px;animation-duration:13s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
   <svg class="float-ast" style="top:30%;right:24%;width:44px;height:44px;animation-duration:7s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
-  <!-- card foto laterali (come Figma) · su mobile diventano un cluster centrato sotto il testo -->
-  <div class="hp-wrap">
+  <!-- card foto laterali (come Figma) -->
   <div class="hero-photo hp-l" style="--rot:-5deg;animation-duration:8s"><img src="img/hero-a.webp" loading="lazy"></div>
   <div class="hero-photo hp-r" style="--rot:5deg;animation-duration:9.5s"><img src="img/p-mc1.webp" loading="lazy"></div>
   <div class="hero-photo hp-l2 late" style="--rot:6deg;animation-duration:7.5s"><img src="img/hero-c.webp" loading="lazy"></div>
   <div class="hero-photo hp-r2 late" style="--rot:-7deg;animation-duration:8.5s"><img src="img/hero-b.webp" loading="lazy"></div>
-  </div>
   <div class="h-in">
     <div class="h-ey" data-a="fade"><div class="hd"></div>30 posizioni aperte</div>
     <h1 class="h-h1 wr" data-a="up" data-d="1">
@@ -2381,19 +2337,7 @@ document.addEventListener('mouseout', e=>{
 
 /* ── REVEAL ── */
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('go')})},{threshold:.12});
-document.querySelectorAll('[data-a],.mrev').forEach(el=>io.observe(el));
-// reveal in scroll SOLO mobile: tagga card/foto/blocchi statici (la classe .mrev ha effetto solo ≤760px → desktop intatto)
-if(matchMedia('(max-width:760px)').matches){
-  document.querySelectorAll('.col-ph,.nf-box,.proc-c,.ben-c,.pos-row,.aw-c').forEach((el,i)=>{ el.classList.add('mrev','d'+((i%3)+1)); io.observe(el); });
-  // CAMPO mobile: accoppia ogni card testo (dc) con la sua grafica (cv) in uno "stage" sticky che si sovrappone scrollando
-  (function(){
-    const deck=document.getElementById('campoDeck'), canv=document.getElementById('campoCanvas'), right=document.getElementById('campoRight');
-    if(!deck||!canv||!right) return;
-    const dcs=[...deck.children], cvs=[...canv.children];
-    dcs.forEach((dc,i)=>{ const st=document.createElement('div'); st.className='campo-stage'; st.appendChild(dc); if(cvs[i]) st.appendChild(cvs[i]); right.appendChild(st); });
-    deck.remove(); canv.remove();
-  })();
-}
+document.querySelectorAll('[data-a]').forEach(el=>io.observe(el));
 
 /* ── WORD REVEAL ── */
 const wio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('go');[...e.target.querySelectorAll('.word')].forEach((w,i)=>{w.style.transitionDelay=(i*.06)+'s'})}})},{threshold:.3});
@@ -3497,7 +3441,6 @@ document.querySelectorAll('canvas[data-growth]').forEach(makeGrowth);
   const sc=document.querySelector('.col-row');
   const track=document.querySelector('.col-track');
   if(!sc||!track) return;
-  if(matchMedia('(max-width:760px)').matches) return;   // mobile: griglia statica via CSS, niente carosello
   track.querySelectorAll('img').forEach(i=>i.draggable=false);
   const SPEED=0.28;
   let pos=0,hw=0,dragging=false,startX=0,startPos=0,rafId=null,visible=false,vel=0,lastX=0,dragDX=0;
@@ -3645,7 +3588,7 @@ if (canvas && _glOK) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.28 : 1.65));   // mobile: camera più vicina = asterisco più grande
+  camera.position.set(0, 0, DIMENSIONE * 1.65);
 
   function envTexture(){
     const c=document.createElement('canvas'); c.width=512; c.height=256;
