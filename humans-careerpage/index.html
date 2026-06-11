@@ -889,6 +889,12 @@ footer>.w{padding:0}
 .nsec-carousel.as-grid .pcard-hd{padding:28px 24px 0}
 .nsec-carousel.as-grid .pcard-hd h4{font-size:24px}
 .nsec-carousel.as-grid .pcard-hd p{font-size:13px;margin-top:6px}
+/* grafiche canvas: riempiono il riquadro e crescono (il bagliore sborda invece di tagliarsi) */
+.nsec-carousel.as-grid .pcard-gfx{padding:0;overflow:hidden}
+.nsec-carousel.as-grid .pcard-gfx canvas{transform-origin:center center;display:block}
+.nsec-carousel.as-grid #llmMix{transform:scale(1.2)}
+.nsec-carousel.as-grid .pcard-gfx canvas[data-cloud]{transform:scale(1.5)}
+.nsec-carousel.as-grid .pcard-gfx canvas[data-growth]{transform:scale(1.42)}
 @media(max-width:1080px){.nsec-carousel.as-grid .nsec-ctrack{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.nsec-carousel.as-grid .nsec-ctrack{grid-template-columns:1fr}}
 .grid-cta{display:flex;justify-content:center;margin-top:40px}
