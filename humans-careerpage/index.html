@@ -1061,9 +1061,8 @@ footer>.w{padding:0}
   .h-in{order:0;padding-top:112px}
   .hp-wrap{order:1;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;width:100%;padding:10px 18px 0}
   .hp-wrap .hero-photo{display:block!important;position:static;width:44%;max-width:200px;height:auto;aspect-ratio:3/4;opacity:1!important;animation:none;box-shadow:0 16px 40px rgba(5,6,32,.42)}
-  .hp-wrap .hp-l{transform:rotate(-5deg)}
+  .hp-wrap .hp-l,.hp-wrap .hp-l2{display:none!important}   /* solo le foto che su desktop stanno a destra */
   .hp-wrap .hp-r{transform:rotate(5deg)}
-  .hp-wrap .hp-l2{transform:rotate(6deg)}
   .hp-wrap .hp-r2{transform:rotate(-7deg)}
   /* CAMPO → statico impilato (niente scroll-pin) */
   .campo-pin{height:auto}
@@ -3609,10 +3608,10 @@ if (canvas && _glOK) {
 
   const isMobile = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
   const lowCore  = (navigator.hardwareConcurrency || 8) <= 4;
-  const dprCap   = isMobile ? (lowCore ? 1.0 : 1.25) : 1.4;
+  const dprCap   = isMobile ? (lowCore ? 1.75 : 2.0) : 1.4;
   const motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:!isMobile, alpha:true, powerPreference:'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:'high-performance' });
   // se la GPU perde il contesto (crash su device borderline) mostra il fallback invece di restare nero
   canvas.addEventListener('webglcontextlost', e=>{ e.preventDefault(); const _w=canvas.closest('.man-spline'); if(_w) _w.classList.add('no3d'); }, false);
   renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
@@ -3646,12 +3645,12 @@ if (canvas && _glOK) {
   const glassMat = isMobile
     // mobile: vetro "finto" senza transmission (nessun render-pass extra) → gira liscio sulle GPU mobili
     ? new THREE.MeshPhysicalMaterial({
-        color:new THREE.Color(0x4437f3), metalness:0.0, roughness:0.16,
-        transparent:true, opacity:0.93, ior:1.5, reflectivity:0.5,
-        iridescence:0.22, iridescenceIOR:1.25,
-        sheen:1.0, sheenColor:new THREE.Color(FRESNEL_COLORE), sheenRoughness:0.3,
-        clearcoat:0.6, clearcoatRoughness:0.1,
-        attenuationColor:new THREE.Color(ATTENUAZIONE), envMapIntensity:1.15
+        color:new THREE.Color(0x3b46ff), metalness:0.0, roughness:0.13,
+        transparent:true, opacity:0.96, ior:1.5, reflectivity:0.45,
+        iridescence:0,
+        sheen:0.5, sheenColor:new THREE.Color(0x3450ff), sheenRoughness:0.35,
+        clearcoat:0.7, clearcoatRoughness:0.08,
+        attenuationColor:new THREE.Color(ATTENUAZIONE), envMapIntensity:0.65
       })
     // desktop: vetro rifrattivo pieno
     : new THREE.MeshPhysicalMaterial({
