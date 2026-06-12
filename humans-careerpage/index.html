@@ -1089,13 +1089,14 @@ footer>.w{padding:0}
   .nc{display:none}
   nav{box-shadow:none}
   nav.nav-hidden{transform:translateY(-175%)}
-  .ni{margin:24px 16px 0;height:60px;background:#efefef;border:none;border-radius:18px;padding:0 10px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+  .ni{margin:24px 16px 0;height:60px;background:#efefef;border:none;border-radius:18px;padding:0 14px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
   .nlo img{display:none}
   .nlo-aster{display:block;width:auto;height:30px;color:#4437F3}
   /* hamburger Impreza style_hamburger_1 (regole verbatim) */
-  .nav-burger{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;margin-left:auto;color:#35415B}
+  .nav-burger{display:flex;align-items:center;justify-content:center;width:40px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;margin-left:auto;color:#35415B;transition:color .25s}
+  .nav-burger:hover{color:#4437F3}   /* hover blu come humans.tech */
   .whx{position:relative;display:block;width:24px;height:24px}
-  .whx>span{position:absolute;top:calc(50% - 1.5px);height:3px;width:100%;border-radius:3px;background:currentColor;transition:transform .2s cubic-bezier(0,1,.8,1)}
+  .whx>span{position:absolute;top:calc(50% - 1.5px);left:2.5px;height:3px;width:19px;border-radius:3px;background:currentColor;transition:transform .2s cubic-bezier(0,1,.8,1)}
   .whx>span::before,.whx>span::after{content:'';display:block;position:absolute;height:inherit;width:inherit;background:inherit;border-radius:inherit}
   .whx>span::before{top:-8px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,opacity .2s cubic-bezier(0,1,.8,1)}
   .whx>span::after{top:8px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,transform .2s cubic-bezier(0,1,.8,1)}
@@ -1106,8 +1107,9 @@ footer>.w{padding:0}
   .nav-drawer{display:flex;flex-direction:column;gap:0;position:absolute;top:calc(100% + 16px);left:16px;right:16px;background:#efefef;border-radius:18px;padding:10px 22px 18px;box-shadow:0 14px 34px rgba(0,0,0,.22);transform:translateY(-10px);opacity:0;pointer-events:none;transition:opacity .3s var(--s),transform .3s var(--s);max-height:calc(100vh - 116px);overflow-y:auto}
   .nav-drawer.open{opacity:1;transform:none;pointer-events:auto}
   /* voci: 16px weight 500 #35415B, righe ~56px (come humans.tech reale) */
-  .nav-drawer a{font-family:var(--f);font-size:16px;font-weight:500;line-height:60px;letter-spacing:0;color:#35415B;padding:0 2px;border-radius:0;text-decoration:none}
+  .nav-drawer a{font-family:var(--f);font-size:18px;font-weight:500;line-height:46px;letter-spacing:0;color:#35415B;padding:0 2px;border-radius:0;text-decoration:none;transition:color .2s}
   .nav-drawer a.nd-current{color:#646CFD}
+  .nav-drawer a:hover{color:#4437F3}
   .nav-drawer a:active{color:#646CFD;background:transparent}
   .nav-drawer .nd-cta{align-self:flex-start;margin:14px 0 8px;background:#4437F3;color:#fff;font-family:var(--f);font-size:16px;font-weight:500;line-height:1;padding:15px 20px;border-radius:12px}
   .nd-lang{display:flex;align-items:center;gap:16px;margin-top:14px;padding-left:2px}
