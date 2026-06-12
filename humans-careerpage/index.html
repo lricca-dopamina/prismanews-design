@@ -1085,27 +1085,33 @@ footer>.w{padding:0}
 .nav-burger{display:none}
 .nav-drawer{display:none}
 @media(max-width:880px){
-  /* navbar humans.tech mobile: pillola/box arrotondato talco che apre un pannello dropdown */
+  /* ===== NAVBAR humans.tech 1:1 (mobile): pillola talco #efefef + dropdown — valori reali estratti ===== */
   .nc{display:none}
   nav{box-shadow:none}
-  nav.nav-hidden{transform:translateY(-165%)}
-  .ni{margin:14px 16px 0;height:58px;background:var(--g);border:none;border-radius:26px;padding:0 12px 0 22px;box-shadow:0 12px 34px rgba(5,6,32,.16)}
+  nav.nav-hidden{transform:translateY(-175%)}
+  .ni{margin:24px 16px 0;height:60px;background:#efefef;border:none;border-radius:18px;padding:0 10px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
   .nlo img{display:none}
-  .nlo-aster{display:block;width:27px;height:27px;color:var(--v)}
-  .nav-burger{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:44px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;margin-left:auto}
-  .nav-burger span{display:block;width:22px;height:2px;background:var(--dk);border-radius:2px;transition:transform .3s var(--s),opacity .2s}
-  .nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-  .nav-burger.open span:nth-child(2){opacity:0}
-  .nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-  .nav-drawer{display:flex;flex-direction:column;gap:0;position:absolute;top:calc(100% + 12px);left:16px;right:16px;background:var(--g);border-radius:26px;padding:24px 26px 24px;box-shadow:0 26px 64px rgba(5,6,32,.24);transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .32s var(--s),transform .32s var(--s);max-height:calc(100vh - 110px);overflow-y:auto}
+  .nlo-aster{display:block;width:auto;height:30px;color:#4437F3}
+  /* hamburger Impreza style_hamburger_1 (regole verbatim) */
+  .nav-burger{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;margin-left:auto;color:#1E1E2D}
+  .whx{position:relative;display:block;width:24px;height:24px}
+  .whx>span{position:absolute;top:calc(50% - 1.5px);height:3px;width:100%;border-radius:3px;background:currentColor;transition:transform .2s cubic-bezier(0,1,.8,1)}
+  .whx>span::before,.whx>span::after{content:'';display:block;position:absolute;height:inherit;width:inherit;background:inherit;border-radius:inherit}
+  .whx>span::before{top:-8px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,opacity .2s cubic-bezier(0,1,.8,1)}
+  .whx>span::after{top:8px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,transform .2s cubic-bezier(0,1,.8,1)}
+  .nav-burger.open .whx>span{transform:rotate(45deg);transition-delay:.2s}
+  .nav-burger.open .whx>span::before{top:0;opacity:0;transition:top .2s cubic-bezier(0,1,.8,1),opacity .2s cubic-bezier(0,1,.8,1) .2s}
+  .nav-burger.open .whx>span::after{top:0;transform:rotate(90deg);transition:top .2s cubic-bezier(0,1,.8,1),transform .2s cubic-bezier(0,1,.8,1) .2s}
+  /* pannello dropdown talco (margin 24/16, radius 18, padding-block 16 — reali) */
+  .nav-drawer{display:flex;flex-direction:column;gap:0;position:absolute;top:calc(100% + 12px);left:16px;right:16px;background:#efefef;border-radius:18px;padding:14px 18px 18px;box-shadow:0 14px 34px rgba(0,0,0,.22);transform:translateY(-10px);opacity:0;pointer-events:none;transition:opacity .3s var(--s),transform .3s var(--s);max-height:calc(100vh - 120px);overflow-y:auto}
   .nav-drawer.open{opacity:1;transform:none;pointer-events:auto}
-  .nav-drawer a{font-family:var(--f);font-size:23px;font-weight:400;line-height:1.05;letter-spacing:-.01em;color:var(--dk);padding:13px 0;border-radius:0;text-decoration:none}
-  .nav-drawer a.nd-current{color:var(--v)}
-  .nav-drawer a:active{color:var(--v);background:transparent}
-  .nav-drawer .nd-cta{align-self:flex-start;margin-top:18px;background:var(--v);color:#fff;font-family:var(--fm);font-size:16px;font-weight:400;line-height:1.2;padding:15px 30px;border-radius:16px}
-  .nd-lang{display:flex;align-items:center;gap:16px;margin-top:26px}
-  .nd-lang svg{width:21px;height:21px;color:var(--dk);flex:none}
-  .nd-lang a{font-family:var(--fm);font-size:16px;font-weight:400;padding:0;color:var(--dk);opacity:.5}
+  .nav-drawer a{font-family:var(--f);font-size:17px;font-weight:400;line-height:1.2;letter-spacing:0;color:#35415B;padding:12px 4px;border-radius:0;text-decoration:none}
+  .nav-drawer a.nd-current{color:#646CFD}
+  .nav-drawer a:active{color:#646CFD;background:transparent}
+  .nav-drawer .nd-cta{align-self:flex-start;margin:16px 0 4px;background:#4437F3;color:#fff;font-family:var(--f);font-size:17px;font-weight:400;line-height:1.2;padding:11px 16px;border-radius:12px}
+  .nd-lang{display:flex;align-items:center;gap:18px;margin-top:18px;padding-left:4px}
+  .nd-lang svg{width:21px;height:21px;color:#1E1E2D;flex:none}
+  .nd-lang a{font-family:var(--f);font-size:16px;font-weight:400;padding:0;color:#1E1E2D;opacity:.55}
   .nd-lang a.nd-lang-cur{opacity:1}
 }
 @media(max-width:720px){
@@ -1281,13 +1287,13 @@ footer>.w{padding:0}
 
 <nav>
   <div class="ni">
-    <div class="nlo"><img src="img/humans-logo.svg" alt="Humans.tech"><svg class="nlo-aster" viewBox="0 0 16.05 16.12" aria-hidden="true"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></div>
+    <div class="nlo"><img src="img/humans-logo.svg" alt="Humans.tech"><svg class="nlo-aster" viewBox="0 0 41 40" aria-hidden="true"><path d="M40.0453 20.2559L37.5315 12.4355L25.9782 16.2198V0H17.821V12.2425L2.52208 7.23305L0 15.0451L11.5449 18.8294L2.08924 31.953L8.6816 36.7862L15.8233 26.8764L25.2874 39.9999L31.8797 35.1751L24.738 25.2653L40.0453 20.2559Z" fill="currentColor"/></svg></div>
     <div class="nm"><a href="https://humans.tech/perche-esistiamo/">Perché esistiamo</a><a href="https://humans.tech/cosa-facciamo/">Cosa facciamo</a><a href="https://humans.tech/come-lavoriamo/">Come lavoriamo</a><a href="https://humans.tech/lavori-realizzati/">Lavori realizzati</a><a href="https://humans.tech/chi-siamo/">Chi siamo</a><a href="https://humans.tech/blog/">Blog</a></div>
     <div class="nc">
       <a class="btn bk" data-c href="#posizioni"><span class="btn-ar"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M8.38579 0.155296C8.61873 -0.0517608 8.83873 -0.0517608 9.04579 0.155296L17.2375 8.3858C17.4704 8.59285 17.4704 8.79991 17.2375 9.00697L9.04579 17.2375C8.83873 17.4445 8.61873 17.4445 8.38579 17.2375L8.11403 16.9269C7.90697 16.7198 7.90697 16.4998 8.11403 16.2669L15.0634 9.35638H0.465877C0.155292 9.35638 0 9.20108 0 8.8905V8.50227C0 8.19168 0.155292 8.03639 0.465877 8.03639H15.0634L8.11403 1.12587C7.90697 0.892935 7.90697 0.672937 8.11403 0.465881L8.38579 0.155296Z" fill="currentColor"/></svg></span>Entra nel team</a>
       <a class="btn bv" data-c href="https://humans.tech/contatti/"><span class="btn-ar"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M8.38579 0.155296C8.61873 -0.0517608 8.83873 -0.0517608 9.04579 0.155296L17.2375 8.3858C17.4704 8.59285 17.4704 8.79991 17.2375 9.00697L9.04579 17.2375C8.83873 17.4445 8.61873 17.4445 8.38579 17.2375L8.11403 16.9269C7.90697 16.7198 7.90697 16.4998 8.11403 16.2669L15.0634 9.35638H0.465877C0.155292 9.35638 0 9.20108 0 8.8905V8.50227C0 8.19168 0.155292 8.03639 0.465877 8.03639H15.0634L8.11403 1.12587C7.90697 0.892935 7.90697 0.672937 8.11403 0.465881L8.38579 0.155296Z" fill="currentColor"/></svg></span>Contattaci</a>
     </div>
-    <button class="nav-burger" id="navBurger" aria-label="Apri menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <button class="nav-burger" id="navBurger" aria-label="Apri menu" aria-expanded="false"><span class="whx"><span></span></span></button>
   </div>
   <div class="nav-drawer" id="navDrawer" aria-hidden="true">
     <a href="https://humans.tech/">Home</a>
