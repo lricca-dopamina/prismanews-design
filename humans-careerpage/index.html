@@ -201,8 +201,10 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .man-spline.no3d canvas{display:none}
 .man-spline.no3d .man-fallback{display:flex}
 @media(max-width:900px){
-  #manifesto .w{grid-template-columns:1fr}
-  .man-spline{height:340px;margin-top:-12px}
+  #manifesto{padding:46px 0 18px}
+  #manifesto .w{grid-template-columns:1fr;gap:16px}
+  .man-spline{height:320px;margin-top:0}
+  .man-scroll{padding:4px 0 0}
   .man-spline canvas{touch-action:pan-y}   /* il dito scrolla la pagina: niente drag che blocca lo scroll */
   /* linee di sfondo STATICHE su mobile: via i filtri SVG pesanti e l'animazione (causa lag/flashing) */
   .bs{filter:none!important;animation:none!important;opacity:1}
