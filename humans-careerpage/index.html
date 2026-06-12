@@ -3286,22 +3286,13 @@ document.querySelectorAll('.nsec-marquee').forEach(sc => {
 (function(){
   const el = document.querySelector('.archi');
   if(!el) return;
+  // asterisco centrale SEMPRE visibile: niente piu cancella/ridisegna (su Safari lasciava l'asterisco sparito).
+  // Il loop ora e solo: piano → isometrico → 3 asterischi → piano.
   const draw = el.querySelector('.ac-draw');
-  let L = 0;
-  if(draw){ L = draw.getTotalLength() || 120; draw.style.strokeDasharray = L; draw.style.strokeDashoffset = L; }
+  if(draw){ draw.style.strokeDasharray = 'none'; draw.style.strokeDashoffset = '0'; }
   const seq = [['s0',2100],['s1',2400],['s2',1900],['s3',5000]];
-  let i = 0, primed = false, off = L;   // off: offset MONOTÒNO (sempre decrescente) → nessuno snap alla ripartenza
-  // dashoffset pilotato via rAF (NON via transizione CSS): Safari/WebKit non anima le transizioni di
-  // stroke-dashoffset → scattava. Con rAF + offset monotòno il tratto si cancella/ridisegna fluido, senza salti.
-  let raf = null;
+  let i = 0;
   const easeIO = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-  function tweenOff(to, dur){
-    if(!draw) return;
-    if(raf) cancelAnimationFrame(raf);
-    const from = parseFloat(draw.style.strokeDashoffset) || 0; let start = null;   // riparte SEMPRE dalla posizione attuale → niente scatti
-    function fr(ts){ if(start==null) start=ts; const p=Math.min(1,(ts-start)/dur); draw.style.strokeDashoffset=(from+(to-from)*easeIO(p)).toFixed(2); raf = p<1 ? requestAnimationFrame(fr) : null; }
-    raf = requestAnimationFrame(fr);
-  }
   // ── iso-tilt + spread dei 3 asterischi pilotati da rAF con easing ease-in-out (NON transizioni CSS, che Safari non anima sugli SVG) ──
   const stage = el.querySelector('.ac-stage'), tilt = el.querySelector('.ac-tilt');
   const acTop = el.querySelector('.ac-top'), acBot = el.querySelector('.ac-bot');
@@ -3325,13 +3316,6 @@ document.querySelectorAll('.nsec-marquee').forEach(sc => {
     el.setAttribute('class','archi '+c);
     setIso((c === 's2' || c === 's3') ? 1 : 0);   // tilt iso su s2/s3
     setSpr((c === 's3') ? 1 : 0);                  // i 3 asterischi separati solo su s3
-    if(draw){
-      // offset monotòno: ogni mezzo giro (cancella / ridisegna) prosegue nello STESSO verso (−L), mai uno snap.
-      // -L è visivamente identico a 0+2L → cucitura invisibile, ridisegno fluido (come desktop).
-      if(c === 's1'){ off -= L; tweenOff(off, 1900); }             // ridisegna
-      else if(c === 's0' && primed){ off -= L; tweenOff(off, 1900); }  // cancella
-      if(c === 's3') primed = true;
-    }
     const d = seq[i][1];
     i = (i+1) % seq.length;
     setTimeout(step, d);
