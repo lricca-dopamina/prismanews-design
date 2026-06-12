@@ -202,7 +202,7 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .man-spline.no3d .man-fallback{display:flex}
 @media(max-width:900px){
   #manifesto .w{grid-template-columns:1fr}
-  .man-spline{height:500px}
+  .man-spline{height:440px}
   .man-spline canvas{touch-action:pan-y}   /* il dito scrolla la pagina: niente drag che blocca lo scroll */
   /* linee di sfondo STATICHE su mobile: via i filtri SVG pesanti e l'animazione (causa lag/flashing) */
   .bs{filter:none!important;animation:none!important;opacity:1}
@@ -1070,7 +1070,7 @@ footer>.w{padding:0}
   /* HERO: foto sotto il testo e SOPRA le stat · le altre 2 foto entrano sopra in swap */
   #hero{justify-content:flex-start}
   .h-in{order:1;padding-top:112px}
-  .hp-wrap{order:2;display:flex;justify-content:center;align-items:flex-start;gap:16px;width:100%;padding:8px 18px 0}
+  .hp-wrap{order:2;display:flex;justify-content:center;align-items:flex-start;gap:16px;width:100%;padding:8px 18px 0;margin-bottom:42px}
   .h-st{order:3}
   .h-wave{order:4}
   .hp-slot{position:relative;width:44%;max-width:200px;aspect-ratio:3/4;flex:none}
@@ -3651,7 +3651,7 @@ if (canvas && _glOK) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.42 : 1.65));   // mobile: grande ma dentro lo schermo
+  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.62 : 1.65));   // mobile: dentro lo schermo, non tocca i bordi
 
   function envTexture(){
     const c=document.createElement('canvas'); c.width=512; c.height=256;
