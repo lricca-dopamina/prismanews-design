@@ -807,11 +807,11 @@ footer>.w{padding:0}
 .archi .ac-cstr{opacity:0;transition:opacity .7s ease}
 .archi.s0 .ac-cstr,.archi.s1 .ac-cstr{opacity:.5}
 .archi .ac-cstr line,.archi .ac-cstr circle,.archi .ac-cstr rect{stroke:rgba(220,217,255,.4);stroke-width:1;fill:none;stroke-dasharray:4 5}
-.archi .ac-stage{transform-box:view-box;transform-origin:220px 220px;transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
+.archi .ac-stage{transform-box:view-box;transform-origin:220px 220px;transform:rotate(0deg);transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
 .archi.s2 .ac-stage,.archi.s3 .ac-stage{transform:rotate(45deg)}
 /* la scala iso (non uniforme) sta su un gruppo SEPARATO: rotate e scaleY non combinati su un solo
    elemento → niente decomposizione-matrice diversa fra Blink (desktop) e WebKit (iPhone): ritorno identico */
-.archi .ac-tilt{transform-box:view-box;transform-origin:220px 220px;transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
+.archi .ac-tilt{transform-box:view-box;transform-origin:220px 220px;transform:scale(1,1);transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
 .archi.s2 .ac-tilt,.archi.s3 .ac-tilt{transform:scale(1,.55)}
 /* anelli concentrici (dentro ac-stage -> tilt iso come gli asterischi), solo fase iso */
 .archi .ac-rings{opacity:0;transition:opacity 1s ease .25s}
@@ -843,7 +843,7 @@ footer>.w{padding:0}
 .ac-as{fill:none;stroke:#dcd9ff;stroke-width:1.1;stroke-linecap:round}
 .archi.s3 .ac-as{fill:rgba(220,217,255,.08)}
 .ac-lvl{transform-box:view-box;transform-origin:220px 220px;transition:transform 1.4s cubic-bezier(.4,0,.2,1),opacity 1.2s}
-.ac-top,.ac-bot{opacity:0}
+.ac-top,.ac-bot{opacity:0;transform:translateY(0)}
 .archi.s3 .ac-top{opacity:.5;transform:translateY(-128px)}
 .archi.s3 .ac-bot{opacity:.5;transform:translateY(128px)}
 /* copie sdoppiate: tratto più chiaro/sottile */
