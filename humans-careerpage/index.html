@@ -3248,24 +3248,28 @@ document.querySelectorAll('.nsec-marquee').forEach(sc => {
   if(!el) return;
   const draw = el.querySelector('.ac-draw');
   let L = 0;
-  if(draw){ L = draw.getTotalLength(); draw.style.strokeDasharray = L; draw.style.strokeDashoffset = L; draw.style.transition = 'stroke-dashoffset 2.1s ease'; }
+  if(draw){ L = draw.getTotalLength() || 120; draw.style.strokeDasharray = L; draw.style.strokeDashoffset = L; }
   const seq = [['s0',2100],['s1',2400],['s2',1900],['s3',5000]];
-  // offset monotòno decrescente: ogni mezzo giro (disegna / cancella) prosegue
-  // nello stesso verso → niente "cancella e riparte", e il ridisegno avviene
-  // dal lato opposto. -L e L sono visivamente identici (tratto nascosto) → loop senza salti.
   let i = 0, primed = false;
-  function setOff(v, instant){
+  // dashoffset pilotato via rAF (NON via transizione CSS): Safari/WebKit non anima le transizioni di
+  // stroke-dashoffset → scattava (spariva e riappariva). Con rAF il tratto si cancella/ridisegna fluido ovunque.
+  let raf = null;
+  const easeIO = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+  function setOffInstant(v){ if(!draw) return; if(raf){cancelAnimationFrame(raf);raf=null;} draw.style.strokeDashoffset = v; }
+  function tweenOff(to, dur){
     if(!draw) return;
-    if(instant){ draw.style.transition = 'none'; draw.style.strokeDashoffset = v; void draw.getBBox(); draw.style.transition = 'stroke-dashoffset 2.1s ease'; }
-    else draw.style.strokeDashoffset = v;
+    if(raf) cancelAnimationFrame(raf);
+    const from = parseFloat(draw.style.strokeDashoffset) || 0; let start = null;
+    function fr(ts){ if(start==null) start=ts; const p=Math.min(1,(ts-start)/dur); draw.style.strokeDashoffset=(from+(to-from)*easeIO(p)).toFixed(2); raf = p<1 ? requestAnimationFrame(fr) : null; }
+    raf = requestAnimationFrame(fr);
   }
   function step(){
     const c = seq[i][0];
     el.setAttribute('class','archi '+c);
     if(draw){
       // -L ≡ L (entrambi nascosti): snap invisibile poi disegno → cucitura sempre chiusa a offset 0
-      if(c === 's1'){ setOff(L, true); setOff(0, false); }
-      else if(c === 's0' && primed){ setOff(-L, false); } // cancella proseguendo nello stesso verso
+      if(c === 's1'){ setOffInstant(L); tweenOff(0, 2100); }       // ridisegna in un unico tratto
+      else if(c === 's0' && primed){ tweenOff(-L, 2100); }         // cancella proseguendo nello stesso verso
       if(c === 's3') primed = true;
     }
     const d = seq[i][1];
