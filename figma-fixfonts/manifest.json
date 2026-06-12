@@ -1,0 +1,7 @@
+{
+  "name": "Fix Fonts — Humans.tech (Dopamina)",
+  "id": "dopamina-humans-fixfonts",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"]
+}

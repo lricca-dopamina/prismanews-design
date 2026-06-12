@@ -1,0 +1,15 @@
+{
+  "name": "Humans.tech — Lavora con noi (Dopamina)",
+  "id": "dopamina-humans-careerpage-builder",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": [
+      "https://humans.tech",
+      "https://images.unsplash.com",
+      "http://localhost:8766"
+    ],
+    "reasoning": "Carica foto, loghi e badge reali da humans.tech e immagini placeholder da Unsplash per ricostruire il mockup."
+  }
+}

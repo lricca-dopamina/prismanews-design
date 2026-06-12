@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+**/.DS_Store
+
+# Tooling / config locale
+.claude/
+**/.claude/
+
+# Artefatti / asset non usati
+humans-careerpage.zip
+_humans_unused_assets/
+
+# Backup locale (la storia git e gia il backup)
+humans-careerpage Backup/
