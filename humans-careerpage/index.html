@@ -70,7 +70,7 @@ img{display:block;max-width:100%}
 /* su sezioni blu: cursore bianco a bassa opacità (così resta visibile) */
 .cur.light{background:rgba(255,255,255,.65);box-shadow:0 0 16px rgba(255,255,255,.35)}
 .cur.light.big{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.85);box-shadow:0 0 24px rgba(255,255,255,.25)}
-@media(hover:none){.cur{display:none}}
+@media(hover:none),(pointer:coarse){.cur{display:none}}
 
 /* ════════ REVEAL ════════ */
 [data-a]{opacity:0;transition:opacity 1s var(--s),transform 1s var(--s);will-change:opacity,transform}
@@ -1143,7 +1143,7 @@ footer>.w{padding:0}
   .campo-sticky{position:static;height:auto;overflow:visible;display:block;cursor:auto;align-items:stretch}
   .campo-inner{display:block;padding:0 16px;max-width:none}
   .campo-h{font-size:clamp(24px,6.4vw,32px);margin-bottom:10px}
-  .campo-left{will-change:auto;transform:none!important;opacity:1!important;margin-bottom:30px}
+  .campo-left{will-change:auto;transform:none!important;opacity:1!important;margin-bottom:48px}
   .campo-right{height:auto;display:block;transform:none!important}
   .campo-deck{position:static;height:auto;clip-path:none}
   .campo-canvas{position:static;height:auto}
