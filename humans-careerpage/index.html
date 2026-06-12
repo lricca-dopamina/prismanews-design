@@ -1113,19 +1113,22 @@ footer>.w{padding:0}
   .h-st{order:3}
   .h-wave{order:4}
   .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:auto;left:0;top:0;width:54%;height:auto!important;aspect-ratio:3/4;border-radius:16px;box-shadow:0 18px 46px rgba(5,6,32,.55);opacity:0;animation:none!important;will-change:transform,opacity}
-  /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
-  /* lead-in: il testo introduttivo scorre via per primo (JS), poi il box+grafiche salgono in alto e si ingrandiscono */
-  .campo-sticky{align-items:center;cursor:pointer}   /* tocca per passare alla foto successiva */
-  .campo-inner{grid-template-columns:1fr;gap:24px;padding:0 16px;align-items:center}
-  .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
-  .campo-b{font-size:13.5px;line-height:1.5;max-width:none}
-  .campo-left{will-change:transform,opacity}
-  .campo-right{height:auto;display:flex;flex-direction:column;gap:14px;will-change:transform}
-  /* deck ritagliato SOLO in alto (no sbordo sul testo); ombra visibile sotto/ai lati */
-  .campo-deck{height:160px;clip-path:inset(-26px -70px -80px -70px)}   /* le card dietro vanno giu (JS), quindi qui l'ombra del box in alto e libera */
-  .campo-pin{height:520vh}   /* scroll molto piu lungo: ogni slide resta a lungo (lead-in + 3 fasi graduali) */
-  .campo-canvas{height:300px;flex:none}   /* grafiche piu grandi */
-  .campo-deck .dc{padding:16px 20px;background:#15123a;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(255,255,255,.12)}   /* opaco: la card davanti copre quelle dietro (niente testo sovrapposto) */
+  /* CAMPO mobile: NIENTE pin/scroll-pin. Ogni box di testo (dc) con la sua grafica (cv) uno SOTTO l'altro nello scroll (JS fa l'interleave dc/cv) */
+  .campo-pin{height:auto}
+  .campo-sticky{position:static;height:auto;overflow:visible;display:block;cursor:auto;align-items:stretch}
+  .campo-inner{display:block;padding:0 16px;max-width:none}
+  .campo-h{font-size:clamp(24px,6.4vw,32px);margin-bottom:10px}
+  .campo-left{will-change:auto;transform:none!important;opacity:1!important;margin-bottom:30px}
+  .campo-right{height:auto;display:block;transform:none!important}
+  .campo-deck{position:static;height:auto;clip-path:none}
+  .campo-canvas{position:static;height:auto}
+  /* box di testo: statici, pieni, uno sotto l'altro */
+  .dc.m-static{position:static!important;left:auto;right:auto;top:auto;opacity:1!important;transform:none!important;
+    background:#15123a;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px 22px;margin-bottom:14px;
+    backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 14px 40px rgba(0,0,0,.34)}
+  /* grafica associata: box statico sotto il rispettivo testo (gli elementi interni restano posizionati nel box) */
+  .cv.m-static{position:relative!important;opacity:1!important;height:300px;margin:0 0 38px;display:block}
+  #cv3.m-static{display:flex;flex-direction:column;justify-content:center}
   #cv2 .cv-code{right:40%}
   /* CRESCERE: titolo che entra senza tagli */
   .cres-title{padding:0 20px;margin-bottom:26px}
@@ -3000,6 +3003,29 @@ onScroll();
   }
 
   const smooth = t => t * t * (3 - 2 * t);                        // smoothstep
+
+  // ── MOBILE: niente pin. Ogni box di testo (dc) seguito dalla sua grafica (cv), uno SOTTO l'altro nello scroll ──
+  if(IS_MOBILE){
+    const cr = document.getElementById('campoRight');
+    for(let k=0;k<N;k++){
+      decks[k].classList.add('m-static');
+      canvas[k].classList.add('m-static','play');               // 'play' = avvia le animazioni interne (foto float, loghi)
+      canvas[k].style.opacity = '1';                             // anche inline (il typer controlla cv2.style.opacity)
+      if(cr){ cr.appendChild(decks[k]); cr.appendChild(canvas[k]); }   // interleave: dc1,cv1, dc2,cv2, dc3,cv3
+    }
+    const left = document.querySelector('.campo-left'); if(left){ left.style.transform='none'; left.style.opacity='1'; }
+    if(cr) cr.style.transform='none';
+    // avvia typer (cv2) e count-up (cv3) quando la grafica entra in viewport
+    if('IntersectionObserver' in window){
+      const trig = new IntersectionObserver(es=>{ es.forEach(e=>{ if(!e.isIntersecting) return;
+        if(e.target.id==='cv2' && window.__startTyper) window.__startTyper();
+        if(e.target.id==='cv3') countUp();
+        trig.unobserve(e.target);
+      }); }, {threshold:0.25});
+      trig.observe(canvas[1]); trig.observe(canvas[2]);
+    } else { if(window.__startTyper) window.__startTyper(); countUp(); }
+    return;   // su mobile NON aggancio render/scroll-pin/lead-in/tap
+  }
 
   function render(){
     const rect = pin.getBoundingClientRect();
