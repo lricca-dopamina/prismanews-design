@@ -103,7 +103,8 @@ body.top-hidden nav{transform:translateY(-180px)}
 /* navbar stile humans.tech: barra piena a tutta larghezza, fissa, auto-hide scrollando (JS) */
 nav{position:fixed;top:0;left:0;right:0;z-index:700;padding:0;transition:transform .4s var(--s)}
 nav.nav-hidden{transform:translateY(-105%)}
-.ni{max-width:none;margin:0;height:72px;display:flex;align-items:center;background:#fff;border:none;border-radius:0;padding:0 8px 0 40px;box-shadow:0 1px 0 rgba(5,6,32,.08)}
+/* navbar = pillola talco flottante (come humans.tech, sia desktop che mobile) */
+.ni{max-width:1368px;width:calc(100% - 80px);margin:24px auto 0;height:70px;display:flex;align-items:center;background:#efefef;border:none;border-radius:18px;padding:0 16px 0 32px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
 .nlo img{height:35px;display:block}.nlo-fb{font-weight:500;font-size:17px;letter-spacing:-.02em;color:var(--dk)}
 .nlo-aster{display:none}
 .nm{display:flex;margin-left:64px;font-family:var(--fm);font-size:14px;font-weight:400;letter-spacing:0;color:#35415B}.nm a{transition:color .2s;color:#35415B;padding:0 12px;white-space:nowrap}.nm a:hover{color:#646CFD}
@@ -1091,7 +1092,7 @@ footer>.w{padding:0}
   .nc{display:none}
   nav{box-shadow:none}
   nav.nav-hidden{transform:translateY(-175%)}
-  .ni{margin:24px 16px 0;height:60px;background:#efefef;border:none;border-radius:18px;padding:0 14px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+  .ni{width:auto;margin:24px 16px 0;height:60px;background:#efefef;border:none;border-radius:18px;padding:0 14px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
   .nlo img{display:none}
   .nlo-aster{display:block;width:auto;height:30px;color:#4437F3}
   /* hamburger Impreza style_hamburger_1 (regole verbatim) */
