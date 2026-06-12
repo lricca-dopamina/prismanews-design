@@ -3782,10 +3782,10 @@ if (canvas && _glOK) {
 
   const isMobile = matchMedia('(pointer: coarse)').matches || innerWidth < 768;
   const lowCore  = (navigator.hardwareConcurrency || 8) <= 4;
-  const dprCap   = isMobile ? (lowCore ? 1.25 : 1.5) : 1.4;   // mobile: pixel ratio contenuto = fluido, niente scatti
+  const dprCap   = isMobile ? (lowCore ? 1.25 : 1.5) : 1.75;   // desktop: MSAA + dpr piu alto = bordi piu netti. mobile: MSAA con dpr contenuto (transmission gia pesante)
   const motionOK = !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:!isMobile, alpha:true, powerPreference:'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:'high-performance' });
   // se la GPU perde il contesto (crash su device borderline) mostra il fallback invece di restare nero
   canvas.addEventListener('webglcontextlost', e=>{ e.preventDefault(); const _w=canvas.closest('.man-spline'); if(_w) _w.classList.add('no3d'); }, false);
   renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
@@ -3795,7 +3795,7 @@ if (canvas && _glOK) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.58 : 1.65));   // mobile: leggermente piu grande (stesse distanze)
+  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.46 : 1.65));   // mobile: leggermente piu grande (solo zoom camera, layout invariato)
 
   function envTexture(){
     const c=document.createElement('canvas'); c.width=512; c.height=256;
