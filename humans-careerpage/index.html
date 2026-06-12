@@ -1221,12 +1221,12 @@ footer>.w{padding:0}
   .cv-met-lbl{font-size:13px}
   /* TUTTE le CTA identiche: SQUADRATE (rounded-rect), asterisco in quadrato arrotondato, testo su UNA riga, CENTRATE */
   .h-ctas{padding:0 20px}
-  .btn.bv,.aw-btn{display:flex!important;align-items:center;gap:12px;width:fit-content;max-width:100%;margin-left:auto!important;margin-right:auto!important;align-self:center!important;padding:0 26px 0 0;background:rgba(255,255,255,.12);color:#fff;border-radius:14px;overflow:hidden;font-family:var(--fm);font-weight:500;font-size:14.5px}
-  .btn.bv:hover,.aw-btn:hover{transform:none;box-shadow:none}
-  .aw-btn::before{display:none}
-  .btn.bv .bv-ico,.aw-btn .aw-btn-ico{display:flex;align-items:center;justify-content:center;width:52px;height:52px;flex:none;background:var(--g);border-radius:12px}
-  .btn.bv .bv-ico svg,.aw-btn .aw-btn-ico svg{width:22px;height:22px;color:var(--v)}
-  .btn.bv .bv-lb,.aw-btn .aw-btn-lb{white-space:nowrap;text-align:left;padding-right:0;color:#fff}
+  /* CTA mobile: box pieni colorati, niente icona/asterisco, testo centrato */
+  .btn.bv,.aw-btn,.pos-cta-btn{display:flex!important;align-items:center;justify-content:center;gap:0;width:fit-content;max-width:100%;margin-left:auto!important;margin-right:auto!important;align-self:center!important;padding:15px 30px;background:var(--v)!important;color:#fff;border:none;border-radius:14px;overflow:hidden;font-family:var(--fm);font-weight:500;font-size:14.5px}
+  .btn.bv:hover,.aw-btn:hover,.pos-cta-btn:hover{transform:none;box-shadow:none;background:var(--v)!important}
+  .aw-btn::before,.pos-cta-btn::before{display:none!important}
+  .btn.bv .bv-ico,.aw-btn .aw-btn-ico,.pos-cta-btn .ib{display:none!important}
+  .btn.bv .bv-lb,.aw-btn .aw-btn-lb,.pos-cta-btn .aw-btn-lb{white-space:nowrap;text-align:center;padding:0;color:#fff}
   /* griglia cerchi "Team snelli" centrata */
   .dotcluster{margin-inline:auto}
   /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
