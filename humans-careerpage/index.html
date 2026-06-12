@@ -1109,17 +1109,17 @@ footer>.w{padding:0}
   .h-wave{order:4}
   .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:auto;left:0;top:0;width:54%;height:auto!important;aspect-ratio:3/4;border-radius:16px;box-shadow:0 18px 46px rgba(5,6,32,.55);opacity:0;animation:none!important;will-change:transform,opacity}
   /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
-  /* contenuto COMPATTO così resta centrato con aria sopra/sotto (non schiacciato in basso sotto l'header) */
-  .campo-sticky{align-items:center}
+  /* lead-in: il testo introduttivo scorre via per primo (JS), poi il box+grafiche salgono in alto e si ingrandiscono */
+  .campo-sticky{align-items:center;cursor:pointer}   /* tocca per passare alla foto successiva */
   .campo-inner{grid-template-columns:1fr;gap:24px;padding:0 16px;align-items:center}
   .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
   .campo-b{font-size:13.5px;line-height:1.5;max-width:none}
-  .campo-right{height:auto;display:flex;flex-direction:column;gap:12px}
-  /* deck ritagliato SOLO in alto (no sbordo sul testo); ombra visibile sotto/ai lati. tap → avanza */
-  .campo-deck{height:150px;clip-path:inset(-26px -70px -80px -70px)}   /* le card dietro vanno giu (JS), quindi qui l'ombra del box in alto e libera */
-  .campo-pin{height:215vh}   /* meno "zona morta" di scroll sull'ultima card */
-  .campo-canvas{height:204px;flex:none}
-  .campo-sticky{cursor:pointer}   /* mobile: tocca per passare alla foto successiva */
+  .campo-left{will-change:transform,opacity}
+  .campo-right{height:auto;display:flex;flex-direction:column;gap:14px;will-change:transform}
+  /* deck ritagliato SOLO in alto (no sbordo sul testo); ombra visibile sotto/ai lati */
+  .campo-deck{height:160px;clip-path:inset(-26px -70px -80px -70px)}   /* le card dietro vanno giu (JS), quindi qui l'ombra del box in alto e libera */
+  .campo-pin{height:300vh}   /* scroll piu ampio: lead-in + 3 fasi piu graduali */
+  .campo-canvas{height:300px;flex:none}   /* grafiche piu grandi */
   .campo-deck .dc{padding:16px 20px;background:#15123a;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(255,255,255,.12)}   /* opaco: la card davanti copre quelle dietro (niente testo sovrapposto) */
   #cv2 .cv-code{right:40%}
   /* CRESCERE: titolo che entra senza tagli */
@@ -2911,7 +2911,21 @@ onScroll();
     const scrollable = pin.offsetHeight - vh;
     if(scrollable <= 0) return;
     const raw = clamp((-rect.top) / scrollable, 0, 1);
-    const p = clamp(raw * N, 0, N - 0.0001);                      // posizione continua 0..N
+    let p;
+    if(IS_MOBILE){
+      // LEAD-IN: nel primo tratto di scroll il testo intro scorre via e il box+grafiche salgono in alto
+      // e si ingrandiscono; SOLO dopo iniziano le fasi (animazione piu ampia e tutta in alto/centro).
+      const LEAD = 0.26;
+      const ls = smooth(clamp(raw / LEAD, 0, 1));                  // 0..1 avanzamento lead-in
+      const left = pin.querySelector('.campo-left');
+      const right = pin.querySelector('.campo-right');
+      if(left){ left.style.transform = 'translateY(' + (-70 * ls).toFixed(1) + 'px)'; left.style.opacity = (1 - ls).toFixed(3); }
+      if(right){ right.style.transform = 'translateY(' + (-235 * ls).toFixed(1) + 'px)'; }   // sale verso l'alto man mano che il testo svanisce
+      const after = clamp((raw - LEAD) / (1 - LEAD), 0, 1);        // dopo il lead-in: 0..1 → fasi
+      p = clamp(after * N, 0, N - 0.0001);
+    } else {
+      p = clamp(raw * N, 0, N - 0.0001);                          // posizione continua 0..N
+    }
 
     // Modello "hold + swap": la card resta in primo piano per quasi tutta la fase,
     // poi card E contenuto cambiano INSIEME nella finestra finale.
@@ -2993,9 +3007,12 @@ onScroll();
       const rect = pin.getBoundingClientRect();
       const pinTop = window.scrollY + rect.top;
       const raw = clamp((-rect.top) / scrollable, 0, 1);
-      const cur = Math.floor(raw * N + 0.001);
+      const LEAD = 0.26;                                        // stesso lead-in del render()
+      const after = clamp((raw - LEAD) / (1 - LEAD), 0, 1);
+      const cur = Math.floor(after * N + 0.001);
       const targetPhase = cur >= N - 1 ? 0 : cur + 1;          // ultima → torna alla prima
-      const targetRaw = clamp((targetPhase + 0.35) / N, 0, 1); // 0.35 = card nuova ben in primo piano
+      const afterTarget = clamp((targetPhase + 0.35) / N, 0, 1); // 0.35 = card nuova ben in primo piano
+      const targetRaw = LEAD + afterTarget * (1 - LEAD);
       const targetY = pinTop + targetRaw * scrollable;
       if(window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(targetY, {duration:0.85});
       else window.scrollTo({top: targetY, behavior:'smooth'});
