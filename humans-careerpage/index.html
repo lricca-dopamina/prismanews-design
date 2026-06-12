@@ -1139,15 +1139,15 @@ footer>.w{padding:0}
   /* card team: FLIP su tap → fronte solo foto (testo percorso nascosto), retro con nome+descrizione+ruolo */
   .gc.has-flip{overflow:visible;background:transparent;perspective:1300px}
   .gc.has-flip::after{display:none}
-  .gc.has-flip .gc-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .72s cubic-bezier(.45,.05,.2,1)}
+  .gc.has-flip .gc-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .72s cubic-bezier(.45,.05,.2,1)}
   .gc.has-flip.flipped .gc-flip{transform:rotateY(180deg)}
   .gc.has-flip .gc-face{position:absolute;inset:0;border-radius:24px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
   .gc.has-flip .gc-front .gc-info{display:none}
   .gc.has-flip .gc-front::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(5,6,32,.74),transparent 42%);z-index:1;pointer-events:none}
   .gc.has-flip .gc-back{transform:rotateY(180deg);background:linear-gradient(165deg,#211f52,#0a0a24 78%);display:flex;flex-direction:column;justify-content:center;padding:28px 24px;color:#fff}
-  /* UN SOLO asterisco, sopra il flip (fuori dalle due facce): resta sempre fermo in alto a destra,
-     non ruota con la card → niente switch/teletrasporto destra↔sinistra quando si rigira */
-  .gc.has-flip>.gc-ast{z-index:6}
+  /* l'asterisco sta su ENTRAMBE le facce (gira INSIEME alla card). Il salto destra↔sinistra era il
+     backface-visibility che trapelava su iOS: risolto con -webkit-transform-style + backface-visibility sulle facce */
+  .gc.has-flip .gc-face .gc-ast{z-index:3}
   .gc-bk-name{font-size:22px;font-weight:600;letter-spacing:-.01em;margin-bottom:16px;line-height:1.12}
   .gc-bk-desc{font-size:15px;line-height:1.58;color:rgba(255,255,255,.88)}
   .gc-bk-role{margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.16);font-family:var(--fm);font-size:12.5px;letter-spacing:.04em;color:var(--dv)}
@@ -2496,16 +2496,14 @@ document.addEventListener('mouseout', e=>{
     if(sep>=0){ name=nameRole.slice(0,sep).trim(); role=nameRole.slice(sep+1).trim(); }
     const flip=document.createElement('div'); flip.className='gc-flip';
     const front=document.createElement('div'); front.className='gc-face gc-front';
-    while(card.firstChild) front.appendChild(card.firstChild);
-    const ast=front.querySelector('.gc-ast');   // asterisco UNICO: lo estraggo, resta sopra il flip (sempre top-right)
+    while(card.firstChild) front.appendChild(card.firstChild);   // foto + asterisco (resta sul fronte, gira con la card)
     const hint=document.createElement('div'); hint.className='gc-hint';
     hint.innerHTML='<span class="gc-hint-n">'+esc(name)+'</span><span class="gc-hint-t">Tocca per il percorso →</span>';
     front.appendChild(hint);
     const back=document.createElement('div'); back.className='gc-face gc-back';
-    back.innerHTML='<div class="gc-bk-name">'+esc(name)+'</div><div class="gc-bk-desc">'+esc(desc)+'</div>'+(role?'<div class="gc-bk-role">'+esc(role)+'</div>':'');
+    back.innerHTML=AST+'<div class="gc-bk-name">'+esc(name)+'</div><div class="gc-bk-desc">'+esc(desc)+'</div>'+(role?'<div class="gc-bk-role">'+esc(role)+'</div>':'');   // asterisco anche sul retro
     flip.appendChild(front); flip.appendChild(back);
     card.appendChild(flip);
-    if(ast) card.appendChild(ast);   // sopra entrambe le facce → fermo in alto a destra, niente teletrasporto
     card.classList.add('has-flip');
     // l'interazione (tap→gira+centra+blocca auto-scroll, scroll→sblocca+rigira) è gestita nel carosello .gc-row
   });
