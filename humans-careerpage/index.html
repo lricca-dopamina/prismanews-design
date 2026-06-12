@@ -4140,7 +4140,8 @@ if (canvas && _glOK) {
     canvas.addEventListener('pointercancel', endDrag);
   }
 
-  const clock=new THREE.Clock(); let running=false, _ftick=0;
+  const clock=new THREE.Clock(); let running=false, _ftick=0, tAuto=0;
+  const ROT_FRONT_X=1.5708;   // inclinazione che presenta la faccia dell'asterisco alla camera
   function kick(){ if(onScreen && visible && !running){ running=true; clock.start(); loop(); } }
   function loop(){
     if(!onScreen || !visible){ running=false; return; }
@@ -4154,7 +4155,14 @@ if (canvas && _glOK) {
         model.rotation.y += velY; model.rotation.x += velX;
         velX*=0.94; velY*=0.94;
       } else {
-        model.rotation.y += dt*VEL_Y*spinMul; model.rotation.x += dt*VEL_X*spinMul; model.rotation.z += dt*VEL_Z*spinMul;
+        // moto "girandola": rotazione continua NEL PIANO della faccia (z) → l'asterisco resta frontale,
+        // + oscillazione leggera su x/y per la profondita' 3D (mai di taglio). Dopo il drag rientra morbido (lerp).
+        tAuto += dt;
+        const tx = ROT_FRONT_X + Math.sin(tAuto*0.5)*0.18;
+        const ty = Math.sin(tAuto*0.35)*0.28;
+        model.rotation.x += (tx - model.rotation.x)*0.03;
+        model.rotation.y += (ty - model.rotation.y)*0.03;
+        model.rotation.z += dt*VEL_Y*spinMul;
       }
     }
     if(isMobile || (_ftick=(_ftick+1)&1)===0) renderer.render(scene,camera);   // mobile: ogni frame (rotazione fluida); desktop: 1 sì 1 no
