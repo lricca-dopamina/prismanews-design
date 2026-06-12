@@ -3651,7 +3651,7 @@ if (canvas && _glOK) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.85 : 1.65));   // mobile: piu piccolo, ben dentro lo schermo
+  camera.position.set(0, 0, DIMENSIONE * (isMobile ? 1.72 : 1.65));   // mobile: leggermente piu piccolo del desktop
 
   function envTexture(){
     const c=document.createElement('canvas'); c.width=512; c.height=256;
@@ -3675,10 +3675,10 @@ if (canvas && _glOK) {
   const glassMat = isMobile
     // mobile: vetro "finto" senza transmission (nessun render-pass extra) → gira liscio sulle GPU mobili
     ? new THREE.MeshPhysicalMaterial({
-        color:new THREE.Color(COLORE_VETRO), metalness:0.0, roughness:0.2,
+        color:new THREE.Color(0x4437f3), metalness:0.0, roughness:0.2,
         transparent:true, opacity:0.62, ior:IOR, reflectivity:0.5,
-        iridescence:0.35, iridescenceIOR:1.3,
-        sheen:1.0, sheenColor:new THREE.Color(FRESNEL_COLORE), sheenRoughness:0.35,
+        iridescence:0.18, iridescenceIOR:1.3,
+        sheen:1.0, sheenColor:new THREE.Color(0x3a4cff), sheenRoughness:0.35,
         clearcoat:0.8, clearcoatRoughness:0.08,
         attenuationColor:new THREE.Color(ATTENUAZIONE), envMapIntensity:1.0
       })
