@@ -154,8 +154,14 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 @keyframes floatP{0%,100%{transform:translateY(0) rotate(var(--rot,0))}50%{transform:translateY(-22px) rotate(var(--rot,0))}}
 /* hero mobile: le foto entrano come carte di un mazzo (dall'alto, poi "calate" via in basso), 4 per slot sfasate */
 @keyframes heroDeck{0%{opacity:0;transform:translateY(-28px) rotate(-7deg) scale(.9);z-index:1}4%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);z-index:3}22%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);z-index:3}28%{opacity:0;transform:translateY(36px) rotate(9deg) scale(.94);z-index:1}100%{opacity:0;transform:translateY(-28px) rotate(-7deg) scale(.9);z-index:1}}
-/* hero: ogni foto è una CARTA distinta che viene "calata" sopra la precedente da un angolo (overlap deck), poi resta dietro (loop). Niente scroll interno né fade */
-@keyframes heroStack{0%{transform:translate(20px,-24px) rotate(6deg) scale(.9);z-index:6}9%{transform:translate(0,0) rotate(0deg) scale(1);z-index:6}24%{transform:translate(0,-5px) rotate(0deg) scale(1);z-index:6}25%{transform:translate(0,0) rotate(0deg) scale(1);z-index:2}100%{transform:translate(0,0) rotate(0deg) scale(1);z-index:2}}
+/* hero: ogni foto appare al CENTRO con dolce fade+zoom, copre la precedente, resta sotto mentre la successiva fa lo stesso (loop morbido) */
+@keyframes heroStack{
+  0%{opacity:0;transform:scale(1.07);z-index:6}
+  12%{opacity:1;transform:scale(1);z-index:6}
+  25%{opacity:1;transform:scale(1);z-index:6}
+  26%{opacity:1;transform:scale(1);z-index:2}
+  100%{opacity:1;transform:scale(1);z-index:2}
+}
 /* float dolce del cluster (come desktop) */
 @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 /* card che appaiono dopo un po' */
@@ -1106,11 +1112,11 @@ footer>.w{padding:0}
   .hp-slot{position:relative;width:44%;max-width:200px;aspect-ratio:3/4;flex:none}
   .hp-slot:nth-child(1){transform:rotate(-3deg)}
   .hp-slot:nth-child(2){transform:rotate(3deg)}
-  .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:0;width:100%!important;height:100%!important;border-radius:18px;opacity:1!important;animation-name:heroStack!important;animation-duration:20s!important;animation-timing-function:cubic-bezier(.65,0,.35,1)!important;animation-iteration-count:infinite!important}
+  .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:0;width:100%!important;height:100%!important;border-radius:18px;box-shadow:0 16px 40px rgba(5,6,32,.42);animation-name:heroStack!important;animation-duration:16s!important;animation-timing-function:ease-in-out!important;animation-iteration-count:infinite!important}
   .hp-slot .hero-photo:nth-child(1){animation-delay:0s!important}
-  .hp-slot .hero-photo:nth-child(2){animation-delay:-5s!important}
-  .hp-slot .hero-photo:nth-child(3){animation-delay:-10s!important}
-  .hp-slot .hero-photo:nth-child(4){animation-delay:-15s!important}
+  .hp-slot .hero-photo:nth-child(2){animation-delay:-4s!important}
+  .hp-slot .hero-photo:nth-child(3){animation-delay:-8s!important}
+  .hp-slot .hero-photo:nth-child(4){animation-delay:-12s!important}
   /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
   .campo-inner{grid-template-columns:1fr;gap:44px;padding:0 16px;align-items:center}
   .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
