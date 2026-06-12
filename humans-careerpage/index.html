@@ -241,7 +241,7 @@ nav.nav-hidden{transform:translateY(-105%)}
 @keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(7px);opacity:1}}
 
 /* ════════ 03 · PROGETTI ════════ */
-#progetti{background:linear-gradient(to bottom,var(--v) 5%,var(--dk) 90%);padding:120px 0}
+#progetti{background:linear-gradient(to bottom,var(--v) 5%,var(--dk) 90%);padding:120px 0 64px}
 .prj-top{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:96px;align-items:end}
 @media(max-width:760px){.prj-top{grid-template-columns:1fr;gap:18px;margin-bottom:32px}}
 .prj-h{font-size:clamp(34px,4.5vw,64px);font-weight:500;line-height:1.05;letter-spacing:-.02em}
@@ -1135,6 +1135,7 @@ footer>.w{padding:0}
   .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:auto;left:0;top:0;width:54%;height:auto!important;aspect-ratio:3/4;border-radius:16px;box-shadow:0 18px 46px rgba(5,6,32,.55);opacity:0;animation:none!important;will-change:transform,opacity}
   .hp-wrap .hero-photo img{object-position:center 22%}   /* bias verso l'alto: i volti non vengono tagliati in cima */
   /* CAMPO mobile: NIENTE pin/scroll-pin. Ogni box di testo (dc) con la sua grafica (cv) uno SOTTO l'altro nello scroll (JS fa l'interleave dc/cv) */
+  #campo{padding-top:54px}   /* il titolo viola non resta attaccato al bordo superiore */
   .campo-pin{height:auto}
   .campo-sticky{position:static;height:auto;overflow:visible;display:block;cursor:auto;align-items:stretch}
   .campo-inner{display:block;padding:0 16px;max-width:none}
@@ -3040,16 +3041,19 @@ onScroll();
   const smooth = t => t * t * (3 - 2 * t);                        // smoothstep
 
   // ── MOBILE: niente pin. Ogni box di testo (dc) seguito dalla sua grafica (cv), uno SOTTO l'altro nello scroll ──
-  if(IS_MOBILE){
-    const cr = document.getElementById('campoRight');
+  let campoMobileDone = false;
+  function setupCampoMobile(){
+    if(campoMobileDone) return;
+    const cr = document.getElementById('campoRight'); if(!cr) return;
+    campoMobileDone = true;
     for(let k=0;k<N;k++){
       decks[k].classList.add('m-static');
       canvas[k].classList.add('m-static','play');               // 'play' = avvia le animazioni interne (foto float, loghi)
       canvas[k].style.opacity = '1';                             // anche inline (il typer controlla cv2.style.opacity)
-      if(cr){ cr.appendChild(decks[k]); cr.appendChild(canvas[k]); }   // interleave: dc1,cv1, dc2,cv2, dc3,cv3
+      cr.appendChild(decks[k]); cr.appendChild(canvas[k]);       // interleave: dc1,cv1, dc2,cv2, dc3,cv3
     }
     const left = document.querySelector('.campo-left'); if(left){ left.style.transform='none'; left.style.opacity='1'; }
-    if(cr) cr.style.transform='none';
+    cr.style.transform='none';
     // avvia typer (cv2) e count-up (cv3) quando la grafica entra in viewport
     if('IntersectionObserver' in window){
       const trig = new IntersectionObserver(es=>{ es.forEach(e=>{ if(!e.isIntersecting) return;
@@ -3059,8 +3063,11 @@ onScroll();
       }); }, {threshold:0.25});
       trig.observe(canvas[1]); trig.observe(canvas[2]);
     } else { if(window.__startTyper) window.__startTyper(); countUp(); }
-    return;   // su mobile NON aggancio render/scroll-pin/lead-in/tap
   }
+  const campoIsMobile = () => window.matchMedia('(max-width:760px)').matches;
+  if(campoIsMobile()){ setupCampoMobile(); return; }   // su mobile NON aggancio render/scroll-pin/lead-in/tap
+  // fallback robusto: se al load il viewport risulta mobile (emulazione/resize dopo l'init), esegui comunque l'interleave
+  window.addEventListener('load', () => { if(campoIsMobile()) setupCampoMobile(); });
 
   function render(){
     const rect = pin.getBoundingClientRect();
