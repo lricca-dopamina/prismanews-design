@@ -54,7 +54,7 @@ addEventListener('DOMContentLoaded',function(){
   --ast:path('M50 0 C55 32 68 45 100 50 C68 55 55 68 50 100 C45 68 32 55 0 50 C32 45 45 32 50 0 Z');
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{overflow-x:clip}  /* scroll-behavior gestito da Lenis */
+html{overflow-x:clip;background:var(--v)}  /* scroll-behavior gestito da Lenis · bg violetto = riempie l'overscroll/rubber-band in alto col colore del top (niente piu grigio) */
 body{font-family:var(--f);background:var(--dk);color:var(--w);-webkit-font-smoothing:antialiased;overflow-x:clip;cursor:none}
 @media(hover:none){body{cursor:auto}}
 a{color:inherit;text-decoration:none}
@@ -807,12 +807,11 @@ footer>.w{padding:0}
 .archi .ac-cstr{opacity:0;transition:opacity .7s ease}
 .archi.s0 .ac-cstr,.archi.s1 .ac-cstr{opacity:.5}
 .archi .ac-cstr line,.archi .ac-cstr circle,.archi .ac-cstr rect{stroke:rgba(220,217,255,.4);stroke-width:1;fill:none;stroke-dasharray:4 5}
-.archi .ac-stage{transform-box:view-box;transform-origin:220px 220px;transform:rotate(0deg);transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
-.archi.s2 .ac-stage,.archi.s3 .ac-stage{transform:rotate(45deg)}
+/* i transform sono pilotati da rAF (inline) in JS: Safari NON anima le transizioni CSS dei transform SVG → scattavano. Niente transition qui. */
+.archi .ac-stage{transform-box:view-box;transform-origin:220px 220px;transform:rotate(0deg);transition:none}
 /* la scala iso (non uniforme) sta su un gruppo SEPARATO: rotate e scaleY non combinati su un solo
    elemento → niente decomposizione-matrice diversa fra Blink (desktop) e WebKit (iPhone): ritorno identico */
-.archi .ac-tilt{transform-box:view-box;transform-origin:220px 220px;transform:scale(1,1);transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
-.archi.s2 .ac-tilt,.archi.s3 .ac-tilt{transform:scale(1,.55)}
+.archi .ac-tilt{transform-box:view-box;transform-origin:220px 220px;transform:scale(1,1);transition:none}
 /* anelli concentrici (dentro ac-stage -> tilt iso come gli asterischi), solo fase iso */
 .archi .ac-rings{opacity:0;transition:opacity 1s ease .25s}
 .archi.s2 .ac-rings,.archi.s3 .ac-rings{opacity:1}
@@ -842,10 +841,8 @@ footer>.w{padding:0}
 .bs-pa{}
 .ac-as{fill:none;stroke:#dcd9ff;stroke-width:1.1;stroke-linecap:round}
 .archi.s3 .ac-as{fill:rgba(220,217,255,.08)}
-.ac-lvl{transform-box:view-box;transform-origin:220px 220px;transition:transform 1.4s cubic-bezier(.4,0,.2,1),opacity 1.2s}
+.ac-lvl{transform-box:view-box;transform-origin:220px 220px;transition:none}
 .ac-top,.ac-bot{opacity:0;transform:translateY(0)}
-.archi.s3 .ac-top{opacity:.5;transform:translateY(-128px)}
-.archi.s3 .ac-bot{opacity:.5;transform:translateY(128px)}
 /* copie sdoppiate: tratto più chiaro/sottile */
 .ac-top .ac-as,.ac-bot .ac-as{stroke:#efeefc;stroke-width:.9}
 .ac-conn{opacity:0;transition:opacity .7s}
@@ -1108,7 +1105,10 @@ footer>.w{padding:0}
   .h-s:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}
   /* HERO: le foto sono pilotate da JS (heroTossMobile) — partono nascoste, JS le "lancia" una alla volta da fuori schermo verso posizioni diverse, ognuna SOPRA le precedenti (z-index reale) */
   #hero{justify-content:flex-start}
-  .h-in{order:1;padding-top:112px}
+  /* più aria tra la navbar e la pill "30 posizioni"; testo titolo più gestibile e non attaccato ai bordi */
+  .h-in{order:1;padding:148px 22px 0}
+  .h-h1{font-size:clamp(33px,8.6vw,46px);line-height:1.04;letter-spacing:-.02em}
+  .h-ey{margin-bottom:20px}
   .hp-wrap{order:2;position:relative;display:block;width:100%;max-width:340px;height:320px;margin:6px auto 40px;animation:heroFloat 7s ease-in-out infinite}
   .h-st{order:3}
   .h-wave{order:4}
@@ -1231,6 +1231,10 @@ footer>.w{padding:0}
   .aw-btn::before,.pos-cta-btn::before{display:none!important}
   .btn.bv .bv-ico,.aw-btn .aw-btn-ico,.pos-cta-btn .ib{display:none!important}
   .btn.bv .bv-lb,.aw-btn .aw-btn-lb,.pos-cta-btn .aw-btn-lb{white-space:nowrap;text-align:center;padding:0;color:#fff}
+  /* CTA dell'HERO: su sfondo violetto il box violetto si confonde → la rendo bianca translucida con testo blu */
+  #hero .btn.bv{background:rgba(255,255,255,.16)!important}
+  #hero .btn.bv:hover{background:rgba(255,255,255,.16)!important}
+  #hero .btn.bv .bv-lb{color:var(--v)}
   /* griglia cerchi "Team snelli" centrata */
   .dotcluster{margin-inline:auto}
   /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
@@ -3266,9 +3270,29 @@ document.querySelectorAll('.nsec-marquee').forEach(sc => {
     function fr(ts){ if(start==null) start=ts; const p=Math.min(1,(ts-start)/dur); draw.style.strokeDashoffset=(from+(to-from)*easeIO(p)).toFixed(2); raf = p<1 ? requestAnimationFrame(fr) : null; }
     raf = requestAnimationFrame(fr);
   }
+  // ── iso-tilt + spread dei 3 asterischi pilotati da rAF con easing ease-in-out (NON transizioni CSS, che Safari non anima sugli SVG) ──
+  const stage = el.querySelector('.ac-stage'), tilt = el.querySelector('.ac-tilt');
+  const acTop = el.querySelector('.ac-top'), acBot = el.querySelector('.ac-bot');
+  const DURX = 1600;
+  let iso=0, isoF=0, isoTo=0, isoT0=null;       // iso: 0 piano → 1 isometrico
+  let spr=0, sprF=0, sprTo=0, sprT0=null;       // spread: 0 unito → 1 tre asterischi separati
+  function setIso(v){ if(v!==isoTo){ isoF=iso; isoTo=v; isoT0=null; } }
+  function setSpr(v){ if(v!==sprTo){ sprF=spr; sprTo=v; sprT0=null; } }
+  (function drive(ts){
+    if(isoT0==null) isoT0=ts; if(sprT0==null) sprT0=ts;
+    iso = isoF + (isoTo-isoF)*easeIO(Math.min(1,(ts-isoT0)/DURX));   // ease-in-out: morbido in partenza E in arrivo
+    spr = sprF + (sprTo-sprF)*easeIO(Math.min(1,(ts-sprT0)/DURX));
+    if(stage) stage.style.transform = 'rotate(' + (45*iso).toFixed(2) + 'deg)';
+    if(tilt)  tilt.style.transform  = 'scale(1,' + (1-0.45*iso).toFixed(3) + ')';
+    if(acTop){ acTop.style.transform = 'translateY(' + (-128*spr).toFixed(1) + 'px)'; acTop.style.opacity = (0.5*spr).toFixed(3); }
+    if(acBot){ acBot.style.transform = 'translateY(' + (128*spr).toFixed(1) + 'px)';  acBot.style.opacity = (0.5*spr).toFixed(3); }
+    requestAnimationFrame(drive);
+  })();
   function step(){
     const c = seq[i][0];
     el.setAttribute('class','archi '+c);
+    setIso((c === 's2' || c === 's3') ? 1 : 0);   // tilt iso su s2/s3
+    setSpr((c === 's3') ? 1 : 0);                  // i 3 asterischi separati solo su s3
     if(draw){
       // offset monotòno: ogni mezzo giro (cancella / ridisegna) prosegue nello STESSO verso (−L), mai uno snap.
       // -L è visivamente identico a 0+2L → cucitura invisibile, ridisegno fluido (come desktop).
