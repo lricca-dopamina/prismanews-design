@@ -53,7 +53,7 @@ addEventListener('DOMContentLoaded',function(){
   /* asterisco brand come maschera/decoro */
   --ast:path('M50 0 C55 32 68 45 100 50 C68 55 55 68 50 100 C45 68 32 55 0 50 C32 45 45 32 50 0 Z');
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{overflow-x:clip}  /* scroll-behavior gestito da Lenis */
 body{font-family:var(--f);background:var(--dk);color:var(--w);-webkit-font-smoothing:antialiased;overflow-x:clip;cursor:none}
 @media(hover:none){body{cursor:auto}}
@@ -1145,6 +1145,11 @@ footer>.w{padding:0}
   .gc.has-flip .gc-front .gc-info{display:none}
   .gc.has-flip .gc-front::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(5,6,32,.74),transparent 42%);z-index:1;pointer-events:none}
   .gc.has-flip .gc-back{transform:rotateY(180deg);background:linear-gradient(165deg,#211f52,#0a0a24 78%);display:flex;flex-direction:column;justify-content:center;padding:28px 24px;color:#fff}
+  /* asterisco SEMPRE solo in alto a destra e su UNA faccia sola: mostro quello della faccia attiva
+     (così, anche se il backface-visibility trapela su certi browser, non appare nell'angolo opposto) */
+  .gc.has-flip .gc-back .gc-ast{opacity:0;transition:opacity .25s ease}
+  .gc.has-flip.flipped .gc-back .gc-ast{opacity:.85}
+  .gc.has-flip.flipped .gc-front .gc-ast{opacity:0}
   .gc-bk-name{font-size:22px;font-weight:600;letter-spacing:-.01em;margin-bottom:16px;line-height:1.12}
   .gc-bk-desc{font-size:15px;line-height:1.58;color:rgba(255,255,255,.88)}
   .gc-bk-role{margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.16);font-family:var(--fm);font-size:12.5px;letter-spacing:.04em;color:var(--dv)}
@@ -2502,10 +2507,7 @@ document.addEventListener('mouseout', e=>{
     flip.appendChild(front); flip.appendChild(back);
     card.appendChild(flip);
     card.classList.add('has-flip');
-    let sx=0,sy=0,moved=false;
-    card.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY;moved=false;},{passive:true});
-    card.addEventListener('pointermove',e=>{if(Math.abs(e.clientX-sx)>8||Math.abs(e.clientY-sy)>8)moved=true;},{passive:true});
-    card.addEventListener('click',()=>{ if(moved)return; card.classList.toggle('flipped'); });
+    // l'interazione (tap→gira+centra+blocca auto-scroll, scroll→sblocca+rigira) è gestita nel carosello .gc-row
   });
 })();
 
@@ -2782,7 +2784,7 @@ onScroll();
     apply();
   },{passive:false});
 })();
-/* ── CAROSELLO PERSONE (Crescere): auto-scroll + drag ── */
+/* ── CAROSELLO PERSONE (Crescere): auto-scroll + drag + FLIP card (mobile) ── */
 (()=>{
   const sc=document.querySelector('.gc-row');
   const tracks=[...document.querySelectorAll('.gc-track')];
@@ -2790,19 +2792,38 @@ onScroll();
   tracks.forEach(t=>t.querySelectorAll('img').forEach(i=>i.draggable=false));
   const SPEED=0.3;
   let pos=0,hw=0,dragging=false,startX=0,startPos=0,rafId=null,visible=false,vel=0,lastX=0,dragDX=0;
+  // flip: una sola card girata per volta; girarla blocca l'auto-scroll e la centra; scroll/ri-tap → si rigira e riparte
+  let frozen=false, openCard=null, centering=null, downCard=null, moved=false, downX=0;
   function calcHW(){hw=tracks[0].scrollWidth;} calcHW();
   window.addEventListener('resize',calcHW,{passive:true});
   function apply(){if(!hw)return;if(pos>=hw)pos-=hw;if(pos<0)pos+=hw;tracks.forEach(t=>t.style.transform='translateX('+(-pos)+'px)');}
-  function loop(){if(!dragging){pos+=SPEED+vel;vel*=0.94;if(Math.abs(vel)<0.05)vel=0;}apply();if(visible)rafId=requestAnimationFrame(loop);}
+  function flipOpen(card){
+    if(openCard && openCard!==card) openCard.classList.remove('flipped');   // solo UNA girata
+    card.classList.add('flipped'); openCard=card; frozen=true; centering=card;   // blocca auto-scroll + centra
+  }
+  function flipClose(){ if(openCard) openCard.classList.remove('flipped'); openCard=null; frozen=false; centering=null; }   // rigira foto + riparte auto
+  function loop(){
+    if(centering){
+      const r=centering.getBoundingClientRect(), b=sc.getBoundingClientRect();
+      const d=(r.left+r.width/2)-(b.left+b.width/2);
+      pos+=d*0.2; if(Math.abs(d)<0.8) centering=null;
+    } else if(!dragging && !frozen){ pos+=SPEED+vel; vel*=0.94; if(Math.abs(vel)<0.05) vel=0; }
+    apply();
+    if(visible)rafId=requestAnimationFrame(loop);
+  }
   new IntersectionObserver(es=>{
     visible=es[0].isIntersecting;
     if(visible&&!rafId)rafId=requestAnimationFrame(loop);
     else if(!visible){cancelAnimationFrame(rafId);rafId=null;}
   },{threshold:0.1}).observe(sc);
-  sc.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;startX=e.clientX;startPos=pos;lastX=e.clientX;vel=0;dragDX=0;sc.setPointerCapture(e.pointerId);});
-  sc.addEventListener('pointermove',e=>{if(!dragging)return;dragDX=dragDX*0.6+(e.clientX-lastX)*0.4;lastX=e.clientX;pos=startPos-(e.clientX-startX);apply();});
-  ['pointerup','pointercancel'].forEach(ev=>sc.addEventListener(ev,()=>{dragging=false;vel=Math.max(-60,Math.min(60,-dragDX));}));
-  sc.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();pos+=e.deltaX;apply();},{passive:false});
+  sc.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;startX=e.clientX;startPos=pos;lastX=e.clientX;vel=0;dragDX=0;downX=e.clientX;moved=false;downCard=e.target.closest('.gc.has-flip');sc.setPointerCapture(e.pointerId);});
+  sc.addEventListener('pointermove',e=>{if(!dragging)return;if(Math.abs(e.clientX-downX)>6){moved=true; if(openCard) flipClose();}dragDX=dragDX*0.6+(e.clientX-lastX)*0.4;lastX=e.clientX;pos=startPos-(e.clientX-startX);apply();});
+  ['pointerup','pointercancel'].forEach(ev=>sc.addEventListener(ev,()=>{
+    dragging=false;vel=Math.max(-60,Math.min(60,-dragDX));
+    if(ev==='pointerup' && !moved && downCard){ if(downCard===openCard) flipClose(); else flipOpen(downCard); }
+    downCard=null;
+  }));
+  sc.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();if(openCard)flipClose();pos+=e.deltaX;apply();},{passive:false});
 })();
 /* ── CAROSELLO RASSEGNA STAMPA: auto-scroll + drag + wheel (come gli altri) ── */
 (()=>{
