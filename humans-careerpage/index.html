@@ -1118,7 +1118,7 @@ footer>.w{padding:0}
   .campo-right{height:auto;display:flex;flex-direction:column;gap:14px;will-change:transform}
   /* deck ritagliato SOLO in alto (no sbordo sul testo); ombra visibile sotto/ai lati */
   .campo-deck{height:160px;clip-path:inset(-26px -70px -80px -70px)}   /* le card dietro vanno giu (JS), quindi qui l'ombra del box in alto e libera */
-  .campo-pin{height:300vh}   /* scroll piu ampio: lead-in + 3 fasi piu graduali */
+  .campo-pin{height:520vh}   /* scroll molto piu lungo: ogni slide resta a lungo (lead-in + 3 fasi graduali) */
   .campo-canvas{height:300px;flex:none}   /* grafiche piu grandi */
   .campo-deck .dc{padding:16px 20px;background:#15123a;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(255,255,255,.12)}   /* opaco: la card davanti copre quelle dietro (niente testo sovrapposto) */
   #cv2 .cv-code{right:40%}
@@ -2964,7 +2964,7 @@ onScroll();
     if(IS_MOBILE){
       // LEAD-IN: nel primo tratto di scroll il testo intro scorre via e il box+grafiche salgono in alto
       // e si ingrandiscono; SOLO dopo iniziano le fasi (animazione piu ampia e tutta in alto/centro).
-      const LEAD = 0.26;
+      const LEAD = 0.18;
       const ls = smooth(clamp(raw / LEAD, 0, 1));                  // 0..1 avanzamento lead-in
       const left = pin.querySelector('.campo-left');
       const right = pin.querySelector('.campo-right');
@@ -3056,7 +3056,7 @@ onScroll();
       const rect = pin.getBoundingClientRect();
       const pinTop = window.scrollY + rect.top;
       const raw = clamp((-rect.top) / scrollable, 0, 1);
-      const LEAD = 0.26;                                        // stesso lead-in del render()
+      const LEAD = 0.18;                                        // stesso lead-in del render()
       const after = clamp((raw - LEAD) / (1 - LEAD), 0, 1);
       const cur = Math.floor(after * N + 0.001);
       const targetPhase = cur >= N - 1 ? 0 : cur + 1;          // ultima → torna alla prima
