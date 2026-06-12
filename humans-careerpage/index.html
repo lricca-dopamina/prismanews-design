@@ -146,10 +146,9 @@ nav.nav-hidden{transform:translateY(-105%)}
 
 /* ════════ 01 · HERO ════════ */
 #hero{min-height:min(100vh,960px);display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(to top,var(--dk) 0%,var(--v) 78.8%);position:relative;overflow:visible}
-/* sotto i 1101px (foto laterali nascoste) il contenuto hero si accorcia: senza questo il min-height
-   fisso + flex-end scaricava tutto lo spazio avanzato IN CIMA (gap navbar→hero crescente).
-   Stessa soglia delle foto: hero alto quando ci sono le foto laterali. */
-@media(max-width:1100px){#hero{min-height:0}}
+/* sotto i 1440px il contenuto hero si accorcia (titolo in vw, foto laterali nascoste): senza questo
+   il min-height fisso + flex-end scaricava tutto lo spazio avanzato IN CIMA (gap navbar→hero crescente) */
+@media(max-width:1439px){#hero{min-height:0}}
 .hp-c{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .hp{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,255,.4);animation:hpd linear infinite}
 @keyframes hpd{from{transform:translateY(100vh);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateY(-6vh) translateX(30px);opacity:0}}
@@ -177,20 +176,6 @@ nav.nav-hidden{transform:translateY(-105%)}
 /* card che appaiono dopo un po' */
 .hero-photo.late{opacity:0;transition:opacity 1.1s var(--s)}
 .hero-photo.late.show{opacity:1}
-/* Foto laterali sempre presenti su desktop, ma SCALATE a gradini perche' non tocchino MAI il testo:
-   a dimensione piena coesistono col titolo solo da ~1680px; sotto vengono ridotte e strette ai bordi. */
-@media(min-width:1400px) and (max-width:1679px){
-  .hp-l{left:1.5vw;width:154px;height:202px}
-  .hp-l2{left:5vw;width:120px;height:158px}
-  .hp-r{right:1.5vw;width:157px;height:206px}
-  .hp-r2{right:5vw;width:120px;height:158px}
-}
-@media(min-width:1101px) and (max-width:1399px){
-  .hp-l{left:1vw;width:120px;height:158px}
-  .hp-l2{left:4vw;width:94px;height:124px}
-  .hp-r{right:1vw;width:122px;height:161px}
-  .hp-r2{right:4vw;width:94px;height:124px}
-}
 @media(max-width:1100px){.hero-photo{display:none}}
 .h-in{position:relative;z-index:2;padding:168px 0 0;text-align:center}
 .h-ey{display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;font-family:var(--fm);font-size:11px;color:var(--nv);text-transform:uppercase;letter-spacing:.12em;background:#fff;border-radius:100px;padding:7px 16px 7px 12px;box-shadow:0 2px 12px rgba(5,6,32,.18)}
