@@ -3816,21 +3816,9 @@ if (canvas && _glOK) {
   tex.colorSpace=THREE.SRGBColorSpace; tex.flipY=false;
   tex.anisotropy=Math.min(4, renderer.capabilities.getMaxAnisotropy());
 
-  const glassMat = isMobile
-    // mobile: vetro "finto" senza transmission (nessun render-pass extra) → gira liscio sulle GPU mobili
-    ? new THREE.MeshPhysicalMaterial({
-        // frost come desktop SENZA transmission: opacità abbassata → il mesh interno texturizzato
-        // (Asterisco_Blur) traspare = texture frost visibile, ma NIENTE render-pass extra (gira liscio).
-        // BLU profondo (non viola).
-        color:new THREE.Color(0x2d22e6), metalness:0.0, roughness:0.3,
-        transparent:true, opacity:0.6, ior:IOR,
-        attenuationColor:new THREE.Color(0x2233cc), attenuationDistance:ATT_DISTANZA,
-        sheen:0.7, sheenColor:new THREE.Color(0x3344ff), sheenRoughness:0.38,
-        clearcoat:SPECULARE_FORZA, clearcoatRoughness:SPECULARE_NIT, specularIntensity:RIFLESSO_BASE,
-        envMapIntensity:0.6
-      })
-    // desktop: vetro rifrattivo pieno
-    : new THREE.MeshPhysicalMaterial({
+  // stesso vetro rifrattivo del desktop ANCHE su mobile (stessi effetti, incl. transmission);
+  // su mobile cambiano solo i guard di performance (dpr contenuto, niente drag, vedi sotto)
+  const glassMat = new THREE.MeshPhysicalMaterial({
         color:new THREE.Color(COLORE_VETRO), metalness:0.0, roughness:ROUGHNESS,
         transmission:TRASMISSIONE, ior:IOR, thickness:SPESSORE,
         attenuationColor:new THREE.Color(ATTENUAZIONE), attenuationDistance:ATT_DISTANZA,
