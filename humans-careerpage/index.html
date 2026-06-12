@@ -154,14 +154,7 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 @keyframes floatP{0%,100%{transform:translateY(0) rotate(var(--rot,0))}50%{transform:translateY(-22px) rotate(var(--rot,0))}}
 /* hero mobile: le foto entrano come carte di un mazzo (dall'alto, poi "calate" via in basso), 4 per slot sfasate */
 @keyframes heroDeck{0%{opacity:0;transform:translateY(-28px) rotate(-7deg) scale(.9);z-index:1}4%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);z-index:3}22%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);z-index:3}28%{opacity:0;transform:translateY(36px) rotate(9deg) scale(.94);z-index:1}100%{opacity:0;transform:translateY(-28px) rotate(-7deg) scale(.9);z-index:1}}
-/* hero: ogni foto appare al CENTRO con dolce fade+zoom, copre la precedente, resta sotto mentre la successiva fa lo stesso (loop morbido) */
-@keyframes heroStack{
-  0%{opacity:0;transform:scale(1.07);z-index:6}
-  12%{opacity:1;transform:scale(1);z-index:6}
-  25%{opacity:1;transform:scale(1);z-index:6}
-  26%{opacity:1;transform:scale(1);z-index:2}
-  100%{opacity:1;transform:scale(1);z-index:2}
-}
+/* hero mobile: le foto sono animate da JS (heroTossMobile), non da keyframe */
 /* float dolce del cluster (come desktop) */
 @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 /* card che appaiono dopo un po' */
@@ -1103,20 +1096,13 @@ footer>.w{padding:0}
   .h-st{display:grid;grid-template-columns:1fr 1fr}
   .h-s{padding:20px 8px;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}
   .h-s:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}
-  /* HERO: foto sotto il testo e SOPRA le stat · le altre 2 foto entrano sopra in swap */
+  /* HERO: le foto sono pilotate da JS (heroTossMobile) — partono nascoste, JS le "lancia" una alla volta da fuori schermo verso posizioni diverse, ognuna SOPRA le precedenti (z-index reale) */
   #hero{justify-content:flex-start}
   .h-in{order:1;padding-top:112px}
-  .hp-wrap{order:2;display:flex;justify-content:center;align-items:flex-start;gap:16px;width:100%;padding:8px 18px 0;margin-bottom:42px;animation:heroFloat 7s ease-in-out infinite}
+  .hp-wrap{order:2;position:relative;display:block;width:100%;max-width:380px;height:404px;margin:6px auto 40px;animation:heroFloat 7s ease-in-out infinite}
   .h-st{order:3}
   .h-wave{order:4}
-  .hp-slot{position:relative;width:44%;max-width:200px;aspect-ratio:3/4;flex:none}
-  .hp-slot:nth-child(1){transform:rotate(-3deg)}
-  .hp-slot:nth-child(2){transform:rotate(3deg)}
-  .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:0;width:100%!important;height:100%!important;border-radius:18px;box-shadow:0 16px 40px rgba(5,6,32,.42);animation-name:heroStack!important;animation-duration:16s!important;animation-timing-function:ease-in-out!important;animation-iteration-count:infinite!important}
-  .hp-slot .hero-photo:nth-child(1){animation-delay:0s!important}
-  .hp-slot .hero-photo:nth-child(2){animation-delay:-4s!important}
-  .hp-slot .hero-photo:nth-child(3){animation-delay:-8s!important}
-  .hp-slot .hero-photo:nth-child(4){animation-delay:-12s!important}
+  .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:auto;left:0;top:0;width:47%;height:auto!important;aspect-ratio:3/4;border-radius:16px;box-shadow:0 18px 46px rgba(5,6,32,.55);opacity:0;animation:none!important;will-change:transform,opacity}
   /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
   .campo-inner{grid-template-columns:1fr;gap:44px;padding:0 16px;align-items:center}
   .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
@@ -1259,18 +1245,14 @@ footer>.w{padding:0}
   <svg class="float-ast" style="top:30%;right:24%;width:44px;height:44px;animation-duration:7s" viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg>
   <!-- card foto laterali (come Figma) · su mobile diventano un cluster centrato sotto il testo -->
   <div class="hp-wrap">
-    <div class="hp-slot">
-      <div class="hero-photo hp-r" style="--rot:5deg;animation-duration:9.5s"><img src="img/p-mc1.webp" loading="lazy"></div>
-      <div class="hero-photo hp-l" style="--rot:-5deg;animation-duration:8s"><img src="img/hero-a.webp" loading="lazy"></div>
-      <div class="hero-photo hp-m" aria-hidden="true"><img src="img/p-cristian.webp" loading="lazy"></div>
-      <div class="hero-photo hp-m" aria-hidden="true"><img src="img/p-francesco-monti.webp" loading="lazy"></div>
-    </div>
-    <div class="hp-slot">
-      <div class="hero-photo hp-r2 late" style="--rot:-7deg;animation-duration:8.5s"><img src="img/hero-b.webp" loading="lazy"></div>
-      <div class="hero-photo hp-l2 late" style="--rot:6deg;animation-duration:7.5s"><img src="img/hero-c.webp" loading="lazy"></div>
-      <div class="hero-photo hp-m" aria-hidden="true"><img src="img/p-stefano-bigica.webp" loading="lazy"></div>
-      <div class="hero-photo hp-m" aria-hidden="true"><img src="img/p-manuel-fontana.webp" loading="lazy"></div>
-    </div>
+    <div class="hero-photo hp-r" style="--rot:4deg;animation-duration:9.5s"><img src="img/p-mc1.webp" loading="lazy"></div>
+    <div class="hero-photo hp-l" style="--rot:-5deg;animation-duration:8s"><img src="img/hero-a.webp" loading="lazy"></div>
+    <div class="hero-photo hp-m" style="--rot:3deg" aria-hidden="true"><img src="img/p-cristian.webp" loading="lazy"></div>
+    <div class="hero-photo hp-r2 late" style="--rot:-6deg;animation-duration:8.5s"><img src="img/hero-b.webp" loading="lazy"></div>
+    <div class="hero-photo hp-m" style="--rot:6deg" aria-hidden="true"><img src="img/p-stefano-bigica.webp" loading="lazy"></div>
+    <div class="hero-photo hp-l2 late" style="--rot:-4deg;animation-duration:7.5s"><img src="img/hero-c.webp" loading="lazy"></div>
+    <div class="hero-photo hp-m" style="--rot:5deg" aria-hidden="true"><img src="img/p-francesco-monti.webp" loading="lazy"></div>
+    <div class="hero-photo hp-m" style="--rot:-3deg" aria-hidden="true"><img src="img/p-manuel-fontana.webp" loading="lazy"></div>
   </div>
   <div class="h-in">
     <div class="h-ey" data-a="fade"><div class="hd"></div>30 posizioni aperte</div>
@@ -2499,10 +2481,68 @@ document.querySelectorAll('[data-tilt]').forEach(c=>{
   c.addEventListener('mouseleave',()=>{c.style.transform=''});
 });
 
-/* ── CARD FOTO HERO TEMPORIZZATE ── */
-document.querySelectorAll('.hero-photo.late').forEach((c,i)=>{
-  setTimeout(()=>c.classList.add('show'), 1600 + i*900);
-});
+/* ── CARD FOTO HERO TEMPORIZZATE (solo desktop: il mobile è gestito da heroTossMobile) ── */
+if(!window.matchMedia('(max-width:760px)').matches){
+  document.querySelectorAll('.hero-photo.late').forEach((c,i)=>{
+    setTimeout(()=>c.classList.add('show'), 1600 + i*900);
+  });
+}
+
+/* ── HERO MOBILE: foto "lanciate sul tavolo" — JS le piazza in posizioni diverse, ognuna SOPRA le precedenti, con entrata da fuori schermo (loop) ── */
+(function heroTossMobile(){
+  if(!window.matchMedia('(max-width:760px)').matches) return;
+  const wrap=document.querySelector('.hp-wrap');
+  if(!wrap) return;
+  const photos=[...wrap.querySelectorAll('.hero-photo')];
+  if(!photos.length) return;
+  photos.forEach(p=>p.classList.remove('late','show'));
+  /* posizioni di atterraggio ben distanziate (left in %, top in px) + rotazione */
+  const spots=[
+    {l:1,  t:6,   r:-7},
+    {l:50, t:0,   r:6},
+    {l:24, t:78,  r:-3},
+    {l:52, t:122, r:8},
+    {l:2,  t:150, r:5},
+    {l:40, t:186, r:-6},
+    {l:18, t:44,  r:4},
+    {l:30, t:158, r:-4}
+  ];
+  /* direzioni d'ingresso (da fuori schermo) */
+  const dirs=[
+    {x:-260,y:-40},{x:260,y:-30},{x:0,y:-300},{x:280,y:120},
+    {x:-240,y:140},{x:40,y:300},{x:-300,y:0},{x:300,y:60}
+  ];
+  let z=10, i=0, timer=null;
+  function toss(){
+    const el=photos[i % photos.length];
+    const s=spots[i % spots.length];
+    const d=dirs[i % dirs.length];
+    el.style.left=s.l+'%';
+    el.style.top=s.t+'px';
+    el.style.zIndex=(++z);
+    el.style.transition='none';
+    el.style.transform='translate('+d.x+'px,'+d.y+'px) rotate('+(s.r*1.6)+'deg) scale(.78)';
+    el.style.opacity='0';
+    void el.offsetWidth;            /* reflow → l'entrata parte dallo stato "fuori" */
+    el.style.transition='transform .9s cubic-bezier(.16,.84,.28,1.12),opacity .5s ease';
+    el.style.transform='translate(0,0) rotate('+s.r+'deg) scale(1)';
+    el.style.opacity='1';
+    i++;
+  }
+  function start(){
+    if(timer) return;
+    toss();
+    timer=setInterval(()=>{
+      if(document.hidden) return;   /* non sprecare cicli in background */
+      toss();
+    },1700);
+  }
+  /* parte quando l'hero è visibile (è in cima, quindi subito) */
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){start();io.disconnect();}});},{threshold:0.05});
+    io.observe(wrap);
+  } else { start(); }
+})();
 
 /* ── GLASS CHE SEGUE IL CURSORE (progetti) ── */
 const pglass=document.getElementById('pglass');
