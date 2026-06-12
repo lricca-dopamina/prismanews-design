@@ -1106,15 +1106,18 @@ footer>.w{padding:0}
   .h-wave{order:4}
   .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:auto;left:0;top:0;width:54%;height:auto!important;aspect-ratio:3/4;border-radius:16px;box-shadow:0 18px 46px rgba(5,6,32,.55);opacity:0;animation:none!important;will-change:transform,opacity}
   /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
-  .campo-inner{grid-template-columns:1fr;gap:44px;padding:0 16px;align-items:center}
+  /* contenuto COMPATTO così resta centrato con aria sopra/sotto (non schiacciato in basso sotto l'header) */
+  .campo-sticky{align-items:center}
+  .campo-inner{grid-template-columns:1fr;gap:24px;padding:0 16px;align-items:center}
   .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
   .campo-b{font-size:13.5px;line-height:1.5;max-width:none}
-  .campo-right{height:auto;display:flex;flex-direction:column;gap:16px}
-  /* deck ritagliato SOLO in alto (no sbordo sul testo); ombra visibile sotto/ai lati */
-  .campo-deck{height:182px;clip-path:inset(-26px -70px -80px -70px)}   /* le card dietro vanno giu (JS), quindi qui l'ombra del box in alto e libera */
+  .campo-right{height:auto;display:flex;flex-direction:column;gap:12px}
+  /* deck ritagliato SOLO in alto (no sbordo sul testo); ombra visibile sotto/ai lati. tap → avanza */
+  .campo-deck{height:150px;clip-path:inset(-26px -70px -80px -70px)}   /* le card dietro vanno giu (JS), quindi qui l'ombra del box in alto e libera */
   .campo-pin{height:215vh}   /* meno "zona morta" di scroll sull'ultima card */
-  .campo-canvas{height:270px;flex:none}
-  .campo-deck .dc{padding:18px 20px;background:#15123a;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(255,255,255,.12)}   /* opaco: la card davanti copre quelle dietro (niente testo sovrapposto) */
+  .campo-canvas{height:204px;flex:none}
+  .campo-sticky{cursor:pointer}   /* mobile: tocca per passare alla foto successiva */
+  .campo-deck .dc{padding:16px 20px;background:#15123a;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(255,255,255,.12)}   /* opaco: la card davanti copre quelle dietro (niente testo sovrapposto) */
   #cv2 .cv-code{right:40%}
   /* CRESCERE: titolo che entra senza tagli */
   .cres-title{padding:0 20px;margin-bottom:26px}
@@ -2917,11 +2920,28 @@ onScroll();
     // DECK - fermo in primo piano, swap rapido al confine (sincronizzato col contenuto)
     decks.forEach((card, i) => {
       const d = i - pEff;
+      if(IS_MOBILE){
+        // mobile: uscita = DISSOLVENZA morbida con risalita piccola (dentro il clip-path → niente taglio netto);
+        // card dietro vanno GIU (non spuntano sopra l'ombra del box davanti)
+        let y, o, s, z, rot = clamp(d, -1, 1.6) * 1.7;
+        if(d <= -1){ o = 0; y = -22; s = 1; z = 40; }
+        else if(d < 0){                                   // in uscita 0 → -1
+          const t = -d;
+          o = 1 - smooth(Math.min(t / 0.6, 1));           // svanisce entro t=0.6 (prima di salire troppo)
+          y = -(20 * t);                                  // risalita max -20px (clip top = -26px → mai tagliata)
+          s = 1 - 0.04 * t; z = 40;
+        } else {                                          // in pila dietro
+          const dd = Math.min(d, 3);
+          o = clamp(1 - 0.30 * dd, 0, 1);
+          y = 10 * dd; s = 1 - 0.055 * dd; z = Math.round(30 - dd * 10);
+        }
+        card.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + rot.toFixed(2) + 'deg) scale(' + s.toFixed(3) + ')';
+        card.style.opacity = o.toFixed(3);
+        card.style.zIndex = z;
+        return;
+      }
       const st = deckState(d);
-      const rot = IS_MOBILE ? (clamp(d, -1, 1.6) * 1.7) : 0;   // mobile: leggera inclinazione che si raddrizza mentre la card entra
-      let y = st.y;
-      if(IS_MOBILE && d > 0.02) y = (10 * Math.min(d, 3)).toFixed(1) + 'px';   // mobile: card dietro vanno GIU (non spuntano sopra => ombra del box non tagliata)
-      card.style.transform = 'translateY(' + y + ') rotate(' + rot.toFixed(2) + 'deg) scale(' + st.s + ')';
+      card.style.transform = 'translateY(' + st.y + ') rotate(0deg) scale(' + st.s + ')';
       card.style.opacity   = st.o;
       card.style.zIndex    = st.z;
     });
@@ -2957,6 +2977,26 @@ onScroll();
   render();
   // aggancia anche al tick di Lenis (oltre all'evento scroll nativo)
   if(window.__lenis) window.__lenis.on('scroll', () => { if(inView) render(); });
+
+  // ── MOBILE: tocca la sezione → avanza alla foto successiva (scrolla fluido alla fase dopo,
+  //    così la transizione programmata si riproduce; dall'ultima riparte dalla prima) ──
+  if(IS_MOBILE){
+    const stage = document.querySelector('.campo-sticky') || pin;
+    stage.addEventListener('click', (e) => {
+      if(e.target.closest('a,button,input,textarea')) return;
+      const scrollable = pin.offsetHeight - window.innerHeight;
+      if(scrollable <= 0) return;
+      const rect = pin.getBoundingClientRect();
+      const pinTop = window.scrollY + rect.top;
+      const raw = clamp((-rect.top) / scrollable, 0, 1);
+      const cur = Math.floor(raw * N + 0.001);
+      const targetPhase = cur >= N - 1 ? 0 : cur + 1;          // ultima → torna alla prima
+      const targetRaw = clamp((targetPhase + 0.35) / N, 0, 1); // 0.35 = card nuova ben in primo piano
+      const targetY = pinTop + targetRaw * scrollable;
+      if(window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(targetY, {duration:0.85});
+      else window.scrollTo({top: targetY, behavior:'smooth'});
+    });
+  }
 })();
 
 // ── Caroselli "spotlight": card centrale grande + vicini che sbucano + dots + autoplay ──
