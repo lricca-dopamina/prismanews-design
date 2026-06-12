@@ -1139,7 +1139,8 @@ footer>.w{padding:0}
   /* card team: FLIP su tap → fronte solo foto (testo percorso nascosto), retro con nome+descrizione+ruolo */
   .gc.has-flip{overflow:visible;background:transparent;perspective:1300px}
   .gc.has-flip::after{display:none}
-  .gc.has-flip .gc-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .72s cubic-bezier(.45,.05,.2,1)}
+  /* easing SIMMETRICO: a metà tempo (.36s) la card è esattamente di taglio → lo scambio asterisco (delay .36s) è invisibile */
+  .gc.has-flip .gc-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .72s ease-in-out}
   .gc.has-flip.flipped .gc-flip{transform:rotateY(180deg)}
   /* NIENTE overflow:hidden sulle facce: su iOS romperebbe il backface-visibility (la faccia dietro trapela
      specchiata → asterisco doppio). Il clip agli angoli lo fa la foto/overlay interni. */
@@ -2823,9 +2824,10 @@ onScroll();
     else if(!visible){cancelAnimationFrame(rafId);rafId=null;}
   },{threshold:0.1}).observe(sc);
   sc.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;startX=e.clientX;startPos=pos;lastX=e.clientX;vel=0;dragDX=0;downX=e.clientX;moved=false;downCard=e.target.closest('.gc.has-flip');sc.setPointerCapture(e.pointerId);});
-  sc.addEventListener('pointermove',e=>{if(!dragging)return;if(Math.abs(e.clientX-downX)>6){moved=true; if(openCard) flipClose();}dragDX=dragDX*0.6+(e.clientX-lastX)*0.4;lastX=e.clientX;pos=startPos-(e.clientX-startX);apply();});
+  sc.addEventListener('pointermove',e=>{if(!dragging)return;if(Math.abs(e.clientX-downX)>10){moved=true; if(openCard) flipClose();} if(!moved) return; dragDX=dragDX*0.6+(e.clientX-lastX)*0.4;lastX=e.clientX;pos=startPos-(e.clientX-startX);apply();});
   ['pointerup','pointercancel'].forEach(ev=>sc.addEventListener(ev,()=>{
-    dragging=false;vel=Math.max(-60,Math.min(60,-dragDX));
+    dragging=false;
+    vel = moved ? Math.max(-60,Math.min(60,-dragDX)) : 0;   // TAP: niente inerzia → niente scroll impazzito
     if(ev==='pointerup' && !moved && downCard){ if(downCard===openCard) flipClose(); else flipOpen(downCard); }
     downCard=null;
   }));
