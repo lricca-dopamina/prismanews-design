@@ -4104,6 +4104,7 @@ if (canvas && _glOK) {
   const innerMat=new THREE.MeshBasicMaterial({ map:tex, side:THREE.DoubleSide, toneMapped:false, alphaTest:0.05 });
 
   const model=new THREE.Group(); scene.add(model); let ready=false;
+  model.rotation.set(1.5708, 0, 0.95);   // posa iniziale FRONTALE (il GLB nativo a 0,0,0 si presenta di lato); da qui parte l'auto-rotazione
   new GLTFLoader().load(FILE_MODELLO,(gltf)=>{
     let glass=null, inner=null;
     gltf.scene.traverse(o=>{ if(!o.isMesh) return;
