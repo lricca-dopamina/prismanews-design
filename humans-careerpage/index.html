@@ -583,7 +583,7 @@ a.aw-c:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(5,6,32,.2)}
 /* card arancione dentro sezione viola (Figma) */
 #candidatura{background:var(--v);padding:64px 0}
 .cand{background:var(--o);border-radius:24px;padding:48px 56px;display:flex;align-items:center;justify-content:space-between;gap:48px}
-@media(max-width:760px){.cand{flex-direction:column;align-items:flex-start;padding:36px 28px}}
+@media(max-width:760px){.cand{flex-direction:column;align-items:center;text-align:center;padding:36px 28px}.cand-btn{align-self:center}}
 .cand-h{font-size:clamp(24px,3vw,48px);font-weight:500;color:var(--w);line-height:1.05;margin-bottom:16px;letter-spacing:-.02em}
 .cand-b{font-size:17px;color:rgba(255,255,255,.9);line-height:1.5;max-width:720px}.cand-b strong{color:var(--w);font-weight:600}
 /* bottone icona-box + label su arancione */
@@ -634,7 +634,7 @@ a.aw-c:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(5,6,32,.2)}
 .pos-cta-t em{font-style:normal;color:var(--v)}
 /* box viola con testo + bottone icona (Figma) */
 .pos-cta-box{border-radius:18px;padding:36px 40px;background:var(--v);max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:40px;text-align:left}
-@media(max-width:760px){.pos-cta-box{flex-direction:column;align-items:flex-start;padding:28px}}
+@media(max-width:760px){.pos-cta-box{flex-direction:column;align-items:center;text-align:center;padding:28px}.pos-cta-btn{align-self:center}}
 .pos-cta-b{font-size:18px;color:rgba(255,255,255,.92);line-height:1.5;max-width:460px}.pos-cta-b strong{color:#fff;font-weight:600}
 .pos-cta-btn{position:relative;display:inline-flex;align-items:center;gap:14px;color:var(--w);font-family:var(--fm);font-weight:500;font-size:15px;letter-spacing:0;flex-shrink:0;padding-right:24px;background:rgba(255,255,255,.12);border-radius:12px}
 .pos-cta-btn::before{content:'';position:absolute;left:0;top:0;width:48px;height:100%;border-radius:12px;background:rgba(255,255,255,.22);transition:width .4s var(--s),background .3s var(--s);z-index:0}
@@ -1033,8 +1033,11 @@ footer>.w{padding:0}
 .press-track .pl-ansa{height:30px}
 .press-track .pl-si{height:26px}
 @media(max-width:720px){.press-track{gap:30px}.press-track img{height:30px}.press-track .pl-rai{height:34px}.press-track .pl-sole{height:40px}.press-track .pl-corriere{height:17px}.press-track .pl-wired{height:21px}.press-track .pl-ansa{height:24px}.press-track .pl-si{height:21px}
-/* loghi clienti: piu vicini su mobile (se ne vedono almeno 2) */
-.pcm-track{gap:30px}.pcm-track img{height:36px}}
+/* loghi clienti: piu vicini + scorrimento piu veloce su mobile (se ne vedono diversi, non uno solo) */
+.pcm-track{gap:34px;animation-duration:20s}.pcm-track img{height:32px}
+/* loghi clienti dentro il box campo (cv-logos): piu piccoli, vicini e veloci → non 1 solo con tanto vuoto */
+.cv-logos-track{animation-duration:16s}
+.cv-logos-track img{height:24px;margin-right:30px}}
 .ph-timeline{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
 .ph-year{padding:10px 18px;border-radius:100px;border:1px solid rgba(68,55,243,.3);font-family:var(--fm);font-size:13px;color:var(--v)}
 /* ── COLLAGE foto sparse (stile sanalabs) ── */
@@ -1207,7 +1210,8 @@ footer>.w{padding:0}
 @media(max-width:440px){
   .pc{width:80vw}
   .gc{width:84vw}
-  .aw-btn{width:auto;max-width:100%}
+  /* la CTA resta aderente al contenuto e CENTRATA (niente full-width che lascia il testo sbandierato a sinistra) */
+  .btn.bv,.aw-btn{width:fit-content!important;max-width:100%;margin-left:auto!important;margin-right:auto!important}
 }
 </style>
 </head>
@@ -2753,7 +2757,7 @@ onScroll();
   const track=document.querySelector('.press-track');
   if(!sc||!track) return;
   track.querySelectorAll('img').forEach(i=>i.draggable=false);
-  const SPEED=0.25;
+  const SPEED = window.matchMedia('(max-width:760px)').matches ? 0.7 : 0.25;   // mobile: piu veloce (prima troppo lento)
   let pos=0,hw=0,dragging=false,startX=0,startPos=0,rafId=null,visible=false,vel=0,lastX=0,dragDX=0;
   function calcHW(){ hw=track.scrollWidth/2; }   // track = 2 copie identiche → wrap a metà = seamless
   if(document.readyState==='complete') calcHW(); else window.addEventListener('load',calcHW);
