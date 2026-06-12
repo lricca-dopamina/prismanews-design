@@ -1101,9 +1101,10 @@ footer>.w{padding:0}
   .ann{padding:6px 18px;font-size:9px;gap:6px}
   .w{padding:0 20px}
   .nsec .w{padding:0 16px}   /* batte .nsec .w{padding:0 56px} (0,2,0): le sezioni nsec erano strette su mobile */
-  /* HERO stat → 2×2 */
+  /* HERO stat → 1 riga da 2 (l'ultima riga "70% / IT+US" non serve su mobile, sta sopra la barra bianca) */
   .h-st{display:grid;grid-template-columns:1fr 1fr}
   .h-s{padding:20px 8px;border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}
+  .h-st .h-s:nth-child(3),.h-st .h-s:nth-child(4){display:none}
   .h-s:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}
   /* HERO: le foto sono pilotate da JS (heroTossMobile) — partono nascoste, JS le "lancia" una alla volta da fuori schermo verso posizioni diverse, ognuna SOPRA le precedenti (z-index reale) */
   #hero{justify-content:flex-start}
