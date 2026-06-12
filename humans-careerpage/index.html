@@ -186,6 +186,13 @@ nav.nav-hidden{transform:translateY(-105%)}
 .h-sub{font-size:clamp(16px,1.7vw,30px);color:var(--g);max-width:840px;margin:0 auto 40px;line-height:1.35}
 .h-sub strong{font-weight:700;color:var(--w)}
 .h-ctas{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:72px;flex-wrap:wrap}
+/* Foto INVARIATE (posizione/dimensione standard). Se stringendo il testo arriverebbe a toccarle,
+   e' il TESTO ad andare a capo prima: larghezza massima = corridoio fra i cluster foto
+   (per lato: 7vw+150px di foto + 24px di aria → testo ≤ 86vw−348px). Da 1690px in su non cambia nulla. */
+@media(min-width:1101px) and (max-width:1689px){
+  .h-h1{max-width:calc(86vw - 348px)}
+  .h-sub{max-width:min(840px,calc(86vw - 348px))}
+}
 .h-st{border-top:1px solid rgba(255,255,255,.15);display:flex;width:100%;max-width:1040px;margin:0 auto}
 .h-s{flex:1;padding:30px 0;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
 .h-s:last-child{border-right:none}
