@@ -1099,10 +1099,10 @@ footer>.w{padding:0}
   /* HERO: le foto sono pilotate da JS (heroTossMobile) — partono nascoste, JS le "lancia" una alla volta da fuori schermo verso posizioni diverse, ognuna SOPRA le precedenti (z-index reale) */
   #hero{justify-content:flex-start}
   .h-in{order:1;padding-top:112px}
-  .hp-wrap{order:2;position:relative;display:block;width:100%;max-width:380px;height:404px;margin:6px auto 40px;animation:heroFloat 7s ease-in-out infinite}
+  .hp-wrap{order:2;position:relative;display:block;width:100%;max-width:340px;height:380px;margin:6px auto 40px;animation:heroFloat 7s ease-in-out infinite}
   .h-st{order:3}
   .h-wave{order:4}
-  .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:auto;left:0;top:0;width:47%;height:auto!important;aspect-ratio:3/4;border-radius:16px;box-shadow:0 18px 46px rgba(5,6,32,.55);opacity:0;animation:none!important;will-change:transform,opacity}
+  .hp-wrap .hero-photo{display:block!important;position:absolute!important;inset:auto;left:0;top:0;width:42%;height:auto!important;aspect-ratio:3/4;border-radius:16px;box-shadow:0 18px 46px rgba(5,6,32,.55);opacity:0;animation:none!important;will-change:transform,opacity}
   /* CAMPO: stesso meccanismo del desktop (i box di testo si sovrappongono nello scroll, le grafiche sfumano) in 1 colonna */
   .campo-inner{grid-template-columns:1fr;gap:44px;padding:0 16px;align-items:center}
   .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
@@ -2496,23 +2496,22 @@ if(!window.matchMedia('(max-width:760px)').matches){
   const photos=[...wrap.querySelectorAll('.hero-photo')];
   if(!photos.length) return;
   photos.forEach(p=>p.classList.remove('late','show'));
-  /* posizioni di atterraggio ben distanziate (left in %, top in px) + rotazione */
+  /* 5 posizioni di atterraggio, tutte CONTENUTE nel riquadro (left in %, top in px) + rotazione.
+     5 spot con max 4 foto visibili => i 4 visibili occupano sempre 4 spot diversi (mai due nello stesso punto) */
   const spots=[
-    {l:1,  t:6,   r:-7},
-    {l:50, t:0,   r:6},
-    {l:24, t:78,  r:-3},
-    {l:52, t:122, r:8},
-    {l:2,  t:150, r:5},
-    {l:40, t:186, r:-6},
-    {l:18, t:44,  r:4},
-    {l:30, t:158, r:-4}
+    {l:3,  t:4,   r:-6},
+    {l:46, t:20,  r:6},
+    {l:25, t:96,  r:-3},
+    {l:48, t:168, r:5},
+    {l:4,  t:156, r:-5}
   ];
   /* direzioni d'ingresso (da fuori schermo) */
   const dirs=[
-    {x:-260,y:-40},{x:260,y:-30},{x:0,y:-300},{x:280,y:120},
-    {x:-240,y:140},{x:40,y:300},{x:-300,y:0},{x:300,y:60}
+    {x:-240,y:-30},{x:250,y:-30},{x:0,y:-280},{x:250,y:120},{x:-220,y:120}
   ];
+  const MAX_VIS=4;
   let z=10, i=0, timer=null;
+  const queue=[];
   function toss(){
     const el=photos[i % photos.length];
     const s=spots[i % spots.length];
@@ -2524,9 +2523,16 @@ if(!window.matchMedia('(max-width:760px)').matches){
     el.style.transform='translate('+d.x+'px,'+d.y+'px) rotate('+(s.r*1.6)+'deg) scale(.78)';
     el.style.opacity='0';
     void el.offsetWidth;            /* reflow → l'entrata parte dallo stato "fuori" */
-    el.style.transition='transform .9s cubic-bezier(.16,.84,.28,1.12),opacity .5s ease';
+    el.style.transition='transform .9s cubic-bezier(.16,.84,.28,1.12),opacity .55s ease';
     el.style.transform='translate(0,0) rotate('+s.r+'deg) scale(1)';
     el.style.opacity='1';
+    queue.push(el);
+    if(queue.length>MAX_VIS){       /* sfuma la più vecchia → max 4 visibili, niente caos */
+      const old=queue.shift();
+      old.style.transition='opacity .6s ease,transform .6s ease';
+      old.style.opacity='0';
+      old.style.transform='translate(0,18px) rotate('+(s.r)+'deg) scale(.92)';
+    }
     i++;
   }
   function start(){
