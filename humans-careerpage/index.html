@@ -1062,6 +1062,12 @@ footer>.w{padding:0}
 /* caroselli drag JS: lo scroll verticale della pagina resta nativo, l'orizzontale al JS */
 .prj-sc,.gc-row,.press-mq,.sede-gallery,.col-row,.nsec-marquee{touch-action:pan-y}
 /* ════════════════ MOBILE / RESPONSIVE ════════════════ */
+/* reveal in scroll leggero (SOLO mobile, no will-change, one-shot) */
+@media(max-width:760px){
+  .m-rev{opacity:0;transform:translateY(24px);transition:opacity .55s var(--s),transform .55s var(--s)}
+  .m-rev.go{opacity:1;transform:none}
+  .m-rev.d1{transition-delay:.07s}.m-rev.d2{transition-delay:.14s}.m-rev.d3{transition-delay:.21s}
+}
 .nav-burger{display:none}
 .nav-drawer{display:none}
 @media(max-width:880px){
@@ -2446,6 +2452,11 @@ document.addEventListener('mouseout', e=>{
 /* ── REVEAL ── */
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('go')})},{threshold:.12});
 document.querySelectorAll('[data-a]').forEach(el=>io.observe(el));
+// reveal in scroll SOLO mobile su card/blocchi statici: leggero (no will-change) e ONE-SHOT (unobserve) => niente lag
+if(matchMedia('(max-width:760px)').matches){
+  const ro=new IntersectionObserver((es,obs)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('go');obs.unobserve(e.target);}})},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.proc-c,.ben-c,.pos-row,.nf-box,.aw-c,.met-c,.col-head,.sede-b,.pcap,.ingr-h').forEach((el,i)=>{ el.classList.add('m-rev','d'+((i%3)+1)); ro.observe(el); });
+}
 
 /* ── WORD REVEAL ── */
 const wio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('go');[...e.target.querySelectorAll('.word')].forEach((w,i)=>{w.style.transitionDelay=(i*.06)+'s'})}})},{threshold:.3});
