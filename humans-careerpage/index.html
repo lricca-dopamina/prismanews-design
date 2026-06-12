@@ -100,8 +100,10 @@ body.top-hidden nav{transform:translateY(-180px)}
 .ann b{color:#ff0079}.ann em{margin-left:auto;opacity:.22;font-style:normal}
 
 /* ════════ NAV ════════ */
-nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition:transform .4s var(--s)}
-.ni{max-width:1368px;margin:0 auto;height:70px;display:flex;align-items:center;background:#efefef;border:none;border-radius:18px;padding:0 8px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+/* navbar stile humans.tech: barra piena a tutta larghezza, fissa, auto-hide scrollando (JS) */
+nav{position:fixed;top:0;left:0;right:0;z-index:700;padding:0;transition:transform .4s var(--s)}
+nav.nav-hidden{transform:translateY(-105%)}
+.ni{max-width:none;margin:0;height:72px;display:flex;align-items:center;background:#fff;border:none;border-radius:0;padding:0 8px 0 40px;box-shadow:0 1px 0 rgba(5,6,32,.08)}
 .nlo img{height:35px;display:block}.nlo-fb{font-weight:500;font-size:17px;letter-spacing:-.02em;color:var(--dk)}
 .nm{display:flex;margin-left:64px;font-family:var(--fm);font-size:14px;font-weight:400;letter-spacing:0;color:#35415B}.nm a{transition:color .2s;color:#35415B;padding:0 12px;white-space:nowrap}.nm a:hover{color:#646CFD}
 .ni .btn{font-family:var(--fm);font-size:14px;font-weight:400;padding:14px;border-radius:11px;gap:0;transition:background .3s,color .3s,box-shadow .3s}
@@ -1083,6 +1085,7 @@ footer>.w{padding:0}
 .nav-drawer{display:none}
 @media(max-width:880px){
   .nc{display:none}
+  .ni{height:64px;padding:0 12px 0 20px}
   .nav-burger{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:44px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;margin-left:auto}
   .nav-burger span{display:block;width:22px;height:2px;background:var(--nv);border-radius:2px;transition:transform .3s var(--s),opacity .2s}
   .nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
@@ -3967,6 +3970,25 @@ document.querySelectorAll('canvas[data-growth]').forEach(makeGrowth);
   burger.addEventListener('click',e=>{ e.stopPropagation(); toggle(); });
   drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
   document.addEventListener('click',e=>{ if(drawer.classList.contains('open') && !drawer.contains(e.target) && e.target!==burger) close(); });
+})();
+
+// ── Navbar auto-hide (come humans.tech: si nasconde scrollando giu, riappare scrollando su) ──
+(function(){
+  const nav=document.querySelector('nav'); if(!nav) return;
+  let last=window.scrollY||0, ticking=false;
+  function update(){
+    const y=window.scrollY||0;
+    const drawer=document.getElementById('navDrawer');
+    const menuOpen=drawer&&drawer.classList.contains('open');
+    if(menuOpen){ nav.classList.remove('nav-hidden'); }
+    else if(y>last && y>140){ nav.classList.add('nav-hidden'); }   // scroll giu → nascondi
+    else if(y<last){ nav.classList.remove('nav-hidden'); }          // scroll su → mostra
+    last=y; ticking=false;
+  }
+  const onScroll=()=>{ if(!ticking){ ticking=true; requestAnimationFrame(update); } };
+  addEventListener('scroll', onScroll, {passive:true});
+  const hook=()=>{ if(window.__lenis && window.__lenis.on) window.__lenis.on('scroll', onScroll); };
+  hook(); setTimeout(hook, 800);
 })();
 
 // ── Lenis · smooth scroll con inerzia (lato fermo + resto che scorre, come makepill) ──
