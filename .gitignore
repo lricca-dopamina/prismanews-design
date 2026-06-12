@@ -9,3 +9,6 @@
 # Artefatti / asset non usati
 humans-careerpage.zip
 _humans_unused_assets/
+
+# Backup locale (la storia git e gia il backup)
+humans-careerpage Backup/
