@@ -1092,31 +1092,23 @@ footer>.w{padding:0}
   .m-rev.go{opacity:1;transform:none}
   .m-rev.d1{transition-delay:.08s}.m-rev.d2{transition-delay:.16s}.m-rev.d3{transition-delay:.24s}
 }
-.nav-burger{display:none}
+/* ── hamburger Impreza style_hamburger_1 (visuale base; visibilità gestita dai media query) ── */
+.nav-burger{display:none;align-items:center;justify-content:center;width:40px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;color:#35415B;transition:color .25s}
+.nav-burger:hover{color:#4437F3}   /* hover blu come humans.tech */
+.whx{position:relative;display:block;width:24px;height:24px}
+.whx>span{position:absolute;top:calc(50% - 1.5px);left:0;height:3px;width:24px;border-radius:0;background:currentColor;transition:transform .2s cubic-bezier(0,1,.8,1)}
+.whx>span::before,.whx>span::after{content:'';display:block;position:absolute;height:inherit;width:inherit;background:inherit;border-radius:inherit}
+.whx>span::before{top:-6px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,opacity .2s cubic-bezier(0,1,.8,1)}
+.whx>span::after{top:6px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,transform .2s cubic-bezier(0,1,.8,1)}
+.nav-burger.open .whx>span{transform:rotate(45deg);transition-delay:.2s}
+.nav-burger.open .whx>span::before{top:0;opacity:0;transition:top .2s cubic-bezier(0,1,.8,1),opacity .2s cubic-bezier(0,1,.8,1) .2s}
+.nav-burger.open .whx>span::after{top:0;transform:rotate(90deg);transition:top .2s cubic-bezier(0,1,.8,1),transform .2s cubic-bezier(0,1,.8,1) .2s}
 .nav-drawer{display:none}
+/* ── NAVBAR a 3 livelli come humans.tech: ≥1440 tutto · 1025-1439 logo+bottoni+hamburger · ≤1024 pillola mobile ── */
 @media(max-width:1439px){
-  /* ===== NAVBAR humans.tech 1:1 (sotto i 1440px): pillola talco #efefef + hamburger + dropdown ===== */
-  .nc{display:none}
-  nav{box-shadow:none}
-  nav.nav-hidden{transform:translateY(-175%)}
-  .ni{width:auto;margin:24px 16px 0;height:60px;background:#efefef;border:none;border-radius:18px;padding:0 14px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
-  .nlo img{display:none}
-  .nlo-aster{display:block;width:auto;height:30px;color:#4437F3}
-  /* hamburger Impreza style_hamburger_1 (regole verbatim) */
-  .nav-burger{display:flex;align-items:center;justify-content:center;width:40px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;margin-left:auto;color:#35415B;transition:color .25s}
-  .nav-burger:hover{color:#4437F3}   /* hover blu come humans.tech */
-  .whx{position:relative;display:block;width:24px;height:24px}
-  .whx>span{position:absolute;top:calc(50% - 1.5px);left:0;height:3px;width:24px;border-radius:0;background:currentColor;transition:transform .2s cubic-bezier(0,1,.8,1)}
-  .whx>span::before,.whx>span::after{content:'';display:block;position:absolute;height:inherit;width:inherit;background:inherit;border-radius:inherit}
-  .whx>span::before{top:-6px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,opacity .2s cubic-bezier(0,1,.8,1)}
-  .whx>span::after{top:6px;transition:top .2s cubic-bezier(0,1,.8,1) .2s,transform .2s cubic-bezier(0,1,.8,1)}
-  .nav-burger.open .whx>span{transform:rotate(45deg);transition-delay:.2s}
-  .nav-burger.open .whx>span::before{top:0;opacity:0;transition:top .2s cubic-bezier(0,1,.8,1),opacity .2s cubic-bezier(0,1,.8,1) .2s}
-  .nav-burger.open .whx>span::after{top:0;transform:rotate(90deg);transition:top .2s cubic-bezier(0,1,.8,1),transform .2s cubic-bezier(0,1,.8,1) .2s}
-  /* pannello dropdown talco (margin 24/16, radius 18, padding-block 16 — reali) */
+  /* dropdown talco condiviso (livello intermedio + mobile) */
   .nav-drawer{display:flex;flex-direction:column;gap:0;position:absolute;top:calc(100% + 16px);left:16px;right:16px;background:#efefef;border-radius:18px;padding:10px 22px 18px;box-shadow:0 10px 24px rgba(0,0,0,.2);transform:translate3d(0,-10px,0);opacity:0;pointer-events:none;will-change:opacity,transform;transition:opacity .26s var(--s),transform .26s var(--s);max-height:calc(100vh - 116px);overflow-y:auto;contain:layout paint}
   .nav-drawer.open{opacity:1;transform:translate3d(0,0,0);pointer-events:auto}
-  /* voci: 16px weight 500 #35415B, righe ~56px (come humans.tech reale) */
   .nav-drawer a{font-family:var(--f);font-size:18px;font-weight:500;line-height:46px;letter-spacing:0;color:#35415B;padding:0 2px;border-radius:0;text-decoration:none;transition:color .2s}
   .nav-drawer a.nd-current{color:#646CFD}
   .nav-drawer a:hover{color:#4437F3}
@@ -1126,6 +1118,21 @@ footer>.w{padding:0}
   .nd-lang svg{width:20px;height:20px;color:#35415B;flex:none}
   .nd-lang a{font-family:var(--f);font-size:16px;font-weight:500;padding:0;color:#35415B;opacity:.55}
   .nd-lang a.nd-lang-cur{opacity:1}
+}
+@media(min-width:1025px) and (max-width:1439px){
+  /* livello intermedio: le voci si condensano nell'hamburger A FIANCO dei due bottoni (come humans.tech 1025-1389) */
+  .nav-burger{display:flex;margin-left:14px}
+  .nav-drawer .nd-cta{display:none}   /* Contattaci e' gia' nella barra: niente doppione nel pannello */
+}
+@media(max-width:1024px){
+  /* mobile/tablet: pillola talco con asterisco + solo hamburger (i bottoni non entrano) */
+  .nc{display:none}
+  nav{box-shadow:none}
+  nav.nav-hidden{transform:translateY(-175%)}
+  .ni{width:auto;margin:24px 16px 0;height:60px;background:#efefef;border:none;border-radius:18px;padding:0 14px 0 24px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+  .nlo img{display:none}
+  .nlo-aster{display:block;width:auto;height:30px;color:#4437F3}
+  .nav-burger{display:flex;margin-left:auto}
 }
 @media(max-width:720px){
   .ann{padding:6px 18px;font-size:9px;gap:6px}
