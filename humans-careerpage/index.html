@@ -3251,16 +3251,15 @@ document.querySelectorAll('.nsec-marquee').forEach(sc => {
   let L = 0;
   if(draw){ L = draw.getTotalLength() || 120; draw.style.strokeDasharray = L; draw.style.strokeDashoffset = L; }
   const seq = [['s0',2100],['s1',2400],['s2',1900],['s3',5000]];
-  let i = 0, primed = false;
+  let i = 0, primed = false, off = L;   // off: offset MONOTÒNO (sempre decrescente) → nessuno snap alla ripartenza
   // dashoffset pilotato via rAF (NON via transizione CSS): Safari/WebKit non anima le transizioni di
-  // stroke-dashoffset → scattava (spariva e riappariva). Con rAF il tratto si cancella/ridisegna fluido ovunque.
+  // stroke-dashoffset → scattava. Con rAF + offset monotòno il tratto si cancella/ridisegna fluido, senza salti.
   let raf = null;
   const easeIO = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-  function setOffInstant(v){ if(!draw) return; if(raf){cancelAnimationFrame(raf);raf=null;} draw.style.strokeDashoffset = v; }
   function tweenOff(to, dur){
     if(!draw) return;
     if(raf) cancelAnimationFrame(raf);
-    const from = parseFloat(draw.style.strokeDashoffset) || 0; let start = null;
+    const from = parseFloat(draw.style.strokeDashoffset) || 0; let start = null;   // riparte SEMPRE dalla posizione attuale → niente scatti
     function fr(ts){ if(start==null) start=ts; const p=Math.min(1,(ts-start)/dur); draw.style.strokeDashoffset=(from+(to-from)*easeIO(p)).toFixed(2); raf = p<1 ? requestAnimationFrame(fr) : null; }
     raf = requestAnimationFrame(fr);
   }
@@ -3268,9 +3267,10 @@ document.querySelectorAll('.nsec-marquee').forEach(sc => {
     const c = seq[i][0];
     el.setAttribute('class','archi '+c);
     if(draw){
-      // -L ≡ L (entrambi nascosti): snap invisibile poi disegno → cucitura sempre chiusa a offset 0
-      if(c === 's1'){ setOffInstant(L); tweenOff(0, 2100); }       // ridisegna in un unico tratto
-      else if(c === 's0' && primed){ tweenOff(-L, 2100); }         // cancella proseguendo nello stesso verso
+      // offset monotòno: ogni mezzo giro (cancella / ridisegna) prosegue nello STESSO verso (−L), mai uno snap.
+      // -L è visivamente identico a 0+2L → cucitura invisibile, ridisegno fluido (come desktop).
+      if(c === 's1'){ off -= L; tweenOff(off, 1900); }             // ridisegna
+      else if(c === 's0' && primed){ off -= L; tweenOff(off, 1900); }  // cancella
       if(c === 's3') primed = true;
     }
     const d = seq[i][1];
