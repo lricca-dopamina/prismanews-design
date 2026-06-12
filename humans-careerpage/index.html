@@ -1087,10 +1087,11 @@ footer>.w{padding:0}
   .campo-h{font-size:clamp(23px,6.2vw,30px);margin-bottom:10px}
   .campo-b{font-size:13.5px;line-height:1.5;max-width:none}
   .campo-right{height:auto;display:flex;flex-direction:column;gap:16px}
-  /* il deck è ritagliato: le card che salgono/escono NON sbordano sul testo sopra */
-  .campo-deck{height:168px;overflow:hidden}
+  /* deck ritagliato SOLO in alto (no sbordo sul testo); ombra visibile sotto/ai lati */
+  .campo-deck{height:182px;clip-path:inset(-10px -70px -80px -70px)}
+  .campo-pin{height:215vh}   /* meno "zona morta" di scroll sull'ultima card */
   .campo-canvas{height:270px;flex:none}
-  .campo-deck .dc{padding:18px 20px}
+  .campo-deck .dc{padding:18px 20px;background:#15123a;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(255,255,255,.12)}   /* opaco: la card davanti copre quelle dietro (niente testo sovrapposto) */
   #cv2 .cv-code{right:40%}
   /* CRESCERE: titolo che entra senza tagli */
   .cres-title{padding:0 20px;margin-bottom:26px}
@@ -2681,6 +2682,7 @@ onScroll();
   if(!pin || decks.some(c=>!c) || canvas.some(s=>!s)) return;
 
   const N = decks.length;            // 3 fasi (gira anche su mobile)
+  const IS_MOBILE = window.matchMedia('(max-width:760px)').matches;   // mobile: card leggermente inclinate in entrata
   const played = [false, false, false];
 
   // ── Feed terminale: lancio comando → log veloci → asterisco Humans → loop ──
@@ -2800,8 +2802,10 @@ onScroll();
 
     // DECK - fermo in primo piano, swap rapido al confine (sincronizzato col contenuto)
     decks.forEach((card, i) => {
-      const st = deckState(i - pEff);
-      card.style.transform = 'translateY(' + st.y + ') scale(' + st.s + ')';
+      const d = i - pEff;
+      const st = deckState(d);
+      const rot = IS_MOBILE ? (clamp(d, -1, 1.6) * 1.7) : 0;   // mobile: leggera inclinazione che si raddrizza mentre la card entra
+      card.style.transform = 'translateY(' + st.y + ') rotate(' + rot.toFixed(2) + 'deg) scale(' + st.s + ')';
       card.style.opacity   = st.o;
       card.style.zIndex    = st.z;
     });
