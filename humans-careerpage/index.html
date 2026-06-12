@@ -1133,7 +1133,10 @@ footer>.w{padding:0}
   /* CAROSELLI orizzontali: card più strette */
   .prj-track{padding-left:14px;gap:14px}
   .pc{width:74vw;max-width:300px;height:400px}
-  .gc{width:82vw;max-width:320px;height:auto;aspect-ratio:33/44;margin-top:0!important}
+  .gc{width:78vw;max-width:300px;height:auto;aspect-ratio:33/44;margin-top:0!important}
+  /* mobile: nessuna card alzata (niente translateY su hover/selezione) → tutte stessa altezza */
+  .gc:hover{transform:none}
+  .gc:hover .gc-ph img{transform:none}
   .gc-info{padding:18px}
   .gc-desc{font-size:14px;line-height:1.5}
   .gc-name{font-size:16px;margin-top:9px;padding-top:9px}
@@ -1150,14 +1153,14 @@ footer>.w{padding:0}
   .gc.has-flip .gc-front .gc-info{display:none}
   .gc.has-flip .gc-front::after{content:'';position:absolute;inset:0;border-radius:24px;background:linear-gradient(to top,rgba(5,6,32,.74),transparent 42%);z-index:1;pointer-events:none}
   .gc.has-flip .gc-back{transform:rotateY(180deg);background:linear-gradient(165deg,#211f52,#0a0a24 78%);display:flex;flex-direction:column;justify-content:center;padding:28px 24px;color:#fff}
-  /* asterisco su ENTRAMBE le facce (gira con la card). Su iOS il backface-visibility NON nasconde la faccia
-     dietro → si vedrebbero 2 asterischi. Soluzione robusta: nascondo via opacity quello della faccia NON attiva,
-     con delay = metà flip (.36s) così lo scambio avviene quando la card è di taglio (invisibile): resta sempre 1 solo. */
   .gc.has-flip .gc-face .gc-ast{z-index:3}
-  .gc.has-flip .gc-front .gc-ast{transition:opacity 0s linear .36s}
-  .gc.has-flip .gc-back .gc-ast{opacity:0;transition:opacity 0s linear .36s}
-  .gc.has-flip.flipped .gc-front .gc-ast{opacity:0}
-  .gc.has-flip.flipped .gc-back .gc-ast{opacity:.85}
+  /* iOS non nasconde la faccia dietro col backface-visibility → durante il giro vedevi la faccia sbagliata
+     (la foto da entrambi i lati). Soluzione robusta: scambio l'INTERA faccia via opacity con delay = metà flip
+     (.36s): a card di taglio (invisibile) la faccia attiva passa all'altra → mai due facce insieme, mai quella sbagliata. */
+  .gc.has-flip .gc-front{transition:opacity 0s linear .36s}
+  .gc.has-flip .gc-back{opacity:0;transition:opacity 0s linear .36s}
+  .gc.has-flip.flipped .gc-front{opacity:0}
+  .gc.has-flip.flipped .gc-back{opacity:1}
   .gc-bk-name{font-size:22px;font-weight:600;letter-spacing:-.01em;margin-bottom:16px;line-height:1.12}
   .gc-bk-desc{font-size:15px;line-height:1.58;color:rgba(255,255,255,.88)}
   .gc-bk-role{margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.16);font-family:var(--fm);font-size:12.5px;letter-spacing:.04em;color:var(--dv)}
