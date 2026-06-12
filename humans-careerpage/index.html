@@ -23,6 +23,13 @@ addEventListener('DOMContentLoaded',function(){
 });
 </script>
 <meta charset="UTF-8">
+<script>
+/* URL senza slash finale (es. /careers) → i path relativi img/... risolverebbero alla root e darebbero 404.
+   Normalizza subito la base aggiungendo lo slash, PRIMA che il parser risolva le immagini. */
+if(!location.pathname.endsWith('/') && !/\.[a-z0-9]+$/i.test(location.pathname)){
+  history.replaceState(null,'',location.pathname+'/'+location.search+location.hash);
+}
+</script>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -2656,6 +2663,14 @@ const teamImg=document.querySelector('#teamphoto img');
 /* video sede: parte muto quando entra nel viewport, si ferma quando esce */
 const sedeVid=document.getElementById('sedeVideoEl');
 if(sedeVid){
+  // mobile: stesso frame/inquadratura ma file esportato in aspect mobile (950x1080) → meno banda, niente crop sprecato
+  if(matchMedia('(max-width:760px)').matches){
+    // deriva l'URL dalla currentSrc di un'immagine gia' caricata (risoluzione parse-time: funziona con qualsiasi base/deploy)
+    const probe=document.querySelector('img[src^="img/"]');
+    const mURL=(probe&&probe.currentSrc) ? probe.currentSrc.replace(/[^/]*$/,'sede-video-mobile.mp4') : 'img/sede-video-mobile.mp4';
+    sedeVid.querySelectorAll('source').forEach(s=>s.remove());
+    sedeVid.src=mURL; sedeVid.load();
+  }
   // mostra il video appena parte davvero (evento affidabile, non la promise di play())
   sedeVid.addEventListener('playing',()=>sedeVid.classList.add('playing'));
   const tryPlay=()=>{ sedeVid.muted=true; const p=sedeVid.play(); if(p&&p.catch) p.catch(()=>{ setTimeout(()=>sedeVid.play().catch(()=>{}),150); }); };
