@@ -138,7 +138,7 @@ nav.nav-hidden{transform:translateY(-105%)}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ════════ 01 · HERO ════════ */
-#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(to top,var(--dk) 0%,var(--v) 78.8%);position:relative;overflow:visible}
+#hero{min-height:min(100vh,960px);display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(to top,var(--dk) 0%,var(--v) 78.8%);position:relative;overflow:visible}
 .hp-c{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .hp{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,255,.4);animation:hpd linear infinite}
 @keyframes hpd{from{transform:translateY(100vh);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateY(-6vh) translateX(30px);opacity:0}}
