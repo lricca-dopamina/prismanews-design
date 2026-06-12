@@ -1132,7 +1132,7 @@ footer>.w{padding:0}
   .ct1,.ct2{white-space:normal;line-height:.96;font-size:clamp(32px,9.5vw,54px)}
   /* CAROSELLI orizzontali: card più strette */
   .prj-track{padding-left:14px;gap:14px}
-  .pc{width:74vw;max-width:300px;height:400px}
+  .pc{width:70vw;max-width:282px;height:376px}
   .gc{width:78vw;max-width:300px;height:auto;aspect-ratio:33/44;margin-top:0!important}
   /* mobile: nessuna card alzata (niente translateY su hover/selezione) → tutte stessa altezza */
   .gc:hover{transform:none}
@@ -1225,16 +1225,12 @@ footer>.w{padding:0}
   .cv-met-lbl{font-size:13px}
   /* TUTTE le CTA identiche: SQUADRATE (rounded-rect), asterisco in quadrato arrotondato, testo su UNA riga, CENTRATE */
   .h-ctas{padding:0 20px}
-  /* CTA mobile: box pieni colorati, niente icona/asterisco, testo centrato */
-  .btn.bv,.aw-btn,.pos-cta-btn{display:flex!important;align-items:center;justify-content:center;gap:0;width:fit-content;max-width:100%;margin-left:auto!important;margin-right:auto!important;align-self:center!important;padding:15px 30px;background:var(--v)!important;color:#fff;border:none;border-radius:14px;overflow:hidden;font-family:var(--fm);font-weight:500;font-size:14.5px}
-  .btn.bv:hover,.aw-btn:hover,.pos-cta-btn:hover{transform:none;box-shadow:none;background:var(--v)!important}
+  /* CTA mobile: box BIANCHI pieni con testo BLU (leggibili su ogni sfondo, anche le sezioni viola dove il box viola spariva), niente icona, testo centrato */
+  .btn.bv,.aw-btn,.pos-cta-btn{display:flex!important;align-items:center;justify-content:center;gap:0;width:fit-content;max-width:100%;margin:28px auto 8px!important;align-self:center!important;padding:15px 30px;background:rgba(255,255,255,.95)!important;color:var(--v);border:none;border-radius:14px;overflow:hidden;font-family:var(--fm);font-weight:600;font-size:14.5px}
+  .btn.bv:hover,.aw-btn:hover,.pos-cta-btn:hover{transform:none;box-shadow:none;background:rgba(255,255,255,.95)!important}
   .aw-btn::before,.pos-cta-btn::before{display:none!important}
   .btn.bv .bv-ico,.aw-btn .aw-btn-ico,.pos-cta-btn .ib{display:none!important}
-  .btn.bv .bv-lb,.aw-btn .aw-btn-lb,.pos-cta-btn .aw-btn-lb{white-space:nowrap;text-align:center;padding:0;color:#fff}
-  /* CTA dell'HERO: su sfondo violetto il box violetto si confonde → la rendo bianca translucida con testo blu */
-  #hero .btn.bv{background:rgba(255,255,255,.16)!important}
-  #hero .btn.bv:hover{background:rgba(255,255,255,.16)!important}
-  #hero .btn.bv .bv-lb{color:var(--v)}
+  .btn.bv .bv-lb,.aw-btn .aw-btn-lb,.pos-cta-btn .aw-btn-lb{white-space:nowrap;text-align:center;padding:0;color:var(--v)}
   /* griglia cerchi "Team snelli" centrata */
   .dotcluster{margin-inline:auto}
   /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
@@ -2397,7 +2393,6 @@ footer>.w{padding:0}
       <p class="pos-cta-b">Le persone migliori con cui abbiamo lavorato non sono arrivate da un annuncio. Mandaci il CV - ma aggiungi <strong>due righe su come pensi quando ti trovi davanti a un problema che non sai ancora risolvere.</strong> Quelle due righe ci dicono più del CV.</p>
       <a class="pos-cta-btn" data-c href="mailto:welcome@humans.tech"><span class="ib"><svg viewBox="0 0 16.05 16.12"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></span><span class="aw-btn-lb">Scrivici</span></a>
     </div>
-    <p style="font-family:var(--fm);font-size:12px;color:var(--m);margin-top:18px;line-height:1.6">Rispondiamo a ogni candidatura entro <strong style="color:var(--nv)">[X giorni lavorativi - da confermare con HR]</strong>. Se non è il momento giusto, te lo diciamo comunque.</p>
   </div>
 </div></section>
 
@@ -2524,6 +2519,14 @@ document.addEventListener('mouseout', e=>{
     card.classList.add('has-flip');
     // l'interazione (tap→gira+centra+blocca auto-scroll, scroll→sblocca+rigira) è gestita nel carosello .gc-row
   });
+})();
+
+/* ── MOBILE: "L'ingrediente segreto" → la CTA va SOTTO le foto, non subito dopo il testo ── */
+(function(){
+  if(!window.matchMedia('(max-width:760px)').matches) return;
+  const ig=document.querySelector('.ingr-g'); if(!ig) return;
+  const cta=ig.querySelector('.aw-btn'), ph=ig.querySelector('.ingr-photos');
+  if(cta && ph) ph.after(cta);   // sposta la CTA dopo le foto (mobile)
 })();
 
 /* ── REVEAL ── */
