@@ -1155,9 +1155,10 @@ footer>.w{padding:0}
   /* griglia cerchi "Team snelli" centrata */
   .dotcluster{margin-inline:auto}
   /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
-  /* animazione "Questo posto" piu grande (oltre la larghezza) e testi piu vicini sopra/sotto */
-  .nf-anim{max-width:none;width:122vw;margin:-34px calc(50% - 61vw)}
-  .nf-top{margin-bottom:4px}
+  /* animazione "Questo posto": ingrandita + canvas RITAGLIATO in altezza (via il vuoto interno) => testi vicini */
+  .nf-anim{max-width:none;width:126vw;height:280px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin:8px calc(50% - 63vw)}
+  .nf-anim canvas{flex:none;width:100%;height:auto}
+  .nf-top{margin-bottom:6px}
   .nf-intro-col .nsec-intro{margin-bottom:0}
   #nonfunziona .nsec-lead{margin-top:0}
   /* footer compatto */
