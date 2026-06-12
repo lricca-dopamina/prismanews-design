@@ -206,7 +206,7 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .man-spline.no3d canvas{display:none}
 .man-spline.no3d .man-fallback{display:flex}
 @media(max-width:900px){
-  #manifesto{padding:46px 0 18px}
+  #manifesto{padding:46px 0 40px}
   #manifesto .w{grid-template-columns:1fr;gap:16px}
   .man-spline{height:320px;margin-top:0}
   .man-scroll{padding:4px 0 0}
@@ -457,7 +457,7 @@ nav{position:fixed;top:24px;left:0;right:0;z-index:700;padding:0 32px;transition
 .sede-media-inner img{width:100%;height:100%;object-fit:cover}
 .sede-media-inner::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,32,.12) 0%,transparent 30%,transparent 70%,rgba(5,6,32,.18) 100%)}
 .sede-body-wrap{padding-top:40px;padding-bottom:0}
-@media(max-width:760px){.sede-body-wrap{padding-top:48px}.sede-media{margin-bottom:16px}}
+@media(max-width:760px){.sede-body-wrap{padding-top:72px}.sede-media{margin-bottom:24px}}
 .sede-g{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:56px}
 @media(max-width:760px){.sede-g{grid-template-columns:1fr}}
 .sede-b{font-size:17px;color:#424267;line-height:1.6;margin-bottom:16px}
@@ -531,6 +531,7 @@ a.aw-c:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(5,6,32,.2)}
 /* deck foto in loop, sovrapposte */
 .aw-deck{position:relative;width:100%;max-width:430px;aspect-ratio:4/5;margin:0 auto;justify-self:center}
 .aw-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:24px;box-shadow:0 16px 40px rgba(5,6,32,.4);transition:transform 1s var(--s),opacity .9s var(--s);backface-visibility:hidden}
+@media(max-width:760px){.aw-deck{margin-bottom:46px;max-width:300px}}
 @media(max-width:860px){.aw-row{grid-template-columns:1fr;gap:40px}.aw-deck{max-width:360px;order:-1}}
 .aw-ss em{font-style:italic}
 
@@ -1068,9 +1069,9 @@ footer>.w{padding:0}
 /* ════════════════ MOBILE / RESPONSIVE ════════════════ */
 /* reveal in scroll leggero (SOLO mobile, no will-change, one-shot) */
 @media(max-width:760px){
-  .m-rev{opacity:0;transform:translateY(24px);transition:opacity .55s var(--s),transform .55s var(--s)}
+  .m-rev{opacity:0;transform:translateY(34px);transition:opacity .7s var(--s),transform .7s var(--s)}
   .m-rev.go{opacity:1;transform:none}
-  .m-rev.d1{transition-delay:.07s}.m-rev.d2{transition-delay:.14s}.m-rev.d3{transition-delay:.21s}
+  .m-rev.d1{transition-delay:.08s}.m-rev.d2{transition-delay:.16s}.m-rev.d3{transition-delay:.24s}
 }
 .nav-burger{display:none}
 .nav-drawer{display:none}
@@ -1198,7 +1199,7 @@ footer>.w{padding:0}
   .dotcluster{margin-inline:auto}
   /* animazione "Questo posto non è per tutti" più grande (full-bleed) */
   /* animazione "Questo posto": canvas grande DIETRO, i testi sopra/sotto ci passano SOPRA (bordi vuoti dietro al testo) */
-  .nf-anim{max-width:none;width:126vw;margin:-80px calc(50% - 63vw);position:relative;z-index:0;pointer-events:none}
+  .nf-anim{max-width:none;width:126vw;margin:-128px calc(50% - 63vw);position:relative;z-index:0;pointer-events:none}
   .nf-anim canvas{width:100%;height:auto}
   .nf-top{margin-bottom:0}
   .nf-intro-col{position:relative;z-index:2}
@@ -2464,7 +2465,7 @@ document.querySelectorAll('[data-a]').forEach(el=>io.observe(el));
 // reveal in scroll SOLO mobile su card/blocchi statici: leggero (no will-change) e ONE-SHOT (unobserve) => niente lag
 if(matchMedia('(max-width:760px)').matches){
   const ro=new IntersectionObserver((es,obs)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('go');obs.unobserve(e.target);}})},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.proc-c,.ben-c,.pos-row,.nf-box,.aw-c,.met-c,.col-head,.sede-b,.pcap,.ingr-h').forEach((el,i)=>{ el.classList.add('m-rev','d'+((i%3)+1)); ro.observe(el); });
+  document.querySelectorAll('.proc-c,.ben-c,.pos-row,.nf-box,.aw-c,.met-c,.col-head,.sede-b,.ingr-h,.ingr-b,.campo-b,.cand-b,.sede-h,.nsec-intro').forEach((el,i)=>{ el.classList.add('m-rev','d'+((i%3)+1)); ro.observe(el); });
 }
 
 /* ── WORD REVEAL ── */
