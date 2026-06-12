@@ -105,6 +105,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:700;padding:0;transition:transfo
 nav.nav-hidden{transform:translateY(-105%)}
 .ni{max-width:none;margin:0;height:72px;display:flex;align-items:center;background:#fff;border:none;border-radius:0;padding:0 8px 0 40px;box-shadow:0 1px 0 rgba(5,6,32,.08)}
 .nlo img{height:35px;display:block}.nlo-fb{font-weight:500;font-size:17px;letter-spacing:-.02em;color:var(--dk)}
+.nlo-aster{display:none}
 .nm{display:flex;margin-left:64px;font-family:var(--fm);font-size:14px;font-weight:400;letter-spacing:0;color:#35415B}.nm a{transition:color .2s;color:#35415B;padding:0 12px;white-space:nowrap}.nm a:hover{color:#646CFD}
 .ni .btn{font-family:var(--fm);font-size:14px;font-weight:400;padding:14px;border-radius:11px;gap:0;transition:background .3s,color .3s,box-shadow .3s}
 .ni .bk{background:#efefef;color:var(--v);border:none}.ni .bk:hover{background:var(--v);color:#efefef}
@@ -1084,19 +1085,28 @@ footer>.w{padding:0}
 .nav-burger{display:none}
 .nav-drawer{display:none}
 @media(max-width:880px){
+  /* navbar humans.tech mobile: pillola/box arrotondato talco che apre un pannello dropdown */
   .nc{display:none}
-  .ni{height:64px;padding:0 12px 0 20px}
+  nav{box-shadow:none}
+  nav.nav-hidden{transform:translateY(-165%)}
+  .ni{margin:14px 16px 0;height:58px;background:var(--g);border:none;border-radius:26px;padding:0 12px 0 22px;box-shadow:0 12px 34px rgba(5,6,32,.16)}
+  .nlo img{display:none}
+  .nlo-aster{display:block;width:27px;height:27px;color:var(--v)}
   .nav-burger{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:44px;height:44px;border:0;background:transparent;cursor:pointer;padding:0;margin-left:auto}
-  .nav-burger span{display:block;width:22px;height:2px;background:var(--nv);border-radius:2px;transition:transform .3s var(--s),opacity .2s}
+  .nav-burger span{display:block;width:22px;height:2px;background:var(--dk);border-radius:2px;transition:transform .3s var(--s),opacity .2s}
   .nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
   .nav-burger.open span:nth-child(2){opacity:0}
   .nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-  .nav-drawer{display:flex;flex-direction:column;gap:2px;position:absolute;top:calc(100% + 10px);left:14px;right:14px;background:#fff;border-radius:22px;padding:16px;box-shadow:0 24px 60px rgba(5,6,32,.3);transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .3s var(--s),transform .3s var(--s)}
+  .nav-drawer{display:flex;flex-direction:column;gap:0;position:absolute;top:calc(100% + 12px);left:16px;right:16px;background:var(--g);border-radius:26px;padding:24px 26px 24px;box-shadow:0 26px 64px rgba(5,6,32,.24);transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .32s var(--s),transform .32s var(--s);max-height:calc(100vh - 110px);overflow-y:auto}
   .nav-drawer.open{opacity:1;transform:none;pointer-events:auto}
-  .nav-drawer a{font-family:var(--fm);font-size:15px;color:var(--nv);padding:13px 12px;border-radius:12px;text-decoration:none}
-  .nav-drawer a:active{background:rgba(68,55,243,.08)}
-  .nav-drawer-cta{display:flex;flex-direction:column;gap:10px;margin-top:8px;padding-top:14px;border-top:1px solid rgba(0,0,0,.08)}
-  .nav-drawer-cta .btn{justify-content:center;text-align:center;width:100%}
+  .nav-drawer a{font-family:var(--f);font-size:23px;font-weight:400;line-height:1.05;letter-spacing:-.01em;color:var(--dk);padding:13px 0;border-radius:0;text-decoration:none}
+  .nav-drawer a.nd-current{color:var(--v)}
+  .nav-drawer a:active{color:var(--v);background:transparent}
+  .nav-drawer .nd-cta{align-self:flex-start;margin-top:18px;background:var(--v);color:#fff;font-family:var(--fm);font-size:16px;font-weight:400;line-height:1.2;padding:15px 30px;border-radius:16px}
+  .nd-lang{display:flex;align-items:center;gap:16px;margin-top:26px}
+  .nd-lang svg{width:21px;height:21px;color:var(--dk);flex:none}
+  .nd-lang a{font-family:var(--fm);font-size:16px;font-weight:400;padding:0;color:var(--dk);opacity:.5}
+  .nd-lang a.nd-lang-cur{opacity:1}
 }
 @media(max-width:720px){
   .ann{padding:6px 18px;font-size:9px;gap:6px}
@@ -1271,7 +1281,7 @@ footer>.w{padding:0}
 
 <nav>
   <div class="ni">
-    <div class="nlo"><img src="img/humans-logo.svg" alt="Humans.tech"></div>
+    <div class="nlo"><img src="img/humans-logo.svg" alt="Humans.tech"><svg class="nlo-aster" viewBox="0 0 16.05 16.12" aria-hidden="true"><path d="M16.05,8.16l-1.01-3.15-4.63,1.53V0h-3.27v4.93L1.01,2.92l-1.01,3.15,4.63,1.53L.84,12.88l2.64,1.95,2.86-3.99,3.79,5.29,2.64-1.94-2.86-3.99,6.13-2.02Z" fill="currentColor"/></svg></div>
     <div class="nm"><a href="https://humans.tech/perche-esistiamo/">Perché esistiamo</a><a href="https://humans.tech/cosa-facciamo/">Cosa facciamo</a><a href="https://humans.tech/come-lavoriamo/">Come lavoriamo</a><a href="https://humans.tech/lavori-realizzati/">Lavori realizzati</a><a href="https://humans.tech/chi-siamo/">Chi siamo</a><a href="https://humans.tech/blog/">Blog</a></div>
     <div class="nc">
       <a class="btn bk" data-c href="#posizioni"><span class="btn-ar"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M8.38579 0.155296C8.61873 -0.0517608 8.83873 -0.0517608 9.04579 0.155296L17.2375 8.3858C17.4704 8.59285 17.4704 8.79991 17.2375 9.00697L9.04579 17.2375C8.83873 17.4445 8.61873 17.4445 8.38579 17.2375L8.11403 16.9269C7.90697 16.7198 7.90697 16.4998 8.11403 16.2669L15.0634 9.35638H0.465877C0.155292 9.35638 0 9.20108 0 8.8905V8.50227C0 8.19168 0.155292 8.03639 0.465877 8.03639H15.0634L8.11403 1.12587C7.90697 0.892935 7.90697 0.672937 8.11403 0.465881L8.38579 0.155296Z" fill="currentColor"/></svg></span>Entra nel team</a>
@@ -1280,15 +1290,18 @@ footer>.w{padding:0}
     <button class="nav-burger" id="navBurger" aria-label="Apri menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
   <div class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <a href="https://humans.tech/">Home</a>
     <a href="https://humans.tech/perche-esistiamo/">Perché esistiamo</a>
     <a href="https://humans.tech/cosa-facciamo/">Cosa facciamo</a>
-    <a href="https://humans.tech/come-lavoriamo/">Come lavoriamo</a>
     <a href="https://humans.tech/lavori-realizzati/">Lavori realizzati</a>
+    <a href="https://humans.tech/come-lavoriamo/">Come lavoriamo</a>
     <a href="https://humans.tech/chi-siamo/">Chi siamo</a>
+    <a class="nd-current" href="#posizioni">Lavora con noi</a>
     <a href="https://humans.tech/blog/">Blog</a>
-    <div class="nav-drawer-cta">
-      <a class="btn bk" href="#posizioni">Entra nel team</a>
-      <a class="btn bv" href="https://humans.tech/contatti/">Contattaci</a>
+    <a class="nd-cta" href="https://humans.tech/contatti/">Contattaci</a>
+    <div class="nd-lang">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.6 2.7 2.6 15.7 0 18.4M12 2.8c-2.6 2.7-2.6 15.7 0 18.4"/></svg>
+      <a href="https://humans.tech/en/">EN</a><a class="nd-lang-cur" href="https://humans.tech/">IT</a>
     </div>
   </div>
 </nav>
